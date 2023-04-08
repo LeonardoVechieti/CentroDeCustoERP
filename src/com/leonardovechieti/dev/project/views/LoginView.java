@@ -26,14 +26,11 @@ public class LoginView extends javax.swing.JFrame {
         initComponents();
         setIcon();
         Connection conexao = ModuloConexao.conector();
-        //System.out.println(conexao); 
         if (conexao != null){
             labelStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png")));
-            //lblStatus.setText("Conectado");
-            
         }else{
             labelStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dberror.png")));
-            //lblStatus.setText("Não Conectado");
+            MessageView messageView = new MessageView("Erro!", "Não foi possível conectar ao banco de dados!", "error");
         }
 
     }
@@ -47,14 +44,13 @@ public class LoginView extends javax.swing.JFrame {
             String senha = new String(txtSenha.getPassword());
             Usuario usuario = usuarioRepository.login(txtUsuario.getText(),senha );
             if (usuario != null){
-                //Abre a tela principal
+                //Abre a tela principal passando o usuário
                 PrincipalView principal = new PrincipalView(usuario);
                 //Fecha a tela de login
                 this.dispose();
             } else {
                 usuario=null;
-                //JOptionPane.showMessageDialog(null, "Usuario ou senha inválidos! ");
-                MessageView messageView = new MessageView("Erro", "Usuário ou senha inválidos!", "error");
+                MessageView messageView = new MessageView("Aviso!", "Usuário ou senha inválidos!", "alert");
             }
         }
 

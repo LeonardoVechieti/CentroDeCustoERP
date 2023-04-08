@@ -36,7 +36,7 @@ public class PrincipalView extends javax.swing.JFrame {
             labelNomeUsuario.setText(usuario.getNome());
             labelIdUsuario.setText(String.valueOf(usuario.getId()));
             //Seta data atual formatada
-            labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date(System.currentTimeMillis())));
+            labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(System.currentTimeMillis())));
         }
     }
 

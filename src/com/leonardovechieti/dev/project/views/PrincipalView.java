@@ -23,6 +23,12 @@ public class PrincipalView extends javax.swing.JFrame {
         //Seta os dados do usuario logado
 
     }
+    public PrincipalView(Usuario usuario) {
+        initComponents();
+        //Seta os dados do usuario logado
+        setUsuario(usuario);
+        this.setVisible(true);
+    }
     
     public void setUsuario(Usuario usuario){
         this.usuario = usuario;

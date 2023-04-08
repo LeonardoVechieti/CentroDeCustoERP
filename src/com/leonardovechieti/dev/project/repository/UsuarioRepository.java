@@ -14,14 +14,11 @@ public class UsuarioRepository {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
-
-
     public UsuarioRepository() {
         conexao = ModuloConexao.conector();
     }
 
     public Usuario login(String login, String senha) {
-        conexao = ModuloConexao.conector();
         String slq = "select * from usuario where login = ? and senha = ? and ativo=1";
         try {
             pst  = conexao.prepareStatement(slq);
@@ -31,18 +28,15 @@ public class UsuarioRepository {
             rs = pst.executeQuery();
 
             if (rs.next()) {
-
                 System.out.println("Usuario logado: " + rs.getString("nome"));
-                //conexao.close(); //termina a conexao com o banco
                 return new Usuario(rs.getInt("id"), rs.getString("nome"), rs.getString("login"), rs.getString("senha"), rs.getBoolean("ativo"), rs.getString("perfil"));
 
             }else {
-                JOptionPane.showMessageDialog(null, "Usuario ou senha inválidos!");
+                return null;
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
-
         }
         return null;
     }

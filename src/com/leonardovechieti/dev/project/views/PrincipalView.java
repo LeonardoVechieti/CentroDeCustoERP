@@ -7,6 +7,8 @@ package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.Usuario;
 
+import java.awt.*;
+
 /**
  *
  * @author Leonardo
@@ -25,9 +27,14 @@ public class PrincipalView extends javax.swing.JFrame {
     }
     public PrincipalView(Usuario usuario) {
         initComponents();
+        //Seta icon da janela
+        setIcon();
         //Seta os dados do usuario logado
         setUsuario(usuario);
         this.setVisible(true);
+    }
+    private void setIcon(){
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
     }
     
     public void setUsuario(Usuario usuario){
@@ -51,6 +58,9 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMenu3 = new javax.swing.JMenu();
         jToolBar1 = new javax.swing.JToolBar();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jToolBar3 = new javax.swing.JToolBar();
         jSeparator9 = new javax.swing.JToolBar.Separator();
         labelVersao = new javax.swing.JLabel();
@@ -68,7 +78,10 @@ public class PrincipalView extends javax.swing.JFrame {
         labelDateTime = new javax.swing.JLabel();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
 
@@ -78,6 +91,18 @@ public class PrincipalView extends javax.swing.JFrame {
         setTitle("Dev - Software");
 
         jToolBar1.setRollover(true);
+        jToolBar1.add(jSeparator1);
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
+        jToolBar1.add(jLabel5);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
+        jToolBar1.add(jLabel1);
 
         jToolBar3.setFloatable(false);
         jToolBar3.setRollover(true);
@@ -125,13 +150,30 @@ public class PrincipalView extends javax.swing.JFrame {
         jToolBar3.add(labelDateTime);
         jToolBar3.add(jSeparator13);
 
-        jMenu1.setText("Cadastro");
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        jMenu5.setText("Cadastros");
+        jMenu5.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        jMenu6.setText("Produtos e serviços");
+        jMenu6.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        jMenuItem1.setText("Listar");
+        jMenu6.add(jMenuItem1);
+
+        jMenuItem2.setText("Cadastrar");
+        jMenu6.add(jMenuItem2);
+
+        jMenu5.add(jMenu6);
+
+        jMenuBar1.add(jMenu5);
 
         jMenu2.setText("Movimentações");
+        jMenu2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Relatórios");
+        jMenu4.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         jMenuBar1.add(jMenu4);
 
         setJMenuBar(jMenuBar1);
@@ -146,14 +188,20 @@ public class PrincipalView extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 534, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 525, Short.MAX_VALUE)
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        ListProdutosView listProdutos = new ListProdutosView();
+        listProdutos.setVisible(true);
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -191,14 +239,20 @@ public class PrincipalView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JToolBar.Separator jSeparator11;
     private javax.swing.JToolBar.Separator jSeparator12;

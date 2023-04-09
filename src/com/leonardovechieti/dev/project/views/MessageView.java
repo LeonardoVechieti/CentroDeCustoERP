@@ -63,7 +63,7 @@ public class MessageView extends javax.swing.JFrame {
         message = new javax.swing.JTextPane();
         btnOk = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Aviso");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setResizable(false);
@@ -75,8 +75,10 @@ public class MessageView extends javax.swing.JFrame {
         title.setText("Aviso");
 
         message.setEditable(false);
+        message.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jScrollPane2.setViewportView(message);
 
+        btnOk.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnOk.setText("OK");
         btnOk.setBorderPainted(false);
         btnOk.addActionListener(new java.awt.event.ActionListener() {

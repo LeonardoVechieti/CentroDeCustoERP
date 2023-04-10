@@ -6,10 +6,14 @@
 package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.enums.Unidades;
+import com.leonardovechieti.dev.project.repository.ProdutoRepository;
+import com.leonardovechieti.dev.project.repository.UsuarioRepository;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+
 
 /**
  *
@@ -24,8 +28,51 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         initComponents();
         setIcon();
         setComboBoxUnidade();
+        ProdutoRepository produtoRepository = new ProdutoRepository();
 
+    }
+    
+    private void cadastrarProduto() {
+        // TODO add your handling code here:
+        if (validarCampos()) {
+            ProdutoRepository produtoRepository = new ProdutoRepository();
+            produtoRepository.salvar(
+                    txtDescricao.getText(),
+                    txtPreco.getText(),
+                    comboBoxUnidade.getSelectedItem().toString(),
+                    checkBoxInativar.isSelected(),
+                    checkBoxServico.isSelected(),
+                    checkBoxHabilitaEstoque.isSelected(),
+                    checkBoxHabilitaProducao.isSelected(),
+                    Integer.parseInt(PrincipalView.labelIdUsuario.getText())
+            );
+            limparCampos();
+            new MessageView("Sucesso", "Produto cadastrado com sucesso", "success");
+        }
 
+    }
+    private void limparCampos() {
+        txtDescricao.setText(null);
+        txtPreco.setText(null);
+        checkBoxInativar.setSelected(false);
+        checkBoxServico.setSelected(false);
+        checkBoxHabilitaEstoque.setSelected(false);
+        checkBoxHabilitaProducao.setSelected(false);
+    }
+    private boolean validarCampos() {
+        if (txtDescricao.getText().equals("")) {
+            new MessageView("Atenção", "Preencha o campo descrição", "alert");
+        } else if (txtPreco.getText().equals("")) {
+            new MessageView("Atenção", "Preencha o campo preço", "alert");
+        } else {
+            //UpperCase
+            txtDescricao.setText(txtDescricao.getText().toUpperCase());
+            txtPreco.setText(txtPreco.getText().toUpperCase());
+            //Troca a virgula por ponto
+            txtPreco.setText(txtPreco.getText().replace(",", "."));
+            return true;
+        }
+        return false;
     }
 
     private void setComboBoxUnidade() {
@@ -117,9 +164,14 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/mais.png"))); // NOI18N
         jLabel2.setText("Novo cadastro");
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
 
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
@@ -142,7 +194,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         checkBoxServico.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         checkBoxServico.setText("Serviço");
 
-        txtPreco.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtPreco.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtPreco.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
 
         checkBoxInativar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -244,14 +296,15 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(labelDataCriacao)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelDataModificacao)
                         .addComponent(jLabel7)
                         .addComponent(jLabel9)
-                        .addComponent(labelNomeUsuario)))
+                        .addComponent(labelNomeUsuario))
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(labelDataCriacao)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -383,6 +436,11 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(614, 463));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // TODO add your handling code here:
+        cadastrarProduto();
+    }//GEN-LAST:event_jLabel2MouseClicked
 
     /**
      * @param args the command line arguments

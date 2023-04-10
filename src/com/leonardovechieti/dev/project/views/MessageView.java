@@ -39,9 +39,11 @@ public class MessageView extends javax.swing.JFrame {
                 break;
             case "success":
                 icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
+                setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
                 break;
             default:
                 icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
+                setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
                 break;
         }
         this.setVisible(true);

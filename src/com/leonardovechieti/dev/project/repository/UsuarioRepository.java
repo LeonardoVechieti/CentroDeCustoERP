@@ -2,7 +2,6 @@ package com.leonardovechieti.dev.project.repository;
 
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
 import com.leonardovechieti.dev.project.model.Usuario;
-
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

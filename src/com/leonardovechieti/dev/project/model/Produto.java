@@ -46,8 +46,8 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public double getPreco() {
-        return preco;
+    public String getPreco() {
+        return String.valueOf(preco);
     }
 
     public void setPreco(double preco) {

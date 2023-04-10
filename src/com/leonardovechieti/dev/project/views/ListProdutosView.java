@@ -25,14 +25,20 @@ public class ListProdutosView extends javax.swing.JFrame {
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
+    public String id = null;
 
     /**
      * Creates new form ListProdutosView
      */
     public ListProdutosView() {
+        initialize();
+    }
+
+    private void initialize(){
         initComponents();
         setIcon();
         btnAlterar.setEnabled(false);
+        btnDelete.setEnabled(false);
     }
 
     public void PesquisarProdutos() throws SQLException{
@@ -43,15 +49,39 @@ public class ListProdutosView extends javax.swing.JFrame {
     }
     
     public void AbreCadastro(){
-        String id;
-        int setar = tabelaProdutos.getSelectedRow();
-        id=tabelaProdutos.getModel().getValueAt(setar,0).toString(); 
-        CadastroProdutosView cadastro = new CadastroProdutosView();
-        cadastro.setVisible(true);
+        if (id != null) {
+            CadastroProdutosView cadastro = new CadastroProdutosView(id);
+            cadastro.setVisible(true);
+        } else if (id == null) {
+            MessageView message = new MessageView("Erro", "Selecione um produto para alterar", "error");
+        }
+
+    }
+    
+    private void Deletar(String idDelete){
+        if (idDelete == null) {
+            MessageView message = new MessageView("Alerta!", "Selecione um produto para excluir", "alert");
+        }
+        if (idDelete != null) {
+            MessageView message = new MessageView("Alerta!", "Deseja realmente excluir o produto?", "confirm");
+            if (message.confirm == true) {
+                ProdutoRepository produtoRepository = new ProdutoRepository();
+                produtoRepository.excluir(idDelete);
+                MessageView message2 = new MessageView("Sucesso!", "Produto excluido com sucesso", "success");
+            }
+        }
+
     }
 
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
+    }
+
+    private void PegaId(){
+        int setar = tabelaProdutos.getSelectedRow();
+        id=tabelaProdutos.getModel().getValueAt(setar,0).toString();
+        //printar o id
+        System.out.println(id);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -98,12 +128,20 @@ public class ListProdutosView extends javax.swing.JFrame {
         btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/delete1.png"))); // NOI18N
         btnDelete.setText("Delete");
+        btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDeleteMouseClicked(evt);
+            }
+        });
 
         btnAlterar.setBackground(new java.awt.Color(204, 204, 204));
         btnAlterar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/update1.png"))); // NOI18N
         btnAlterar.setText("Alterar");
         btnAlterar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAlterarMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnAlterarMouseEntered(evt);
             }
@@ -244,13 +282,27 @@ public class ListProdutosView extends javax.swing.JFrame {
         // TODO add your handling code here:
         //Verifica se foi clicado duas vezes com o botão direito do mouse
         if (evt.getClickCount() == 2) {
+            PegaId();
             AbreCadastro();
         } if (evt.getClickCount() == 1) {
             btnAlterar.setEnabled(true);
+            btnDelete.setEnabled(true);
+            PegaId();
         }
 
 
     }//GEN-LAST:event_tabelaProdutosMouseClicked
+
+    private void btnAlterarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlterarMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnAlterarMouseClicked
+
+    private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseClicked
+        // TODO add your handling code here:
+        PegaId();
+        Deletar(id);
+    }//GEN-LAST:event_btnDeleteMouseClicked
 
     /**
      * @param args the command line arguments

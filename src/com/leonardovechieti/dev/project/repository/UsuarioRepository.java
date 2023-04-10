@@ -39,4 +39,30 @@ public class UsuarioRepository {
         }
         return null;
     }
+
+    public Usuario buscaId(int usuario) {
+        String slq = "select * from usuario where id = ?";
+        try {
+            pst  = conexao.prepareStatement(slq);
+            pst.setInt(1, usuario);
+
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                return new
+                        Usuario(rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getBoolean("ativo"),
+                        rs.getString("perfil"));
+            }else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        return null;
+    }
 }

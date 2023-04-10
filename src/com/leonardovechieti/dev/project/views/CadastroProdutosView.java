@@ -5,6 +5,7 @@
  */
 package com.leonardovechieti.dev.project.views;
 
+import com.leonardovechieti.dev.project.model.Produto;
 import com.leonardovechieti.dev.project.model.enums.Unidades;
 import com.leonardovechieti.dev.project.repository.ProdutoRepository;
 import com.leonardovechieti.dev.project.repository.UsuarioRepository;
@@ -25,11 +26,49 @@ public class CadastroProdutosView extends javax.swing.JFrame {
      * Creates new form ListProdutosView
      */
     public CadastroProdutosView() {
+        initialize();
+    }
+    public CadastroProdutosView(String id) {
+        initialize();
+        painelInformacoes.setVisible(true);
+        labelId.setVisible(true);
+        Produto produto = new Produto();
+        if (id != null) {
+            ProdutoRepository produtoRepository = new ProdutoRepository();
+            produto = produtoRepository.buscaId(id);
+            txtDescricao.setText(produto.getDescricao());
+            txtPreco.setText(produto.getPreco());
+            checkBoxInativar.setSelected(produto.getAtivo());
+            checkBoxServico.setSelected(produto.getServico());
+            checkBoxHabilitaEstoque.setSelected(produto.getEstoque());
+            checkBoxHabilitaProducao.setSelected(produto.getProducao());
+            comboBoxUnidade.setSelectedItem(produto.getUnidade());
+            labelId.setText("ID: " + id);
+            //Exibe as datas
+            labelDataCriacao.setText(produto.getDataCriacao());
+            labelDataModificacao.setText(produto.getDataModificacao());
+
+            //Exibe usuário
+            UsuarioRepository usuarioRepository = new UsuarioRepository();
+            labelNomeUsuario.setText(usuarioRepository.buscaId(produto.getUsuario()).getNome());
+
+
+
+
+            //Modifica o ambiente
+            setTitle("Alterar produtos e serviços");
+            btnPricipal.setText("Alterar");
+            btnPricipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/update1.png")));
+        }
+    }
+
+    private void initialize() {
         initComponents();
         setIcon();
         setComboBoxUnidade();
+        painelInformacoes.setVisible(false);
+        labelId.setVisible(false);
         ProdutoRepository produtoRepository = new ProdutoRepository();
-
     }
     
     private void cadastrarProduto() {
@@ -47,7 +86,8 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                     Integer.parseInt(PrincipalView.labelIdUsuario.getText())
             );
             limparCampos();
-            new MessageView("Sucesso", "Produto cadastrado com sucesso", "success");
+            Integer idCriado = produtoRepository.ultimoId();
+            new MessageView("Sucesso!", "Produto cadastrado com sucesso!" + "ID: " +idCriado, "success");
         }
 
     }
@@ -101,7 +141,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        btnPricipal = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -114,9 +154,8 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         checkBoxServico = new javax.swing.JCheckBox();
         txtPreco = new javax.swing.JFormattedTextField();
         checkBoxInativar = new javax.swing.JCheckBox();
-        jLabel11 = new javax.swing.JLabel();
         labelId = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
+        painelInformacoes = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         labelDataCriacao = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -164,12 +203,12 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/mais.png"))); // NOI18N
-        jLabel2.setText("Novo cadastro");
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnPricipal.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        btnPricipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/mais.png"))); // NOI18N
+        btnPricipal.setText("Novo cadastro");
+        btnPricipal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel2MouseClicked(evt);
+                btnPricipalMouseClicked(evt);
             }
         });
 
@@ -200,11 +239,8 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         checkBoxInativar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         checkBoxInativar.setText("Inativar cadastro");
 
-        jLabel11.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel11.setText("ID:");
-
         labelId.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        labelId.setText("00");
+        labelId.setText("ID");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -212,30 +248,28 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
                         .addComponent(LabelDescricao)
                         .addGap(18, 18, 18)
-                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(20, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(21, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(labelPreco)
                         .addGap(18, 18, 18)
                         .addComponent(txtPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel5)
                         .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addGap(23, 23, 23)
                         .addComponent(comboBoxUnidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(checkBoxServico)
-                        .addGap(38, 38, 38))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(40, 40, 40))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(checkBoxInativar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(labelId)
-                        .addGap(29, 29, 29))))
+                        .addGap(67, 67, 67))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,15 +285,14 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                     .addComponent(comboBoxUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(checkBoxServico)
                     .addComponent(txtPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(checkBoxInativar)
-                    .addComponent(jLabel11)
                     .addComponent(labelId))
                 .addGap(15, 15, 15))
         );
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informações do cadastro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
+        painelInformacoes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informações do cadastro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
         jLabel3.setText("Data de cadastro: ");
 
@@ -273,11 +306,11 @@ public class CadastroProdutosView extends javax.swing.JFrame {
 
         labelNomeUsuario.setText("Nome do usuário");
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
+        javax.swing.GroupLayout painelInformacoesLayout = new javax.swing.GroupLayout(painelInformacoes);
+        painelInformacoes.setLayout(painelInformacoesLayout);
+        painelInformacoesLayout.setHorizontalGroup(
+            painelInformacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelInformacoesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -292,17 +325,17 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addComponent(labelNomeUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
+        painelInformacoesLayout.setVerticalGroup(
+            painelInformacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelInformacoesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(painelInformacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelInformacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelDataModificacao)
                         .addComponent(jLabel7)
                         .addComponent(jLabel9)
                         .addComponent(labelNomeUsuario))
-                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(painelInformacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
                         .addComponent(labelDataCriacao)))
                 .addContainerGap(12, Short.MAX_VALUE))
@@ -316,23 +349,25 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(13, Short.MAX_VALUE))
+                    .addComponent(painelInformacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(painelInformacoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -416,9 +451,9 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(66, 66, 66)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jTabbedPane1)
+                .addComponent(btnPricipal)
+                .addContainerGap(46, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,7 +463,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(btnPricipal)
                         .addGap(8, 8, 8)))
                 .addGap(16, 16, 16))
         );
@@ -437,10 +472,10 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+    private void btnPricipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPricipalMouseClicked
         // TODO add your handling code here:
         cadastrarProduto();
-    }//GEN-LAST:event_jLabel2MouseClicked
+    }//GEN-LAST:event_btnPricipalMouseClicked
 
     /**
      * @param args the command line arguments
@@ -482,14 +517,13 @@ public class CadastroProdutosView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LabelDescricao;
+    private javax.swing.JLabel btnPricipal;
     private javax.swing.JCheckBox checkBoxHabilitaEstoque;
     private javax.swing.JCheckBox checkBoxHabilitaProducao;
     private javax.swing.JCheckBox checkBoxInativar;
     private javax.swing.JCheckBox checkBoxServico;
     private javax.swing.JComboBox<String> comboBoxUnidade;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -502,7 +536,6 @@ public class CadastroProdutosView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel labelDataCriacao;
@@ -510,6 +543,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
     private javax.swing.JLabel labelId;
     private javax.swing.JLabel labelNomeUsuario;
     private javax.swing.JLabel labelPreco;
+    private javax.swing.JPanel painelInformacoes;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JFormattedTextField txtPreco;
     // End of variables declaration//GEN-END:variables

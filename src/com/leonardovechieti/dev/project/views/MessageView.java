@@ -13,6 +13,8 @@ import java.awt.Toolkit;
  */
 public class MessageView extends javax.swing.JFrame {
 
+    public boolean confirm;
+
     /**
      * Creates new form MessageView
      */
@@ -20,10 +22,15 @@ public class MessageView extends javax.swing.JFrame {
         initComponents();
     }
 
+    public boolean confirm(){
+        return confirm;
+    }
+
     public MessageView(String title, String message, String type) {
         initComponents();
         this.title.setText(title);
         this.message.setText(message);
+        btnSim.setVisible(false);
         switch (type) {
             case "error":
                 icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/error.png")));
@@ -41,6 +48,13 @@ public class MessageView extends javax.swing.JFrame {
                 icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
                 setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
                 break;
+                case "confirm":
+                    icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/info.png")));
+                    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/info.png")));
+                    btnOk.setText("Não");
+                    btnSim.setVisible(true);
+                    break;
+
             default:
                 icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
                 setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
@@ -64,6 +78,7 @@ public class MessageView extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         message = new javax.swing.JTextPane();
         btnOk = new javax.swing.JButton();
+        btnSim = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Aviso");
@@ -89,6 +104,15 @@ public class MessageView extends javax.swing.JFrame {
             }
         });
 
+        btnSim.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnSim.setText("Sim");
+        btnSim.setBorderPainted(false);
+        btnSim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -96,7 +120,10 @@ public class MessageView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnSim, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(title)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -110,7 +137,9 @@ public class MessageView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSim, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -143,6 +172,12 @@ public class MessageView extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btnOkActionPerformed
+
+    private void btnSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimActionPerformed
+        // TODO add your handling code here:
+        confirm = true;
+        dispose();
+    }//GEN-LAST:event_btnSimActionPerformed
 
     /**
      * @param args the command line arguments
@@ -181,6 +216,7 @@ public class MessageView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOk;
+    private javax.swing.JButton btnSim;
     private javax.swing.JLabel icon;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;

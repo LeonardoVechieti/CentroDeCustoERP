@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.proteanit.sql.DbUtils;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.swing.*;
 
 /**
  *
@@ -37,14 +40,36 @@ public class ListProdutosView extends javax.swing.JFrame {
     private void initialize(){
         initComponents();
         setIcon();
-        btnAlterar.setEnabled(false);
-        btnDelete.setEnabled(false);
+        FormataTabela();
+        FormataBotoes();
+        //Inicia pesquisando os produtos
+        try {
+            PesquisarProdutos();
+        } catch (SQLException ex) {
+            Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void PesquisarProdutos() throws SQLException{
         ProdutoRepository produtoRepository = new ProdutoRepository();
         rs = (ResultSet) produtoRepository.pesquisar(textPesquisar.getText());
         tabelaProdutos.setModel(DbUtils.resultSetToTableModel(rs));
+
+        //Seta o tamanho das colunas
+        tabelaProdutos.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tabelaProdutos.getColumnModel().getColumn(1).setPreferredWidth(230);
+        tabelaProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tabelaProdutos.getColumnModel().getColumn(3).setPreferredWidth(80);
+
+        //Reseta o id do produto selecionado
+        id=null;
+
+        //Desabilita os botões de alterar e excluir
+        btnAlterar.setEnabled(false);
+        btnDeletar.setEnabled(false);
+
+        //Fecha a conexão
+        produtoRepository.fecharConexao();
 
     }
     
@@ -63,18 +88,66 @@ public class ListProdutosView extends javax.swing.JFrame {
             MessageView message = new MessageView("Alerta!", "Selecione um produto para excluir", "alert");
         }
         if (idDelete != null) {
-            MessageView message = new MessageView("Alerta!", "Deseja realmente excluir o produto?", "confirm");
-            if (message.confirm == true) {
+
+            int confirma = JOptionPane.showConfirmDialog(tabelaProdutos, "Deseja realmente excluir? ","Atenção!",JOptionPane.YES_NO_OPTION);
+            if (confirma == JOptionPane.YES_OPTION) {
                 ProdutoRepository produtoRepository = new ProdutoRepository();
-                produtoRepository.excluir(idDelete);
-                MessageView message2 = new MessageView("Sucesso!", "Produto excluido com sucesso", "success");
+                String resposta = produtoRepository.excluir(idDelete);
+                if (resposta == "DELETE") {
+                    MessageView message = new MessageView("Sucesso!", "Produto excluído com sucesso!", "success");
+                    try {
+                        PesquisarProdutos();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
-
     }
 
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
+    }
+
+    private void FormataTabela(){
+
+        //Seta o tamanho das linhas
+        tabelaProdutos.setRowHeight(25);
+
+        //Seta o tamanho da fonte
+        tabelaProdutos.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        //Seta o tamanho da fonte do cabeçalho
+        tabelaProdutos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+
+        //Seta a cor da linha quando selecionada
+        tabelaProdutos.setSelectionBackground(new Color(152, 156, 157));
+
+        //Seta a cor da fonte quando selecionada
+        tabelaProdutos.setSelectionForeground(Color.black);
+
+        //Bloqueia a edição da tabela
+        tabelaProdutos.setDefaultEditor(Object.class, null);
+    }
+
+    private void FormataBotoes(){
+        btnAlterar.setEnabled(false);
+        btnDeletar.setEnabled(false);
+
+        btnNovoCadastro.setBorderPainted(false);
+        btnNovoCadastro.setFocusPainted(false);
+        btnNovoCadastro.setContentAreaFilled(false);
+        btnNovoCadastro.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnAlterar.setBorderPainted(false);
+        btnAlterar.setFocusPainted(false);
+        btnAlterar.setContentAreaFilled(false);
+        btnAlterar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnDeletar.setBorderPainted(false);
+        btnDeletar.setFocusPainted(false);
+        btnDeletar.setContentAreaFilled(false);
+        btnDeletar.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void PegaId(){
@@ -94,13 +167,12 @@ public class ListProdutosView extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         textPesquisar = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        btnAlterar = new javax.swing.JButton();
+        btnDeletar = new javax.swing.JButton();
         btnPesquisar = new javax.swing.JLabel();
-        btnDelete = new javax.swing.JLabel();
-        btnAlterar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaProdutos = new javax.swing.JTable();
-        btnNovoCadastro = new javax.swing.JLabel();
+        btnNovoCadastro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Listar Produtos");
@@ -108,42 +180,37 @@ public class ListProdutosView extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        textPesquisar.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         textPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 textPesquisarKeyReleased(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText("Pesquisar:");
+        btnAlterar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/update1.png"))); // NOI18N
+        btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
+        btnDeletar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnDeletar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/delete1.png"))); // NOI18N
+        btnDeletar.setText("Deletar");
+        btnDeletar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarActionPerformed(evt);
+            }
+        });
+
+        btnPesquisar.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/search-file.png"))); // NOI18N
+        btnPesquisar.setText("Pesquisar:");
         btnPesquisar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnPesquisarMouseClicked(evt);
-            }
-        });
-
-        btnDelete.setBackground(new java.awt.Color(204, 204, 204));
-        btnDelete.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/delete1.png"))); // NOI18N
-        btnDelete.setText("Delete");
-        btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDeleteMouseClicked(evt);
-            }
-        });
-
-        btnAlterar.setBackground(new java.awt.Color(204, 204, 204));
-        btnAlterar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/update1.png"))); // NOI18N
-        btnAlterar.setText("Alterar");
-        btnAlterar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAlterarMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAlterarMouseEntered(evt);
             }
         });
 
@@ -152,29 +219,26 @@ public class ListProdutosView extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addContainerGap()
                 .addComponent(btnPesquisar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAlterar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDelete)
+                .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDeletar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnAlterar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnDeletar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         tabelaProdutos.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
@@ -208,12 +272,13 @@ public class ListProdutosView extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaProdutos);
 
-        btnNovoCadastro.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        btnNovoCadastro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/mais.png"))); // NOI18N
-        btnNovoCadastro.setText("Novo cadastro");
-        btnNovoCadastro.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnNovoCadastroMouseClicked(evt);
+        btnNovoCadastro.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnNovoCadastro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png"))); // NOI18N
+        btnNovoCadastro.setText("Novo Cadastro");
+        btnNovoCadastro.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnNovoCadastro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoCadastroActionPerformed(evt);
             }
         });
 
@@ -223,14 +288,14 @@ public class ListProdutosView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 588, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnNovoCadastro)
-                .addGap(41, 41, 41))
+                .addComponent(btnNovoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,20 +304,14 @@ public class ListProdutosView extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addComponent(btnNovoCadastro)
-                .addGap(32, 32, 32))
+                .addGap(18, 18, 18)
+                .addComponent(btnNovoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(615, 463));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnNovoCadastroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNovoCadastroMouseClicked
-        // TODO add your handling code here:
-        CadastroProdutosView cadastroProdutos = new CadastroProdutosView();
-        cadastroProdutos.setVisible(true);
-    }//GEN-LAST:event_btnNovoCadastroMouseClicked
 
     private void textPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textPesquisarKeyReleased
         try {
@@ -262,12 +321,6 @@ public class ListProdutosView extends javax.swing.JFrame {
             Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_textPesquisarKeyReleased
-
-    private void btnAlterarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlterarMouseEntered
-        // TODO add your handling code here:
-        //btnAlterar.setFont(new java.awt.Font("Arial", 0, 16));
-        //btnAlterar.setFont(new java.awt.Font("Arial", 0, 14));
-    }//GEN-LAST:event_btnAlterarMouseEntered
 
     private void btnPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarMouseClicked
         try {
@@ -286,23 +339,30 @@ public class ListProdutosView extends javax.swing.JFrame {
             AbreCadastro();
         } if (evt.getClickCount() == 1) {
             btnAlterar.setEnabled(true);
-            btnDelete.setEnabled(true);
+            btnDeletar.setEnabled(true);
             PegaId();
         }
 
 
     }//GEN-LAST:event_tabelaProdutosMouseClicked
 
-    private void btnAlterarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlterarMouseClicked
+    private void btnNovoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoCadastroActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnAlterarMouseClicked
+        CadastroProdutosView cadastroProdutos = new CadastroProdutosView();
+        cadastroProdutos.setVisible(true);
+    }//GEN-LAST:event_btnNovoCadastroActionPerformed
 
-    private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseClicked
+    private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
         // TODO add your handling code here:
         PegaId();
         Deletar(id);
-    }//GEN-LAST:event_btnDeleteMouseClicked
+    }//GEN-LAST:event_btnDeletarActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        // TODO add your handling code here:
+        PegaId();
+        AbreCadastro();
+    }//GEN-LAST:event_btnAlterarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -340,11 +400,10 @@ public class ListProdutosView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel btnAlterar;
-    private javax.swing.JLabel btnDelete;
-    private javax.swing.JLabel btnNovoCadastro;
+    private javax.swing.JButton btnAlterar;
+    private javax.swing.JButton btnDeletar;
+    private javax.swing.JButton btnNovoCadastro;
     private javax.swing.JLabel btnPesquisar;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabelaProdutos;

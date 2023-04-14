@@ -3,9 +3,9 @@ package com.leonardovechieti.dev.project.model;
 public class Produto {
     private int id;
     private String descricao;
-    private double preco;
+    private String preco;
     private String unidade;
-    private Boolean ativo;
+    private Boolean inativo;
     private Boolean servico;
     private Boolean estoque;
     private Boolean producao;
@@ -13,12 +13,12 @@ public class Produto {
     private String dataModificacao;
     private int usuario;
 
-    public Produto(int id, String descricao, double preco, String unidade, Boolean ativo, Boolean servico, Boolean estoque, Boolean producao, String dataModificacao, int usuario) {
+    public Produto(int id, String descricao, String preco, String unidade, Boolean inativo, Boolean servico, Boolean estoque, Boolean producao, String dataModificacao, int usuario) {
         this.id = id;
         this.descricao = descricao;
         this.preco = preco;
         this.unidade = unidade;
-        this.ativo = ativo;
+        this.inativo = inativo;
         this.servico = servico;
         this.estoque = estoque;
         this.producao = producao;
@@ -50,7 +50,7 @@ public class Produto {
         return String.valueOf(preco);
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(String preco) {
         this.preco = preco;
     }
 
@@ -62,12 +62,12 @@ public class Produto {
         this.unidade = unidade;
     }
 
-    public Boolean getAtivo() {
-        return ativo;
+    public Boolean getInativo() {
+        return inativo;
     }
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
+    public void setInativo(Boolean inativo) {
+        this.inativo = inativo;
     }
 
     public Boolean getServico() {

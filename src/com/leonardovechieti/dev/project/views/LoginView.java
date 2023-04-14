@@ -28,6 +28,7 @@ public class LoginView extends javax.swing.JFrame {
         Connection conexao = ModuloConexao.conector();
         if (conexao != null){
             status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png")));
+            autoLogin();
         }else{
             status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dberror.png")));
             MessageView messageView = new MessageView("Erro!", "Não foi possível conectar ao banco de dados!", "error");
@@ -37,6 +38,12 @@ public class LoginView extends javax.swing.JFrame {
     
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));       
+    }
+
+    private void autoLogin(){
+        txtUsuario.setText("leonardo");
+        txtSenha.setText("1234");
+        logar();
     }
     
     public void logar(){
@@ -75,7 +82,7 @@ public class LoginView extends javax.swing.JFrame {
         setTitle("Login");
         setResizable(false);
 
-        btnLogin.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnLogin.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/entrar1.png"))); // NOI18N
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -84,13 +91,13 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        labelUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         labelUsuario.setText("Usuário");
 
-        labelSenha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelSenha.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         labelSenha.setText("Senha");
 
-        txtUsuario.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        txtUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtUsuarioKeyPressed(evt);
@@ -110,6 +117,11 @@ public class LoginView extends javax.swing.JFrame {
         });
 
         status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png"))); // NOI18N
+        status.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                statusMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,7 +145,7 @@ public class LoginView extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(status)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                         .addComponent(btnLogin)))
                 .addGap(55, 55, 55))
         );
@@ -185,6 +197,12 @@ public class LoginView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtSenhaKeyPressed
 
+    private void statusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statusMouseClicked
+        // TODO add your handling code here:
+        ConfigDaoView config = new ConfigDaoView();
+        config.setVisible(true);
+    }//GEN-LAST:event_statusMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -196,7 +214,7 @@ public class LoginView extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

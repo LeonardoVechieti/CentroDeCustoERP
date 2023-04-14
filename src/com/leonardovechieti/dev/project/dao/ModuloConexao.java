@@ -15,6 +15,7 @@ public class ModuloConexao {
     public static Connection conector() {
         
          ConfigDao config = new ConfigDao();
+         System.out.println("Conexao aberta!");
         try {
             config.lerarquivo();
         } catch (IOException ex) {
@@ -24,7 +25,7 @@ public class ModuloConexao {
         Connection conexao = null;
         String driver = "com.mysql.cj.jdbc.Driver";
         String url= config.getUrl();
-        System.out.println("Nome = "+url);
+        //System.out.println("Nome = "+url);
         String user=config.getUser();
         String password=config.getPassword();
 

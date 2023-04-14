@@ -1,4 +1,4 @@
-package com.leonardovechieti.dev.project.message;
+package com.leonardovechieti.dev.project.util;
 
 import com.leonardovechieti.dev.project.views.MessageView;
 

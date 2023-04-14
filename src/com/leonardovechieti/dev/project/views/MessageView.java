@@ -13,7 +13,8 @@ import java.awt.Toolkit;
  */
 public class MessageView extends javax.swing.JFrame {
 
-    public boolean confirm;
+    public boolean confirm= false;
+    public boolean cancel= false;
 
     /**
      * Creates new form MessageView
@@ -22,13 +23,18 @@ public class MessageView extends javax.swing.JFrame {
         initComponents();
     }
 
+
     public boolean confirm(){
         return confirm;
+    }
+    public boolean cancel(){
+        return cancel;
     }
 
     public MessageView(String title, String message, String type) {
         initComponents();
         this.title.setText(title);
+        setTitle(title);
         this.message.setText(message);
         btnSim.setVisible(false);
         switch (type) {
@@ -49,8 +55,8 @@ public class MessageView extends javax.swing.JFrame {
                 setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/success.png")));
                 break;
                 case "confirm":
-                    icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/info.png")));
-                    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/info.png")));
+                    icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/alert.png")));
+                    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/alert.png")));
                     btnOk.setText("Não");
                     btnSim.setVisible(true);
                     break;
@@ -170,6 +176,7 @@ public class MessageView extends javax.swing.JFrame {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         // TODO add your handling code here:
+        cancel = true;
         dispose();
     }//GEN-LAST:event_btnOkActionPerformed
 

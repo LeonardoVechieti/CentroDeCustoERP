@@ -11,7 +11,7 @@ public class Func {
 
     public static String formatarString(String texto) {
         String textoFormatado = texto.toLowerCase();
-        textoFormatado = textoFormatado.replace(" ", "_");
+        textoFormatado = textoFormatado.replace("  ", " ");
         textoFormatado = textoFormatado.replace("ã", "a");
         textoFormatado = textoFormatado.replace("á", "a");
         textoFormatado = textoFormatado.replace("à", "a");

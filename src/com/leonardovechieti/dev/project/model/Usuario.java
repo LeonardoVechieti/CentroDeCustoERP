@@ -5,15 +5,15 @@ public class Usuario {
     private String nome;
     private String login;
     private String senha;
-    private Boolean ativo;
+    private Boolean inativo;
     private String perfil;
 
-    public Usuario(int id, String nome, String login, String senha, Boolean ativo, String perfil) {
+    public Usuario(int id, String nome, String login, String senha, Boolean inativo, String perfil) {
         this.id = id;
         this.nome = nome;
         this.login = login;
         this.senha = senha;
-        this.ativo = ativo;
+        this.inativo = inativo;
         this.perfil = perfil;
     }
 
@@ -49,12 +49,12 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public Boolean getAtivo() {
-        return ativo;
+    public Boolean getInativo() {
+        return inativo;
     }
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
+    public void setInativo(Boolean inativo) {
+        this.inativo = inativo;
     }
 
     public String getPerfil() {

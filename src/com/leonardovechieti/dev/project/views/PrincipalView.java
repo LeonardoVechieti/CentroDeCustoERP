@@ -105,6 +105,8 @@ public class PrincipalView extends javax.swing.JFrame {
         menuListarProdutos = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
+        menuCadastrarUsuarios = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
 
@@ -225,6 +227,21 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenu4.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuBarraPrincipal.add(jMenu4);
 
+        jMenu7.setText("Sistema");
+        jMenu7.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        menuCadastrarUsuarios.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/pastapessoaamarela.png"))); // NOI18N
+        menuCadastrarUsuarios.setText("Usuários");
+        menuCadastrarUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarUsuariosActionPerformed(evt);
+            }
+        });
+        jMenu7.add(menuCadastrarUsuarios);
+
+        menuBarraPrincipal.add(jMenu7);
+
         setJMenuBar(menuBarraPrincipal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -269,6 +286,12 @@ public class PrincipalView extends javax.swing.JFrame {
         ListProdutosView listar = new ListProdutosView();
         listar.setVisible(true);
     }//GEN-LAST:event_barraListarProdutosActionPerformed
+
+    private void menuCadastrarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarUsuariosActionPerformed
+        // TODO add your handling code here:
+        CadastroUsuariosView cadastro = new CadastroUsuariosView();
+        cadastro.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarUsuariosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -316,6 +339,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JToolBar.Separator jSeparator11;
@@ -334,6 +358,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JLabel lblData1;
     private javax.swing.JMenuBar menuBarraPrincipal;
     private javax.swing.JMenuItem menuCadastrarProdutos;
+    private javax.swing.JMenuItem menuCadastrarUsuarios;
     private javax.swing.JMenuItem menuListarProdutos;
     // End of variables declaration//GEN-END:variables
 }

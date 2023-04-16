@@ -26,5 +26,12 @@ public class Func {
         textoFormatado = textoFormatado.replace("ç", "c");
         return textoFormatado;
     }
+
+    public static String removeEspaco(String texto) {
+        String textoFormatado = texto.replace(" ", "_");
+        textoFormatado = textoFormatado.replace("  ", "_");
+        textoFormatado = textoFormatado.replace("   ", "_");
+        return textoFormatado;
+    }
 }
 

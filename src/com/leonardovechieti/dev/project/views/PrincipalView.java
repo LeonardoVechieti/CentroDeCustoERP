@@ -103,6 +103,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenu6 = new javax.swing.JMenu();
         menuCadastrarProdutos = new javax.swing.JMenuItem();
         menuListarProdutos = new javax.swing.JMenuItem();
+        menuCadastrarCentroDeCusto = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
@@ -217,6 +218,16 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMenu5.add(jMenu6);
 
+        menuCadastrarCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarCentroDeCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
+        menuCadastrarCentroDeCusto.setText("Centro de Custo");
+        menuCadastrarCentroDeCusto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarCentroDeCustoActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuCadastrarCentroDeCusto);
+
         menuBarraPrincipal.add(jMenu5);
 
         jMenu2.setText("Movimentações");
@@ -293,6 +304,12 @@ public class PrincipalView extends javax.swing.JFrame {
         cadastro.setVisible(true);
     }//GEN-LAST:event_menuCadastrarUsuariosActionPerformed
 
+    private void menuCadastrarCentroDeCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarCentroDeCustoActionPerformed
+        // TODO add your handling code here:
+        CadastroCentroDeCusto centroDeCusto = new CadastroCentroDeCusto();
+        centroDeCusto.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarCentroDeCustoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -357,6 +374,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JLabel labelVersao;
     private javax.swing.JLabel lblData1;
     private javax.swing.JMenuBar menuBarraPrincipal;
+    private javax.swing.JMenuItem menuCadastrarCentroDeCusto;
     private javax.swing.JMenuItem menuCadastrarProdutos;
     private javax.swing.JMenuItem menuCadastrarUsuarios;
     private javax.swing.JMenuItem menuListarProdutos;

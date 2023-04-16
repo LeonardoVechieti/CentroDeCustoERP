@@ -26,14 +26,12 @@ public class LoginView extends javax.swing.JFrame {
         initComponents();
         setIcon();
         Connection conexao = ModuloConexao.conector();
-        //System.out.println(conexao); 
         if (conexao != null){
-            labelStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png")));
-            //lblStatus.setText("Conectado");
-            
+            status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png")));
+            autoLogin();
         }else{
-            labelStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dberror.png")));
-            //lblStatus.setText("Não Conectado");
+            status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dberror.png")));
+            MessageView messageView = new MessageView("Erro!", "Não foi possível conectar ao banco de dados!", "error");
         }
 
     }
@@ -41,23 +39,25 @@ public class LoginView extends javax.swing.JFrame {
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));       
     }
+
+    private void autoLogin(){
+        txtUsuario.setText("leonardo");
+        txtSenha.setText("1234");
+        logar();
+    }
     
     public void logar(){
             UsuarioRepository usuarioRepository = new UsuarioRepository();
             String senha = new String(txtSenha.getPassword());
             Usuario usuario = usuarioRepository.login(txtUsuario.getText(),senha );
             if (usuario != null){
-                JOptionPane.showMessageDialog(null, "Bem vindo " + usuario.getNome());
-                //Abre a tela principal
-                PrincipalView principal = new PrincipalView();
-                principal.setVisible(true);
-                principal.setUsuario(usuario);
+                //Abre a tela principal passando o usuário
+                PrincipalView principal = new PrincipalView(usuario);
                 //Fecha a tela de login
                 this.dispose();
             } else {
                 usuario=null;
-                //JOptionPane.showMessageDialog(null, "Usuario ou senha inválidos! ");
-                MessageView messageView = new MessageView("Erro", "Usuário ou senha inválidos!", "error");
+                MessageView messageView = new MessageView("Aviso!", "Usuário ou senha inválidos!", "alert");
             }
         }
 
@@ -76,11 +76,14 @@ public class LoginView extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         txtSenha = new javax.swing.JPasswordField();
         labelStatus = new javax.swing.JLabel();
+        status = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setResizable(false);
 
+        btnLogin.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/entrar1.png"))); // NOI18N
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,13 +91,35 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
+        labelUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         labelUsuario.setText("Usuário");
 
+        labelSenha.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         labelSenha.setText("Senha");
 
+        txtUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyPressed(evt);
+            }
+        });
+
+        txtSenha.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         txtSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSenhaActionPerformed(evt);
+            }
+        });
+        txtSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSenhaKeyPressed(evt);
+            }
+        });
+
+        status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png"))); // NOI18N
+        status.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                statusMouseClicked(evt);
             }
         });
 
@@ -102,44 +127,49 @@ public class LoginView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(labelStatus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
             .addGroup(layout.createSequentialGroup()
-                .addGap(75, 75, 75)
+                .addGap(177, 177, 177)
+                .addComponent(labelStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelSenha)
-                    .addComponent(labelUsuario))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtUsuario)
-                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelSenha)
+                            .addComponent(labelUsuario))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtUsuario)
+                            .addComponent(txtSenha)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(status)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addComponent(btnLogin)))
+                .addGap(55, 55, 55))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(labelStatus)
-                .addContainerGap(35, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelUsuario)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelSenha)
                     .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(btnLogin)
-                .addGap(24, 24, 24))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelStatus)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLogin)
+                    .addComponent(status))
+                .addGap(65, 65, 65))
         );
 
-        setSize(new java.awt.Dimension(322, 224));
+        setSize(new java.awt.Dimension(316, 193));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -152,6 +182,27 @@ public class LoginView extends javax.swing.JFrame {
         logar();
     }//GEN-LAST:event_btnLoginActionPerformed
 
+    private void txtUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            txtSenha.requestFocus();
+        }
+    }//GEN-LAST:event_txtUsuarioKeyPressed
+
+    private void txtSenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSenhaKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            btnLogin.requestFocus();
+            logar();
+        }
+    }//GEN-LAST:event_txtSenhaKeyPressed
+
+    private void statusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statusMouseClicked
+        // TODO add your handling code here:
+        ConfigDaoView config = new ConfigDaoView();
+        config.setVisible(true);
+    }//GEN-LAST:event_statusMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -163,7 +214,7 @@ public class LoginView extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -192,6 +243,7 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JLabel labelSenha;
     private javax.swing.JLabel labelStatus;
     private javax.swing.JLabel labelUsuario;
+    private javax.swing.JLabel status;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

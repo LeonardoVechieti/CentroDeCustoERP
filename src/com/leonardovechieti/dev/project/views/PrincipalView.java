@@ -7,6 +7,9 @@ package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.Usuario;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  *
  * @author Leonardo
@@ -22,6 +25,36 @@ public class PrincipalView extends javax.swing.JFrame {
         initComponents();
         //Seta os dados do usuario logado
 
+        //Formata menu
+        //menuBarraPrincipal.setBackground(Color.decode("#2E2E2E"));
+        //menuBarraPrincipal.setForeground(Color.decode("#FFFFFF"));
+//        menuBarraPrincipal.setBorderPainted(false);
+//        menuBarraPrincipal.setFocusable(false);
+//        menuBarraPrincipal.setOpaque(true);
+//        menuBarraPrincipal.setRequestFocusEnabled(false);
+//        //menuBarraPrincipal.setRolloverEnabled(false);
+//        menuBarraPrincipal.setVerifyInputWhenFocusTarget(false);
+//        menuBarraPrincipal.setVisible(true);
+//        menuBarraPrincipal.setBorder(null);
+
+        //Seta uma margem para o menu
+        menuBarraPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+
+
+
+
+
+    }
+    public PrincipalView(Usuario usuario) {
+        initComponents();
+        //Seta icon da janela
+        setIcon();
+        //Seta os dados do usuario logado
+        setUsuario(usuario);
+        this.setVisible(true);
+    }
+    private void setIcon(){
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
     }
     
     public void setUsuario(Usuario usuario){
@@ -30,7 +63,7 @@ public class PrincipalView extends javax.swing.JFrame {
             labelNomeUsuario.setText(usuario.getNome());
             labelIdUsuario.setText(String.valueOf(usuario.getId()));
             //Seta data atual formatada
-            labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date(System.currentTimeMillis())));
+            labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(System.currentTimeMillis())));
         }
     }
 
@@ -45,6 +78,10 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMenu3 = new javax.swing.JMenu();
         jToolBar1 = new javax.swing.JToolBar();
+        barraCadastrarProdutos = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        barraListarProdutos = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         jToolBar3 = new javax.swing.JToolBar();
         jSeparator9 = new javax.swing.JToolBar.Separator();
         labelVersao = new javax.swing.JLabel();
@@ -61,10 +98,16 @@ public class PrincipalView extends javax.swing.JFrame {
         lblData1 = new javax.swing.JLabel();
         labelDateTime = new javax.swing.JLabel();
         jSeparator13 = new javax.swing.JToolBar.Separator();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        menuBarraPrincipal = new javax.swing.JMenuBar();
+        jMenu5 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        menuCadastrarProdutos = new javax.swing.JMenuItem();
+        menuListarProdutos = new javax.swing.JMenuItem();
+        menuCadastrarCentroDeCusto = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
+        menuCadastrarUsuarios = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
 
@@ -72,6 +115,31 @@ public class PrincipalView extends javax.swing.JFrame {
         setTitle("Dev - Software");
 
         jToolBar1.setRollover(true);
+
+        barraCadastrarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
+        barraCadastrarProdutos.setToolTipText("");
+        barraCadastrarProdutos.setFocusable(false);
+        barraCadastrarProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraCadastrarProdutos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraCadastrarProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraCadastrarProdutosActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraCadastrarProdutos);
+        jToolBar1.add(jSeparator2);
+
+        barraListarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
+        barraListarProdutos.setFocusable(false);
+        barraListarProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraListarProdutos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraListarProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraListarProdutosActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraListarProdutos);
+        jToolBar1.add(jSeparator1);
 
         jToolBar3.setFloatable(false);
         jToolBar3.setRollover(true);
@@ -119,16 +187,73 @@ public class PrincipalView extends javax.swing.JFrame {
         jToolBar3.add(labelDateTime);
         jToolBar3.add(jSeparator13);
 
-        jMenu1.setText("Cadastro");
-        jMenuBar1.add(jMenu1);
+        menuBarraPrincipal.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        jMenu5.setText("Cadastros");
+        jMenu5.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
+        jMenu6.setText("Produtos e serviços");
+        jMenu6.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        menuCadastrarProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
+        menuCadastrarProdutos.setText("Cadastrar");
+        menuCadastrarProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarProdutosActionPerformed(evt);
+            }
+        });
+        jMenu6.add(menuCadastrarProdutos);
+
+        menuListarProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuListarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
+        menuListarProdutos.setText("Listar");
+        menuListarProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuListarProdutosActionPerformed(evt);
+            }
+        });
+        jMenu6.add(menuListarProdutos);
+
+        jMenu5.add(jMenu6);
+
+        menuCadastrarCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarCentroDeCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
+        menuCadastrarCentroDeCusto.setText("Centro de Custo");
+        menuCadastrarCentroDeCusto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarCentroDeCustoActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuCadastrarCentroDeCusto);
+
+        menuBarraPrincipal.add(jMenu5);
 
         jMenu2.setText("Movimentações");
-        jMenuBar1.add(jMenu2);
+        jMenu2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuBarraPrincipal.add(jMenu2);
 
         jMenu4.setText("Relatórios");
-        jMenuBar1.add(jMenu4);
+        jMenu4.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuBarraPrincipal.add(jMenu4);
 
-        setJMenuBar(jMenuBar1);
+        jMenu7.setText("Sistema");
+        jMenu7.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        menuCadastrarUsuarios.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/pastapessoaamarela.png"))); // NOI18N
+        menuCadastrarUsuarios.setText("Usuários");
+        menuCadastrarUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarUsuariosActionPerformed(evt);
+            }
+        });
+        jMenu7.add(menuCadastrarUsuarios);
+
+        menuBarraPrincipal.add(jMenu7);
+
+        setJMenuBar(menuBarraPrincipal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -140,14 +265,50 @@ public class PrincipalView extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 534, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 518, Short.MAX_VALUE)
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void barraCadastrarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraCadastrarProdutosActionPerformed
+        // TODO add your handling code here:
+        CadastroProdutosView cadastro = new CadastroProdutosView();
+        cadastro.setVisible(true);
+    }//GEN-LAST:event_barraCadastrarProdutosActionPerformed
+
+    private void menuCadastrarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutosActionPerformed
+        // TODO add your handling code here:
+        CadastroProdutosView cadastro = new CadastroProdutosView();
+        cadastro.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarProdutosActionPerformed
+
+    private void menuListarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuListarProdutosActionPerformed
+        // TODO add your handling code here:
+        ListProdutosView listar = new ListProdutosView();
+        listar.setVisible(true);
+    }//GEN-LAST:event_menuListarProdutosActionPerformed
+
+    private void barraListarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraListarProdutosActionPerformed
+        // TODO add your handling code here:
+        ListProdutosView listar = new ListProdutosView();
+        listar.setVisible(true);
+    }//GEN-LAST:event_barraListarProdutosActionPerformed
+
+    private void menuCadastrarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarUsuariosActionPerformed
+        // TODO add your handling code here:
+        CadastroUsuariosView cadastro = new CadastroUsuariosView();
+        cadastro.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarUsuariosActionPerformed
+
+    private void menuCadastrarCentroDeCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarCentroDeCustoActionPerformed
+        // TODO add your handling code here:
+        CadastroCentroDeCusto centroDeCusto = new CadastroCentroDeCusto();
+        centroDeCusto.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarCentroDeCustoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -185,18 +346,23 @@ public class PrincipalView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton barraCadastrarProdutos;
+    private javax.swing.JButton barraListarProdutos;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JToolBar.Separator jSeparator11;
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar3;
@@ -207,5 +373,10 @@ public class PrincipalView extends javax.swing.JFrame {
     public static javax.swing.JLabel labelNomeUsuario;
     private javax.swing.JLabel labelVersao;
     private javax.swing.JLabel lblData1;
+    private javax.swing.JMenuBar menuBarraPrincipal;
+    private javax.swing.JMenuItem menuCadastrarCentroDeCusto;
+    private javax.swing.JMenuItem menuCadastrarProdutos;
+    private javax.swing.JMenuItem menuCadastrarUsuarios;
+    private javax.swing.JMenuItem menuListarProdutos;
     // End of variables declaration//GEN-END:variables
 }

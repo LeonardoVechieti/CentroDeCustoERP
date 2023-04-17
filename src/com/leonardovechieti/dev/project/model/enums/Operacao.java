@@ -1,6 +1,6 @@
 package com.leonardovechieti.dev.project.model.enums;
 
-public enum MovimentacaoEstoque {
+public enum Operacao {
     ENTRADA("Entrada"),
     PRODUCAO("Entrada"),
     VENDA("Saida"),
@@ -12,7 +12,7 @@ public enum MovimentacaoEstoque {
 
     private String descricao;
 
-    MovimentacaoEstoque(String descricao) {
+    Operacao(String descricao) {
         this.descricao = descricao;
     }
 

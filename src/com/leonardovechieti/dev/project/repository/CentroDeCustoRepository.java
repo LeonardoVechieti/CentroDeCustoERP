@@ -115,8 +115,23 @@ public class CentroDeCustoRepository {
             System.out.println(e);
         }
         return 0;
-
     }
+    //Retorna todos os nome do centro de custo em uma string
+    public String todosNomes() {
+        String sql = "select nome from centrodecusto";
+        String nomes = "";
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                nomes += rs.getString("nome") + ",";
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return nomes;
+    }
+
 
     public void fecharConexao() throws SQLException {
         conexao.close();

@@ -49,3 +49,67 @@ insert into centrodecusto( nome, descricao, inativo)
 values ('CENTRO DE CUSTO 2', 'CENTRO DE CUSTO 2', false);
 insert into centrodecusto( nome, descricao, inativo)
 values ('CENTRO DE CUSTO 3', 'CENTRO DE CUSTO 3', false);
+
+
+create table movimentacao(
+id int primary key auto_increment,
+idProduto int not null,
+idCentroDeCusto int not null,
+quantidade int,
+valor decimal(10,2),
+data timestamp default current_timestamp,
+operacao varchar(25),
+descricao varchar(200),
+foreign key(idProduto) references produto(id),
+foreign key(idCentroDeCusto) references centrodecusto(id)
+);
+
+create table estoque(
+id int primary key auto_increment,
+idProduto int not null,
+idMoviementacao int not null,
+idCentroDeCusto int not null,
+quantidade int,
+valor decimal(10,2),
+data timestamp default current_timestamp,
+operacao varchar(25),
+descricao varchar(200),
+foreign key(idProduto) references produto(id),
+foreign key(idMoviementacao) references movimentacao(id),
+foreign key(idCentroDeCusto) references centrodecusto(id)
+);
+
+-- Adciona campo valor no estoque
+-- alter table estoque add valor decimal(10,2);
+
+
+
+insert into movimentacao( idProduto, idCentroDeCusto, quantidade, valor, operacao, descricao)
+values (1, 1, 10, 100.10, 'ENTRADA', 'ENTRADA DE PRODUTO');
+
+insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, quantidade, operacao, descricao)
+values (1, 1, 1, 10, 'ENTRADA', 'ENTRADA DE PRODUTO');
+
+insert into movimentacao( idProduto, idCentroDeCusto, quantidade, valor, operacao, descricao)
+values (1, 1, -5, 100.10, 'SAIDA', 'SAIDA DE PRODUTO');
+
+insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, quantidade, operacao, descricao)
+values (1, 2, 1, -5, 'SAIDA', 'SAIDA DE PRODUTO');
+
+insert into movimentacao( idProduto, idCentroDeCusto, quantidade, valor, operacao, descricao)
+values (1, 1, -5, 100.10, 'SAIDA', 'SAIDA DE PRODUTO');
+
+insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, quantidade, operacao, descricao)
+values (1, 3, 1, -5, 'SAIDA', 'SAIDA DE PRODUTO');
+
+insert into movimentacao( idProduto, idCentroDeCusto, quantidade, valor, operacao, descricao)
+values (1, 1, 10, 100.10, 'ENTRADA', 'ENTRADA DE PRODUTO');
+
+insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, quantidade, operacao, descricao)
+values (1, 4, 1, 10, 'ENTRADA', 'ENTRADA DE PRODUTO');
+
+
+
+select * from estoque;
+select * from movimentacao;
+

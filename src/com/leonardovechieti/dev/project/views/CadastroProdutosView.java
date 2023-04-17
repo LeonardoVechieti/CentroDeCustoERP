@@ -195,6 +195,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         checkBoxHabilitaProducao = new javax.swing.JCheckBox();
         btnPrincipal = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de produtos e serviços");
@@ -445,12 +446,21 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Abre Lista de estoque");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(59, 59, 59)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -460,7 +470,9 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane1)
                 .addGap(18, 18, 18)
-                .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addGap(20, 20, 20))
         );
 
@@ -477,6 +489,12 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             cadastrarProduto();
         }
     }//GEN-LAST:event_btnPrincipalActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ControleDeEstoqueView controleEstoque = new ControleDeEstoqueView(this.id);
+        controleEstoque.setVisible(true); 
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -524,6 +542,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBoxInativar;
     private javax.swing.JCheckBox checkBoxServico;
     private javax.swing.JComboBox<String> comboBoxUnidade;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;

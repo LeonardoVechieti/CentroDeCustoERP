@@ -105,6 +105,7 @@ public class PrincipalView extends javax.swing.JFrame {
         menuListarProdutos = new javax.swing.JMenuItem();
         menuCadastrarCentroDeCusto = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        menuCadastrarProdutos1 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
         menuCadastrarUsuarios = new javax.swing.JMenuItem();
@@ -232,6 +233,17 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMenu2.setText("Movimentações");
         jMenu2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        menuCadastrarProdutos1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarProdutos1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/cardVerde1.png"))); // NOI18N
+        menuCadastrarProdutos1.setText("Lançamentos");
+        menuCadastrarProdutos1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarProdutos1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuCadastrarProdutos1);
+
         menuBarraPrincipal.add(jMenu2);
 
         jMenu4.setText("Relatórios");
@@ -310,6 +322,12 @@ public class PrincipalView extends javax.swing.JFrame {
         centroDeCusto.setVisible(true);
     }//GEN-LAST:event_menuCadastrarCentroDeCustoActionPerformed
 
+    private void menuCadastrarProdutos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos1ActionPerformed
+        // TODO add your handling code here:
+        LancamentoMovimentacaoView lancamento = new LancamentoMovimentacaoView();
+        lancamento.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarProdutos1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -376,6 +394,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuBar menuBarraPrincipal;
     private javax.swing.JMenuItem menuCadastrarCentroDeCusto;
     private javax.swing.JMenuItem menuCadastrarProdutos;
+    private javax.swing.JMenuItem menuCadastrarProdutos1;
     private javax.swing.JMenuItem menuCadastrarUsuarios;
     private javax.swing.JMenuItem menuListarProdutos;
     // End of variables declaration//GEN-END:variables

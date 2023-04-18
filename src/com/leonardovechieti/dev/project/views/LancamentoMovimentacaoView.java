@@ -35,22 +35,18 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     private String id = null;
     private String idProduto = null;
     ResultSet rs = null;
-    //Cria um lista de Estoque
     private java.util.List<Estoque> listaEstoque = new java.util.ArrayList<Estoque>();
-
-
 
     public LancamentoMovimentacaoView() {
         initialize();
-        buscaLancamentos();
+        listaLancamentos();
     }
 
     public LancamentoMovimentacaoView(String id) {
         Produto produto = new Produto();
         produto.setId(Integer.parseInt(id));
         initialize();
-        buscaLancamentosPorProduto(produto);
-        buscaTotalDoEstoque(produto);
+
     }
 
     private void buscaTotalDoEstoque(Produto produto) {
@@ -64,8 +60,19 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         formataBotoes();
         formataTabela();
         setSelectBox();
-        
+        tabelaEstoque.setEnabled(false);
+        tabelaProdutos.setEnabled(false);
+        btnCancelarLancamento.setEnabled(false);
+        btnLancarProduto.setEnabled(false);
+        painelProdutos.setEnabled(false);
         btnLancarProduto.setVisible(false);
+        //Campos desabilitados
+        labelDescricao.setVisible(false);
+        txtDescricaoMovimentacao.setVisible(false);
+        labelValorTotalMovimentacao.setVisible(false);
+        txtValorTotalMovimentacao.setVisible(false);
+
+
         EstoqueRepository estoqueRepository = new EstoqueRepository();
     }
 
@@ -99,13 +106,31 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         tabelaEstoque.setModel(DbUtils.resultSetToTableModel(rs));
     }
 
+    private void listaLancamentos() {
+        //Reseta a tabela
+
+        //Passa os valores do array para a tabela
+        DefaultTableModel model = (DefaultTableModel) tabelaEstoque.getModel();
+        model.setRowCount(0);
+        for (Estoque estoque : listaEstoque) {
+            model.addRow(new Object[]{estoque.getIdProduto(),estoque.getNomeProduto(), estoque.getQuantidade(), estoque.getValor()});
+        }
+        adicionaBotaoDeletar();
+        //Define o tamanho das colunas
+        tabelaEstoque.getColumnModel().getColumn(0).setPreferredWidth(60);
+        tabelaEstoque.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tabelaEstoque.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tabelaEstoque.getColumnModel().getColumn(3).setPreferredWidth(60);
+
+    }
+
     private void adicionaBotaoDeletar(){
         //Adiciona mais uma coluna na tabela
         DefaultTableModel model = (DefaultTableModel) tabelaEstoque.getModel();
-        model.addColumn("");
+        //model.addColumn("");
         //Seta o valor de deletar para cada linha
         for (int i = 0; i < tabelaEstoque.getRowCount(); i++) {
-            model.setValueAt("Deletar", i, 4);
+            model.setValueAt("Cancelar", i, 4);
         }
 
         TableColumn buttonColumn = tabelaEstoque.getColumnModel().getColumn(4);
@@ -123,11 +148,25 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         // Adiciona um ouvinte de eventos de clique ao botão deletar
         tabelaEstoque.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
+                int idProduto = Integer.parseInt(tabelaEstoque.getValueAt(tabelaEstoque.getSelectedRow(), 0).toString());
                 int linha = tabelaEstoque.rowAtPoint(e.getPoint());
                 int coluna = tabelaEstoque.columnAtPoint(e.getPoint());
                 if (coluna == 4) {
-                    ((DefaultTableModel) tabelaEstoque.getModel()).removeRow(linha);
-                    //Aqui você pode chamar o método que deleta o registro do banco
+                    //((DefaultTableModel) tabelaEstoque.getModel()).removeRow(linha);
+                    //Remove o item de idProduto do array
+                    for (Estoque estoque : listaEstoque) {
+                        if (estoque.getIdProduto() == idProduto) {
+                            listaEstoque.remove(estoque);
+                            break;
+                        }
+                    }
+                    //Atualiza a tabela
+                    listaLancamentos();
+                    //Mostra o array
+                    for (Estoque estoque : listaEstoque) {
+                        System.out.println(estoque.getIdProduto());
+                    }
+
 
                 }
             }
@@ -210,21 +249,47 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
 
     private void lancamentoDeProduto() {
         if (txtProduto.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Selecione um produto!");
+            new MessageView("Alerta!", "Selecione um produto!", "alert");
             return;
         } else if (txtQuantidade.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Informe a quantidade!");
+            new MessageView("Alerta!", "Informe a quantidade!", "alert");
             return;
         } else if (txtValor.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Informe o valor!");
+            new MessageView("Alerta!", "Informe o valor!", "alert");
             return;
         } else {
-            Estoque estoque = new Estoque(idProduto, txtQuantidade.getText(), txtValor.getText());
-            //Adiciona o estoque criado no array de estoques
-            listaEstoque.add(estoque);
-            System.out.println(listaEstoque.size());
-        }
+            try {
+                //Verifica se o produto já foi lançado
+                for (Estoque estoque : listaEstoque) {
+                    if (estoque.getIdProduto() == Integer.parseInt(this.idProduto)) {
+                        new MessageView("Alerta!", "Produto já lançado!", "alert");
+                        return;
+                    }
+                }
+                //Cria um novo estoque
+                Estoque estoque = new Estoque();
+                estoque.setIdProduto(Integer.parseInt(this.idProduto));
+                estoque.setQuantidade(txtQuantidade.getText());
+                estoque.setValor(txtValor.getText());
+                estoque.setNomeProduto(txtProduto.getText());
 
+                //Adiciona o estoque criado no array de estoques ta tabela inicial
+                listaEstoque.add(estoque);
+                //System.out.println(listaEstoque.size());
+                listaLancamentos();
+                new MessageView("Sucesso!", "Movimentação lançada com sucesso!", "success");
+            } catch (Exception e) {
+                new MessageView("Erro!", "Erro ao lançar movimentação do produto ("+this.idProduto+"). Verifique!", "erro");
+            }
+
+        }
+    }
+
+    private void verificaEstoqueDoProduto(String idProduto){
+        ProdutoRepository produtoRepository = new ProdutoRepository();
+        Produto produto = new Produto();
+        produto = produtoRepository.buscaId(idProduto);
+        
     }
 
     private void seleciona(String id){
@@ -300,7 +365,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     private void initComponents() {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        painelProdutos = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         painel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -310,11 +375,13 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         labelCentroDeCusto = new javax.swing.JLabel();
         txtValorTotalMovimentacao = new javax.swing.JFormattedTextField();
         labelValorTotalMovimentacao = new javax.swing.JLabel();
-        LabelDescricao = new javax.swing.JLabel();
+        labelDescricao = new javax.swing.JLabel();
         txtDescricaoMovimentacao = new javax.swing.JTextField();
         labelOperacao = new javax.swing.JLabel();
         comboBoxOperacao = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        labelCentroDeCustoDestino = new javax.swing.JLabel();
+        comboBoxCentroDeCustoDestino = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         LabelProduto = new javax.swing.JLabel();
@@ -337,7 +404,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         setTitle("Lançamento de Movimenteções");
         setResizable(false);
 
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        painelProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
         tabelaEstoque.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         tabelaEstoque.setModel(new javax.swing.table.DefaultTableModel(
@@ -345,7 +412,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "INDEX", "PRODUTO", "QUANTIDADE", "VALOR", "CENTRO"
+                "ID PRODUTO", "PRODUTO", "QUANTIDADE", "VALOR", ""
             }
         ));
         tabelaEstoque.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -377,8 +444,8 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         labelValorTotalMovimentacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelValorTotalMovimentacao.setText("Valor Total:");
 
-        LabelDescricao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        LabelDescricao.setText("Descrição:");
+        labelDescricao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelDescricao.setText("Descrição:");
 
         txtDescricaoMovimentacao.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
 
@@ -387,8 +454,19 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
 
         comboBoxOperacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxOperacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxOperacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxOperacaoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("ID:");
+
+        labelCentroDeCustoDestino.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelCentroDeCustoDestino.setText("Centro de Custo Destino:");
+
+        comboBoxCentroDeCustoDestino.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        comboBoxCentroDeCustoDestino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -396,49 +474,60 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(labelCentroDeCusto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(labelOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(107, 107, 107)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(labelValorTotalMovimentacao)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(LabelDescricao)
-                            .addGap(18, 18, 18)
-                            .addComponent(txtDescricaoMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(101, Short.MAX_VALUE))
+                        .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(158, 158, 158))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelValorTotalMovimentacao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelDescricao)
+                                    .addComponent(labelOperacao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(38, 38, 38)
+                                        .addComponent(labelCentroDeCustoDestino)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(comboBoxCentroDeCustoDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtDescricaoMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(99, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelCentroDeCusto)
-                        .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelOperacao)
-                        .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCentroDeCusto))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelOperacao)
+                            .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCentroDeCustoDestino)
+                            .addComponent(comboBoxCentroDeCustoDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtDescricaoMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(LabelDescricao))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelValorTotalMovimentacao)
-                    .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22))
+                    .addComponent(labelDescricao)
+                    .addComponent(txtDescricaoMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelValorTotalMovimentacao))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
@@ -455,10 +544,10 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
             painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -474,7 +563,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
             .addComponent(painel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Movimentação", jPanel2);
+        painelProdutos.addTab("Movimentação", jPanel2);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14))); // NOI18N
         jPanel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -649,7 +738,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Produtos", jPanel4);
+        painelProdutos.addTab("Produtos", jPanel4);
 
         btnPrincipal.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png"))); // NOI18N
@@ -681,12 +770,12 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
-            .addComponent(jTabbedPane1)
+            .addComponent(painelProdutos)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
+                .addComponent(painelProdutos)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -742,6 +831,11 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     private void btnPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarMouseClicked
         
     }//GEN-LAST:event_btnPesquisarMouseClicked
+
+    private void comboBoxOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOperacaoActionPerformed
+        // TODO add your handling code here:
+        //Combo tipo
+    }//GEN-LAST:event_comboBoxOperacaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -842,7 +936,6 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel LabelDescricao;
     private javax.swing.JLabel LabelProduto;
     private javax.swing.JLabel LabelQuantidade;
     private javax.swing.JButton btnCancelarLancamento;
@@ -850,6 +943,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     private javax.swing.JLabel btnPesquisar;
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JComboBox<String> comboBoxCentroDeCusto;
+    private javax.swing.JComboBox<String> comboBoxCentroDeCustoDestino;
     private javax.swing.JComboBox<String> comboBoxOperacao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -860,13 +954,15 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelCentroDeCusto;
+    private javax.swing.JLabel labelCentroDeCustoDestino;
+    private javax.swing.JLabel labelDescricao;
     private javax.swing.JLabel labelIdProduto;
     private javax.swing.JLabel labelOperacao;
     private javax.swing.JLabel labelValor;
     private javax.swing.JLabel labelValorTotalMovimentacao;
     private javax.swing.JPanel painel;
+    private javax.swing.JTabbedPane painelProdutos;
     private javax.swing.JTable tabelaEstoque;
     private javax.swing.JTable tabelaProdutos;
     private javax.swing.JTextField textPesquisarProdutos;

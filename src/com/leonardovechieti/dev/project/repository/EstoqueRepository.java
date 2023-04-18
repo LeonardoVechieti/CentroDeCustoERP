@@ -22,7 +22,7 @@ public class EstoqueRepository {
                pst.setInt(1, estoque.getIdProduto());
             pst.setInt(2, estoque.getIdMovimentacao());
             pst.setInt(3, estoque.getIdCentroDeCusto());
-            pst.setInt(4, estoque.getQuantidade());
+            pst.setString(4, estoque.getQuantidade());
             pst.setString(5, estoque.getOperacao().toString());
             pst.setString(6, estoque.getDescricao());
             pst.executeUpdate();
@@ -40,7 +40,7 @@ public class EstoqueRepository {
             pst.setInt(1, estoque.getIdProduto());
             pst.setInt(2, estoque.getIdMovimentacao());
             pst.setInt(3, estoque.getIdCentroDeCusto());
-            pst.setInt(4, estoque.getQuantidade());
+            pst.setString(4, estoque.getQuantidade());
             pst.setString(5, estoque.getOperacao().toString());
             pst.setString(6, estoque.getDescricao());
             pst.setInt(7, estoque.getId());
@@ -97,7 +97,7 @@ public class EstoqueRepository {
             pst.setInt(1, Integer.parseInt(id));
             rs = pst.executeQuery();
             if (rs.next()) {
-                return new Estoque(rs.getInt("id"), rs.getInt("idProduto"), rs.getInt("idMovimentacao"), rs.getInt("idCentroDeCusto"), rs.getInt("quantidade"), rs.getString("operacao"), rs.getString("descricao"), rs.getInt("valor"));
+                return new Estoque(rs.getInt("id"), rs.getInt("idProduto"), rs.getInt("idMovimentacao"), rs.getInt("idCentroDeCusto"), rs.getString("quantidade"), rs.getString("operacao"), rs.getString("descricao"), rs.getString("valor"));
             } else {
                 return null;
             }

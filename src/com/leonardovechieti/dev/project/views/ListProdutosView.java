@@ -88,9 +88,9 @@ public class ListProdutosView extends javax.swing.JFrame {
             MessageView message = new MessageView("Alerta!", "Selecione um produto para excluir", "alert");
         }
         if (idDelete != null) {
-
-            int confirma = JOptionPane.showConfirmDialog(tabelaProdutos, "Deseja realmente excluir? ","Atenção!",JOptionPane.YES_NO_OPTION);
-            if (confirma == JOptionPane.YES_OPTION) {
+            MessageView confirmationDialog = new MessageView(this,"Confirmação", "Deseja realmente excluir?", "confirm");
+            boolean confirmed = confirmationDialog.showConfirmationDialog();
+            if (confirmed) {
                 ProdutoRepository produtoRepository = new ProdutoRepository();
                 String resposta = produtoRepository.excluir(idDelete);
                 if (resposta == "DELETE") {
@@ -101,6 +101,9 @@ public class ListProdutosView extends javax.swing.JFrame {
                         Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+            } else {
+                // ação a ser executada quando cancelado
+                System.out.println("Canceled");
             }
         }
     }

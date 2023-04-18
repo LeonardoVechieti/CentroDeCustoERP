@@ -5,13 +5,15 @@
  */
 package com.leonardovechieti.dev.project.views;
 
+import javax.swing.*;
 import java.awt.Toolkit;
 
 /**
  *
  * @author Leonardo
  */
-public class MessageView extends javax.swing.JFrame {
+//public class MessageView extends javax.swing.JFrame {
+public class MessageView extends JDialog {
 
     public boolean confirm= false;
     public boolean cancel= false;
@@ -29,6 +31,14 @@ public class MessageView extends javax.swing.JFrame {
     }
     public boolean cancel(){
         return cancel;
+    }
+
+    //Metodo para exibir a mensagem de confirmação quando a tela é criada pelo construtor da que recebe alem das infomaçoes da mensagem, o objeto que a chamou
+    public boolean showConfirmationDialog() {
+        pack();
+        setLocationRelativeTo(getParent());
+        setVisible(true);
+        return confirm;
     }
 
     public MessageView(String title, String message, String type) {
@@ -67,6 +77,19 @@ public class MessageView extends javax.swing.JFrame {
                 break;
         }
         this.setVisible(true);
+    }
+
+    //Construtor que recebe o objeto que a chamou e as informações da mensagem
+    public MessageView(JFrame parent, String title, String message, String type) {
+        super(parent, "Confirmação", true);
+        initComponents();
+        this.title.setText(title);
+        setTitle(title);
+        this.message.setText(message);
+        icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/alert.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/alert.png")));
+        btnOk.setText("Não");
+        btnSim.setVisible(true);
     }
 
     /**

@@ -36,7 +36,7 @@ class ButtonEditor extends DefaultCellEditor {
 
         label = (value == null) ? "" : value.toString();
         //button.setText(label);
-        button.setText("Deletar");
+        button.setText("Cancelar");
         isPushed = true;
 
         return button;

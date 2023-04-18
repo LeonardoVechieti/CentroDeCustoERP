@@ -7,23 +7,25 @@ public class Estoque {
     private int idProduto;
     private int idMovimentacao;
     private int idCentroDeCusto;
-    private int quantidade;
+    private String quantidade;
     private String data;
     private Enum<Operacao> operacao;
     private String descricao;
-    private Number valor;
+    private String valor;
+
+    private String NomeProduto;
 
     public Estoque(int id) {
         this.id = id;
     }
 
-    public Estoque(String idProduto, String quantidade, String valor) {
-        this.idProduto = Integer.parseInt(idProduto);
-        this.quantidade = Integer.parseInt(quantidade);
-        this.valor = Double.parseDouble(valor);
+    public Estoque(int idProduto, String quantidade, String valor) {
+        this.idProduto = idProduto;
+        this.quantidade = quantidade;
+        this.valor = valor;
     }
 
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int quantidade, String data, Enum<Operacao> opercao, String descricao) {
+    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, String quantidade, String data, Enum<Operacao> opercao, String descricao) {
         this.id = id;
         this.idProduto = idProduto;
         this.idMovimentacao = idMovimentacao;
@@ -34,7 +36,7 @@ public class Estoque {
         this.descricao = descricao;
     }
 
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int quantidade, String operacao, String descricao, Number valor) {
+    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, String quantidade, String operacao, String descricao, String valor) {
         this.id = id;
         this.idProduto = idProduto;
         this.idMovimentacao = idMovimentacao;
@@ -47,11 +49,15 @@ public class Estoque {
         this.valor = valor;
     }
 
-    public Number getValor() {
+    public Estoque() {
+
+    }
+
+    public String getValor() {
         return valor;
     }
 
-    public void setValor(Number valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
 
@@ -87,11 +93,11 @@ public class Estoque {
         this.idCentroDeCusto = idCentroDeCusto;
     }
 
-    public int getQuantidade() {
+    public String getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(String quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -117,5 +123,13 @@ public class Estoque {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getNomeProduto() {
+        return NomeProduto;
+    }
+
+    public void setNomeProduto(String nomeProduto) {
+        NomeProduto = nomeProduto;
     }
 }

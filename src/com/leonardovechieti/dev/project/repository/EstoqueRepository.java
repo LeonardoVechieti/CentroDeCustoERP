@@ -16,15 +16,17 @@ public class EstoqueRepository {
     }
 
     public String lancar(Estoque estoque) {
-        String sql = "insert into estoque (idProduto, idMovimentacao, idCentroDeCusto, quantidade, operacao, descricao,) values (?, ?, ?, ?, ?, ?)";
+        String sql = "insert into estoque (idProduto, idMovimentacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao) values (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             pst = conexao.prepareStatement(sql);
-               pst.setInt(1, estoque.getIdProduto());
+            pst.setInt(1, estoque.getIdProduto());
             pst.setInt(2, estoque.getIdMovimentacao());
             pst.setInt(3, estoque.getIdCentroDeCusto());
-            pst.setString(4, estoque.getQuantidade());
-            pst.setString(5, estoque.getOperacao().toString());
-            pst.setString(6, estoque.getDescricao());
+            pst.setInt(4, estoque.getIdOperacao());
+            pst.setString(5, String.valueOf(estoque.getQuantidade()));
+            pst.setString(6, String.valueOf(estoque.getValorUnitario()));
+            pst.setString(7, String.valueOf(estoque.getValorTotal()));
+            pst.setString(8, estoque.getDescricao());
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -37,13 +39,6 @@ public class EstoqueRepository {
         String sql = "update estoque set idProduto=?, idMovimentacao=?, idCentroDeCusto=?, quantidade=?, operacao=?, descricao=? where id=?";
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setInt(1, estoque.getIdProduto());
-            pst.setInt(2, estoque.getIdMovimentacao());
-            pst.setInt(3, estoque.getIdCentroDeCusto());
-            pst.setString(4, estoque.getQuantidade());
-            pst.setString(5, estoque.getOperacao().toString());
-            pst.setString(6, estoque.getDescricao());
-            pst.setInt(7, estoque.getId());
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -97,7 +92,7 @@ public class EstoqueRepository {
             pst.setInt(1, Integer.parseInt(id));
             rs = pst.executeQuery();
             if (rs.next()) {
-                return new Estoque(rs.getInt("id"), rs.getInt("idProduto"), rs.getInt("idMovimentacao"), rs.getInt("idCentroDeCusto"), rs.getString("quantidade"), rs.getString("operacao"), rs.getString("descricao"), rs.getString("valor"));
+                return new Estoque(rs.getInt("id"), rs.getInt("idProduto"), rs.getInt("idMovimentacao"), rs.getInt("idCentroDeCusto"), rs.getInt("idOperacao"), rs.getBigDecimal("quantidade"), rs.getBigDecimal("valorUnitario"), rs.getBigDecimal("valorTotal"), rs.getString("data"), rs.getString("descricao"));
             } else {
                 return null;
             }
@@ -132,11 +127,13 @@ public class EstoqueRepository {
 
     public ResultSet listarPorProduto(Produto produto) {
         //Lista do mais recente para o mais antigo da uniao das tabelas estoque, produto e centrodecusto
-        String sql = "select e.id as ID, e.operacao as OPERACAO, e.quantidade as QUANTIDADE, c.nome as CENTRO, p.descricao as PRODUTO from estoque e\n" +
+        String sql = "select e.id as ID, o.descricao as OPERACAO, e.quantidade as QUANTIDADE, c.nome as CENTRO, p.descricao as PRODUTO from estoque e\n" +
                 "join produto p\n" +
                 "on e.idProduto = p.id\n" +
                 "join centrodecusto c\n" +
                 "on e.idCentroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on e.idOperacao = o.id\n" +
                 "where e.idProduto = ? order by e.id desc";
         try {
             pst = conexao.prepareStatement(sql);

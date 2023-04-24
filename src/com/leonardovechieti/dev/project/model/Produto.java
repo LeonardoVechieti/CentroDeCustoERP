@@ -13,6 +13,8 @@ public class Produto {
     private String dataModificacao;
     private int usuario;
 
+
+
     public Produto(int id, String descricao, String preco, String unidade, Boolean inativo, Boolean servico, Boolean estoque, Boolean producao, String dataModificacao, int usuario) {
         this.id = id;
         this.descricao = descricao;
@@ -117,20 +119,7 @@ public class Produto {
     public void setUsuario(int usuario) {
         this.usuario = usuario;
     }
+
+
 }
 
-//
-//    create table produto(
-//        id int primary key auto_increment,
-//        descricao varchar(200) not null,
-//        preco double,
-//        unidade varchar(25),
-//        ativo boolean,
-//        servico boolean,
-//        estoque boolean,
-//        producao boolean,
-//        dataCriacao timestamp default current_timestamp,
-//        dataModificacao datetime,
-//        usuario int not null,
-//        foreign key(usuario) references usuario(id)
-//        );

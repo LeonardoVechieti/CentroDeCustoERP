@@ -2,7 +2,6 @@ package com.leonardovechieti.dev.project.views;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 class ButtonRenderer extends DefaultTableCellRenderer {

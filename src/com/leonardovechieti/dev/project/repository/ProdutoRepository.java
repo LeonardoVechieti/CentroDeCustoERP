@@ -1,11 +1,15 @@
 package com.leonardovechieti.dev.project.repository;
 
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
+import com.leonardovechieti.dev.project.model.Estoque;
+import com.leonardovechieti.dev.project.util.Func;
 import com.leonardovechieti.dev.project.util.Message;
 import com.leonardovechieti.dev.project.model.Produto;
 import com.leonardovechieti.dev.project.views.MessageView;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProdutoRepository {
     Connection conexao = null;
@@ -19,15 +23,9 @@ public class ProdutoRepository {
     public String salvar(String descricao, String preco, String unidade, Boolean inativo, Boolean servico, Boolean estoque, Boolean producao, int usuario) {
         String sql = "insert into produto (descricao, preco, unidade, inativo, servico, estoque, producao, dataModificacao, usuario) values (?,?,?,?,?,?,?,?,?)";
         try {
-
-            //Remove o ponto do preco
-            preco = preco.replace(".", ""); //Troca o ponto por nada
-            //Troca a virgula por ponto
-            preco = preco.replace(",", ".");
-
             pst = conexao.prepareStatement(sql);
             pst.setString(1, descricao);
-            pst.setString(2, preco);
+            pst.setString(2, Func.formataPrecoBanco(preco));
             pst.setString(3, unidade);
             pst.setBoolean(4, inativo);
             pst.setBoolean(5, servico);
@@ -46,14 +44,9 @@ public class ProdutoRepository {
     public String editar(String id, String descricao, String preco, String unidade, Boolean inativo, Boolean servico, Boolean estoque, Boolean producao, int usuario) {
         String sql = "update produto set descricao=?, preco=?, unidade=?, inativo=?, servico=?, estoque=?, producao=?, dataModificacao=?, usuario=? where id=?";
         try {
-            //Remove o ponto do preco
-            preco = preco.replace(".", ""); //Troca o ponto por nada
-            //Troca a virgula por ponto
-            preco = preco.replace(",", ".");
-
             pst = conexao.prepareStatement(sql);
             pst.setString(1, descricao);
-            pst.setString(2, preco);
+            pst.setString(2, Func.formataPrecoBanco(preco));
             pst.setString(3, unidade);
             pst.setBoolean(4, inativo);
             pst.setBoolean(5, servico);
@@ -95,7 +88,7 @@ public class ProdutoRepository {
         return rs;
     }
 
-    public Wrapper pesquisar(String nome) {
+    public List<Produto> pesquisar(String nome) {
         String sql = "select id as ID, descricao as PRODUTO, unidade as UNIDADE, preco as PREÇO from produto where descricao like ?";;
         try {
             pst = conexao.prepareStatement(sql);
@@ -104,7 +97,23 @@ public class ProdutoRepository {
         } catch (Exception e) {
             System.out.println(e);
         }
-        return rs;
+        //Percorre o ResultSet e adiciona os dados em um ArrayList
+        java.util.List<Produto> listaProdutos = new java.util.ArrayList<Produto>();
+
+        try {
+            while (rs.next()) {
+                Produto produto = new Produto();
+                produto.setId(rs.getInt(1));
+                produto.setDescricao(rs.getString(2));
+                produto.setUnidade(rs.getString(3));
+                produto.setPreco(Func.formataPrecoPadrao(rs.getString(4)));
+                listaProdutos.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaProdutos;
     }
 
     public Produto buscaId(String id) {
@@ -117,12 +126,10 @@ public class ProdutoRepository {
                 Produto produto = new Produto();
                 produto.setId(rs.getInt(1));
                 produto.setDescricao(rs.getString(2));
-                //Trocando o ponto por virgula
-                String preco = rs.getString(3);
-                preco = preco.replace(".", ",");
-                produto.setPreco(preco);
 
-                //produto.setPreco(rs.getDouble(3));
+                //Formatando o preco do banco para o padrao
+                produto.setPreco(Func.formataPrecoPadrao(rs.getString(3)));
+
                 produto.setUnidade(rs.getString(4));
                 produto.setInativo(rs.getBoolean(5));
                 produto.setServico(rs.getBoolean(6));

@@ -5,19 +5,15 @@
  */
 package com.leonardovechieti.dev.project.views;
 
+import com.leonardovechieti.dev.project.model.Estoque;
+import com.leonardovechieti.dev.project.model.Produto;
 import com.leonardovechieti.dev.project.repository.ProdutoRepository;
 
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.proteanit.sql.DbUtils;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -40,20 +36,27 @@ public class ListProdutosView extends javax.swing.JFrame {
     private void initialize(){
         initComponents();
         setIcon();
-        FormataTabela();
-        FormataBotoes();
+        formataTabela();
+        formataBotoes();
         //Inicia pesquisando os produtos
-        try {
-            PesquisarProdutos();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        pesquisarProdutos();
     }
 
-    public void PesquisarProdutos() throws SQLException{
+    public void pesquisarProdutos() {
         ProdutoRepository produtoRepository = new ProdutoRepository();
-        rs = (ResultSet) produtoRepository.pesquisar(textPesquisar.getText());
-        tabelaProdutos.setModel(DbUtils.resultSetToTableModel(rs));
+        java.util.List<Produto> listaProdutos = new java.util.ArrayList<Produto>();
+        listaProdutos = produtoRepository.pesquisar(textPesquisar.getText());
+
+        DefaultTableModel model = (DefaultTableModel) tabelaProdutos.getModel();
+        model.setRowCount(0);
+        Object[] row = new Object[4];
+        for (int i = 0; i < listaProdutos.size(); i++) {
+            row[0] = listaProdutos.get(i).getId();
+            row[1] = listaProdutos.get(i).getDescricao();
+            row[2] = listaProdutos.get(i).getUnidade();
+            row[3] = listaProdutos.get(i).getPreco();
+            model.addRow(row);
+        }
 
         //Seta o tamanho das colunas
         tabelaProdutos.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -67,13 +70,9 @@ public class ListProdutosView extends javax.swing.JFrame {
         //Desabilita os botões de alterar e excluir
         btnAlterar.setEnabled(false);
         btnDeletar.setEnabled(false);
-
-        //Fecha a conexão
-        produtoRepository.fecharConexao();
-
     }
     
-    public void AbreCadastro(){
+    public void abreCadastro(){
         if (id != null) {
             CadastroProdutosView cadastro = new CadastroProdutosView(id);
             cadastro.setVisible(true);
@@ -83,7 +82,7 @@ public class ListProdutosView extends javax.swing.JFrame {
 
     }
     
-    private void Deletar(String idDelete){
+    private void deletar(String idDelete){
         if (idDelete == null) {
             MessageView message = new MessageView("Alerta!", "Selecione um produto para excluir", "alert");
         }
@@ -95,11 +94,7 @@ public class ListProdutosView extends javax.swing.JFrame {
                 String resposta = produtoRepository.excluir(idDelete);
                 if (resposta == "DELETE") {
                     MessageView message = new MessageView("Sucesso!", "Produto excluído com sucesso!", "success");
-                    try {
-                        PesquisarProdutos();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    pesquisarProdutos();
                 }
             } else {
                 // ação a ser executada quando cancelado
@@ -112,7 +107,7 @@ public class ListProdutosView extends javax.swing.JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
     }
 
-    private void FormataTabela(){
+    private void formataTabela(){
 
         //Seta o tamanho das linhas
         tabelaProdutos.setRowHeight(25);
@@ -133,7 +128,7 @@ public class ListProdutosView extends javax.swing.JFrame {
         tabelaProdutos.setDefaultEditor(Object.class, null);
     }
 
-    private void FormataBotoes(){
+    private void formataBotoes(){
         btnAlterar.setEnabled(false);
         btnDeletar.setEnabled(false);
 
@@ -153,7 +148,7 @@ public class ListProdutosView extends javax.swing.JFrame {
         btnDeletar.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
-    private void PegaId(){
+    private void pegaId(){
         int setar = tabelaProdutos.getSelectedRow();
         id=tabelaProdutos.getModel().getValueAt(setar,0).toString();
         //printar o id
@@ -317,33 +312,25 @@ public class ListProdutosView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void textPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textPesquisarKeyReleased
-        try {
-            // TODO add your handling code here:
-            PesquisarProdutos();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // TODO add your handling code here:
+        pesquisarProdutos();
     }//GEN-LAST:event_textPesquisarKeyReleased
 
     private void btnPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarMouseClicked
-        try {
-            // TODO add your handling code here:
-            PesquisarProdutos();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListProdutosView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // TODO add your handling code here:
+        pesquisarProdutos();
     }//GEN-LAST:event_btnPesquisarMouseClicked
 
     private void tabelaProdutosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaProdutosMouseClicked
         // TODO add your handling code here:
         //Verifica se foi clicado duas vezes com o botão direito do mouse
         if (evt.getClickCount() == 2) {
-            PegaId();
-            AbreCadastro();
+            pegaId();
+            abreCadastro();
         } if (evt.getClickCount() == 1) {
             btnAlterar.setEnabled(true);
             btnDeletar.setEnabled(true);
-            PegaId();
+            pegaId();
         }
 
 
@@ -357,14 +344,14 @@ public class ListProdutosView extends javax.swing.JFrame {
 
     private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
         // TODO add your handling code here:
-        PegaId();
-        Deletar(id);
+        pegaId();
+        deletar(id);
     }//GEN-LAST:event_btnDeletarActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
         // TODO add your handling code here:
-        PegaId();
-        AbreCadastro();
+        pegaId();
+        abreCadastro();
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     /**

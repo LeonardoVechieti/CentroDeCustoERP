@@ -104,8 +104,10 @@ public class PrincipalView extends javax.swing.JFrame {
         menuCadastrarProdutos = new javax.swing.JMenuItem();
         menuListarProdutos = new javax.swing.JMenuItem();
         menuCadastrarCentroDeCusto = new javax.swing.JMenuItem();
+        menuCadastrarOpercaoes = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         menuCadastrarProdutos1 = new javax.swing.JMenuItem();
+        menuCadastrarProdutos2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
         menuCadastrarUsuarios = new javax.swing.JMenuItem();
@@ -229,6 +231,16 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jMenu5.add(menuCadastrarCentroDeCusto);
 
+        menuCadastrarOpercaoes.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
+        menuCadastrarOpercaoes.setText("Operçoes");
+        menuCadastrarOpercaoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarOpercaoesActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuCadastrarOpercaoes);
+
         menuBarraPrincipal.add(jMenu5);
 
         jMenu2.setText("Movimentações");
@@ -243,6 +255,16 @@ public class PrincipalView extends javax.swing.JFrame {
             }
         });
         jMenu2.add(menuCadastrarProdutos1);
+
+        menuCadastrarProdutos2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastrarProdutos2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/cardVerde1.png"))); // NOI18N
+        menuCadastrarProdutos2.setText("Novo Lançamento");
+        menuCadastrarProdutos2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastrarProdutos2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuCadastrarProdutos2);
 
         menuBarraPrincipal.add(jMenu2);
 
@@ -328,6 +350,18 @@ public class PrincipalView extends javax.swing.JFrame {
         lancamento.setVisible(true);
     }//GEN-LAST:event_menuCadastrarProdutos1ActionPerformed
 
+    private void menuCadastrarProdutos2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos2ActionPerformed
+        // TODO add your handling code here:
+        NovoLancamentoView lancamento = new NovoLancamentoView();
+        lancamento.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarProdutos2ActionPerformed
+
+    private void menuCadastrarOpercaoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarOpercaoesActionPerformed
+        // TODO add your handling code here:
+        CadastroOperacoes opercao = new CadastroOperacoes();
+        opercao.setVisible(true);
+    }//GEN-LAST:event_menuCadastrarOpercaoesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -393,8 +427,10 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JLabel lblData1;
     private javax.swing.JMenuBar menuBarraPrincipal;
     private javax.swing.JMenuItem menuCadastrarCentroDeCusto;
+    private javax.swing.JMenuItem menuCadastrarOpercaoes;
     private javax.swing.JMenuItem menuCadastrarProdutos;
     private javax.swing.JMenuItem menuCadastrarProdutos1;
+    private javax.swing.JMenuItem menuCadastrarProdutos2;
     private javax.swing.JMenuItem menuCadastrarUsuarios;
     private javax.swing.JMenuItem menuListarProdutos;
     // End of variables declaration//GEN-END:variables

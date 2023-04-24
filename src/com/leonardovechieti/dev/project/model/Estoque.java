@@ -1,65 +1,41 @@
 package com.leonardovechieti.dev.project.model;
 
-import com.leonardovechieti.dev.project.model.enums.Operacao;
+import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
 
 public class Estoque {
     private int id;
     private int idProduto;
     private int idMovimentacao;
     private int idCentroDeCusto;
-    private String quantidade;
+
+    private int idOperacao;
+    private Number quantidade;
+
+    private Number valorUnitario;
+
+    private Number valorTotal;
     private String data;
-    private Enum<Operacao> operacao;
+
     private String descricao;
-    private String valor;
 
-    private String NomeProduto;
+    //Campos abaixo não são persistidos no banco de dados
+    private String descricaoProduto;
 
-    public Estoque(int id) {
-        this.id = id;
-    }
 
-    public Estoque(int idProduto, String quantidade, String valor) {
-        this.idProduto = idProduto;
-        this.quantidade = quantidade;
-        this.valor = valor;
-    }
-
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, String quantidade, String data, Enum<Operacao> opercao, String descricao) {
+    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int idOperacao, Number quantidade, Number valorUnitario, Number valorTotal, String data, String descricao) {
         this.id = id;
         this.idProduto = idProduto;
         this.idMovimentacao = idMovimentacao;
         this.idCentroDeCusto = idCentroDeCusto;
+        this.idOperacao = idOperacao;
         this.quantidade = quantidade;
+        this.valorUnitario = valorUnitario;
+        this.valorTotal = valorTotal;
         this.data = data;
-        this.operacao = opercao;
         this.descricao = descricao;
     }
 
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, String quantidade, String operacao, String descricao, String valor) {
-        this.id = id;
-        this.idProduto = idProduto;
-        this.idMovimentacao = idMovimentacao;
-        this.idCentroDeCusto = idCentroDeCusto;
-        this.quantidade = quantidade;
-        this.data = data;
-        //Convertendo String para Enum
-        this.operacao = Operacao.valueOf(operacao);
-        this.descricao = descricao;
-        this.valor = valor;
-    }
-
-    public Estoque() {
-
-    }
-
-    public String getValor() {
-        return valor;
-    }
-
-    public void setValor(String valor) {
-        this.valor = valor;
-    }
+    public Estoque() {}
 
     public int getId() {
         return id;
@@ -93,12 +69,36 @@ public class Estoque {
         this.idCentroDeCusto = idCentroDeCusto;
     }
 
-    public String getQuantidade() {
+    public int getIdOperacao() {
+        return idOperacao;
+    }
+
+    public void setIdOperacao(int idOperacao) {
+        this.idOperacao = idOperacao;
+    }
+
+    public Number getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(String quantidade) {
+    public void setQuantidade(Number quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Number getValorUnitario() {
+        return valorUnitario;
+    }
+
+    public void setValorUnitario(Number valorUnitario) {
+        this.valorUnitario = valorUnitario;
+    }
+
+    public Number getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Number valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public String getData() {
@@ -109,14 +109,6 @@ public class Estoque {
         this.data = data;
     }
 
-    public Enum<Operacao> getOperacao() {
-        return operacao;
-    }
-
-    public void setOperacao(Enum<Operacao> operacao) {
-        this.operacao = operacao;
-    }
-
     public String getDescricao() {
         return descricao;
     }
@@ -125,11 +117,11 @@ public class Estoque {
         this.descricao = descricao;
     }
 
-    public String getNomeProduto() {
-        return NomeProduto;
+    public String getDescricaoProduto() {
+        return descricaoProduto;
     }
 
-    public void setNomeProduto(String nomeProduto) {
-        NomeProduto = nomeProduto;
+    public void setDescricaoProduto(String descricaoProduto) {
+        this.descricaoProduto = descricaoProduto;
     }
 }

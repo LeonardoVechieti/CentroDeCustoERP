@@ -5,8 +5,10 @@
  */
 package com.leonardovechieti.dev.project.views;
 
-import com.leonardovechieti.dev.project.model.enums.Operacao;
+import com.leonardovechieti.dev.project.model.Operacao;
+import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
 import com.leonardovechieti.dev.project.repository.CentroDeCustoRepository;
+import com.leonardovechieti.dev.project.repository.OperacaoRepository;
 
 import java.awt.*;
 
@@ -27,6 +29,9 @@ public class NovoLancamentoView extends javax.swing.JFrame {
         setIcon();
         formataBotoes();
         setSelectBox();
+        //Desabilita os campos de centro de custo destino
+        labelCentroDeCustoDestino.setVisible(false);
+        comboBoxCentroDeCustoDestino.setVisible(false);
     }
 
     private void setSelectBox(){
@@ -41,12 +46,15 @@ public class NovoLancamentoView extends javax.swing.JFrame {
             comboBoxCentroDeCustoDestino.addItem(nome);
 
         }
-        //seta os itens do select box tipo de movimentacao
+        //seta os itens do select box tipo de opercao
         comboBoxOperacao.removeAllItems();
-        //Passa os valore do Enum Operacoes para o select box
-        for (Operacao operacao : Operacao.values()) {
-            comboBoxOperacao.addItem(String.valueOf(operacao));
+        OperacaoRepository operacaoRepository = new OperacaoRepository();
+        String todasAsOperacoes = operacaoRepository.todasDescricao();
+        String[] operacoes = todasAsOperacoes.split(",");
+        for (String operacao : operacoes) {
+            comboBoxOperacao.addItem(operacao);
         }
+
     }
     private void formataBotoes() {
         btnPrincipal.setBackground(new Color(0, 0, 0, 0));
@@ -55,6 +63,32 @@ public class NovoLancamentoView extends javax.swing.JFrame {
         btnPrincipal.setContentAreaFilled(false);
         btnPrincipal.setOpaque(false);
         btnPrincipal.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    private void abreNovaMovimentacao() {
+        if (comboBoxOperacao.getSelectedItem().equals("TRANSFERENCIA")) {
+            if (comboBoxCentroDeCusto.getSelectedItem().equals(comboBoxCentroDeCustoDestino.getSelectedItem())) {
+                new MessageView("Alerta!", "Selecione centros de custo diferentes", "alert");
+            } else {
+                OperacaoRepository operacaoRepository = new OperacaoRepository();
+                CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
+                LancamentoMovimentacaoView lancamento = new LancamentoMovimentacaoView(
+                        operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
+                        centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
+                        centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
+                );
+                dispose();
+            }
+        } else {
+            OperacaoRepository operacaoRepository = new OperacaoRepository();
+            CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
+            LancamentoMovimentacaoView lancamento = new LancamentoMovimentacaoView(
+                    operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
+                    centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
+                    centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
+            );
+            dispose();
+        }
     }
 
  
@@ -105,6 +139,14 @@ public class NovoLancamentoView extends javax.swing.JFrame {
 
         comboBoxOperacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxOperacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxOperacao.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboBoxOperacaoMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                comboBoxOperacaoMouseExited(evt);
+            }
+        });
         comboBoxOperacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxOperacaoActionPerformed(evt);
@@ -192,16 +234,33 @@ public class NovoLancamentoView extends javax.swing.JFrame {
 
     private void comboBoxOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOperacaoActionPerformed
         // TODO add your handling code here:
-        //Combo tipo
+
     }//GEN-LAST:event_comboBoxOperacaoActionPerformed
 
     private void btnPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrincipalActionPerformed
         // TODO add your handling code here:
+        abreNovaMovimentacao();
     }//GEN-LAST:event_btnPrincipalActionPerformed
 
     private void comboBoxCentroDeCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCentroDeCustoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxCentroDeCustoActionPerformed
+
+    private void comboBoxOperacaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxOperacaoMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_comboBoxOperacaoMouseClicked
+
+    private void comboBoxOperacaoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxOperacaoMouseExited
+        // TODO add your handling code here:
+        if (comboBoxOperacao.getSelectedItem().equals("TRANSFERENCIA")) {
+            labelCentroDeCustoDestino.setVisible(true);
+            comboBoxCentroDeCustoDestino.setVisible(true);
+        } else {
+            labelCentroDeCustoDestino.setVisible(false);
+            comboBoxCentroDeCustoDestino.setVisible(false);
+        }
+    }//GEN-LAST:event_comboBoxOperacaoMouseExited
 
     /**
      * @param args the command line arguments

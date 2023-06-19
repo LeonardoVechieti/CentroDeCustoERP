@@ -8,7 +8,8 @@ package com.leonardovechieti.dev.project.views;
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
 import com.leonardovechieti.dev.project.model.Usuario;
 import com.leonardovechieti.dev.project.repository.UsuarioRepository;
-import java.awt.Toolkit;
+
+import java.awt.*;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -35,7 +36,9 @@ public class LoginView extends javax.swing.JFrame {
         }
 
     }
+
     
+
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));       
     }

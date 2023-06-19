@@ -1,59 +1,41 @@
 package com.leonardovechieti.dev.project.model;
 
-import com.leonardovechieti.dev.project.model.enums.Operacao;
+import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
 
 public class Estoque {
     private int id;
     private int idProduto;
     private int idMovimentacao;
     private int idCentroDeCusto;
-    private int quantidade;
+
+    private int idOperacao;
+    private Number quantidade;
+
+    private Number valorUnitario;
+
+    private Number valorTotal;
     private String data;
-    private Enum<Operacao> operacao;
+
     private String descricao;
-    private Number valor;
 
-    public Estoque(int id) {
-        this.id = id;
-    }
+    //Campos abaixo não são persistidos no banco de dados
+    private String descricaoProduto;
 
-    public Estoque(String idProduto, String quantidade, String valor) {
-        this.idProduto = Integer.parseInt(idProduto);
-        this.quantidade = Integer.parseInt(quantidade);
-        this.valor = Double.parseDouble(valor);
-    }
 
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int quantidade, String data, Enum<Operacao> opercao, String descricao) {
+    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int idOperacao, Number quantidade, Number valorUnitario, Number valorTotal, String data, String descricao) {
         this.id = id;
         this.idProduto = idProduto;
         this.idMovimentacao = idMovimentacao;
         this.idCentroDeCusto = idCentroDeCusto;
+        this.idOperacao = idOperacao;
         this.quantidade = quantidade;
+        this.valorUnitario = valorUnitario;
+        this.valorTotal = valorTotal;
         this.data = data;
-        this.operacao = opercao;
         this.descricao = descricao;
     }
 
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int quantidade, String operacao, String descricao, Number valor) {
-        this.id = id;
-        this.idProduto = idProduto;
-        this.idMovimentacao = idMovimentacao;
-        this.idCentroDeCusto = idCentroDeCusto;
-        this.quantidade = quantidade;
-        this.data = data;
-        //Convertendo String para Enum
-        this.operacao = Operacao.valueOf(operacao);
-        this.descricao = descricao;
-        this.valor = valor;
-    }
-
-    public Number getValor() {
-        return valor;
-    }
-
-    public void setValor(Number valor) {
-        this.valor = valor;
-    }
+    public Estoque() {}
 
     public int getId() {
         return id;
@@ -87,12 +69,36 @@ public class Estoque {
         this.idCentroDeCusto = idCentroDeCusto;
     }
 
-    public int getQuantidade() {
+    public int getIdOperacao() {
+        return idOperacao;
+    }
+
+    public void setIdOperacao(int idOperacao) {
+        this.idOperacao = idOperacao;
+    }
+
+    public Number getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Number quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Number getValorUnitario() {
+        return valorUnitario;
+    }
+
+    public void setValorUnitario(Number valorUnitario) {
+        this.valorUnitario = valorUnitario;
+    }
+
+    public Number getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Number valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public String getData() {
@@ -103,19 +109,19 @@ public class Estoque {
         this.data = data;
     }
 
-    public Enum<Operacao> getOperacao() {
-        return operacao;
-    }
-
-    public void setOperacao(Enum<Operacao> operacao) {
-        this.operacao = operacao;
-    }
-
     public String getDescricao() {
         return descricao;
     }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getDescricaoProduto() {
+        return descricaoProduto;
+    }
+
+    public void setDescricaoProduto(String descricaoProduto) {
+        this.descricaoProduto = descricaoProduto;
     }
 }

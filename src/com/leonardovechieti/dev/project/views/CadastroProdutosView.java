@@ -12,6 +12,8 @@ import com.leonardovechieti.dev.project.repository.UsuarioRepository;
 import com.leonardovechieti.dev.project.util.Func;
 
 import java.awt.*;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 
 /**
@@ -36,7 +38,13 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             ProdutoRepository produtoRepository = new ProdutoRepository();
             produto = produtoRepository.buscaId(id);
             txtDescricao.setText(produto.getDescricao());
+
+
             txtPreco.setText(produto.getPreco());
+
+
+
+
 
             checkBoxInativar.setSelected(produto.getInativo());
             checkBoxServico.setSelected(produto.getServico());

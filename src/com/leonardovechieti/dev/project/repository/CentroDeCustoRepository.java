@@ -137,4 +137,21 @@ public class CentroDeCustoRepository {
         conexao.close();
         System.out.println("Conexao fechada!");
     }
+
+    public CentroDeCusto buscaCentroDeCustoNome(String nome) {
+        String sql = "select * from centrodecusto where nome = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, nome);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return new CentroDeCusto(rs.getInt("id"), rs.getString("nome"), rs.getString("descricao"), rs.getBoolean("inativo"));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
 }

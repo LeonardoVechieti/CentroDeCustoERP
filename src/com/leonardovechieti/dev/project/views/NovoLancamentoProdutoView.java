@@ -13,6 +13,7 @@ import com.leonardovechieti.dev.project.repository.ProdutoRepository;
 import com.leonardovechieti.dev.project.util.Func;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -195,14 +196,12 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
     private void calculaValorTotal(){
         if(!txtQuantidade.getText().isEmpty()){
             //Troca a virgula por ponto
-            String quantidadeDigitada = txtQuantidade.getText().replace(",", ".");
-            String valorUnitarioDigitado = txtValorUnitario.getText().replace(",", ".");
+            Double quantidadeDigitada = Double.parseDouble(Func.formataPrecoBanco(txtQuantidade.getText()));
+            Double valorUnitarioDigitado = Double.parseDouble(Func.formataPrecoBanco(txtValorUnitario.getText()));
             //Calcula o valor total
-            Float valorTotal = Float.parseFloat(quantidadeDigitada) * Float.parseFloat(valorUnitarioDigitado);
-            //Formata o valor total de acordo com o padrão do campo valor total
-            DecimalFormat df =  new DecimalFormat("0.00");
-            //Seta o valor total
-            txtValorTotal.setText(df.format(valorTotal));
+            Double valorTotal = quantidadeDigitada * valorUnitarioDigitado;
+            String valorTotalFinal = Func.formataPrecoPadrao(valorTotal.toString());
+            txtValorTotal.setText(valorTotalFinal);
         }
     }
     public void abreCadastro(){

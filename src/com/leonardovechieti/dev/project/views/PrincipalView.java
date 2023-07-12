@@ -82,6 +82,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         barraListarProdutos = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        barraNovoLancamento = new javax.swing.JButton();
         jToolBar3 = new javax.swing.JToolBar();
         jSeparator9 = new javax.swing.JToolBar.Separator();
         labelVersao = new javax.swing.JLabel();
@@ -106,8 +107,8 @@ public class PrincipalView extends javax.swing.JFrame {
         menuCadastrarCentroDeCusto = new javax.swing.JMenuItem();
         menuCadastrarOpercaoes = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        menuCadastrarProdutos1 = new javax.swing.JMenuItem();
         menuCadastrarProdutos2 = new javax.swing.JMenuItem();
+        menuListarLancamento = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
         menuCadastrarUsuarios = new javax.swing.JMenuItem();
@@ -143,6 +144,17 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jToolBar1.add(barraListarProdutos);
         jToolBar1.add(jSeparator1);
+
+        barraNovoLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
+        barraNovoLancamento.setFocusable(false);
+        barraNovoLancamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraNovoLancamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraNovoLancamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraNovoLancamentoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraNovoLancamento);
 
         jToolBar3.setFloatable(false);
         jToolBar3.setRollover(true);
@@ -232,7 +244,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenu5.add(menuCadastrarCentroDeCusto);
 
         menuCadastrarOpercaoes.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        menuCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
+        menuCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/integracao.png"))); // NOI18N
         menuCadastrarOpercaoes.setText("Operçoes");
         menuCadastrarOpercaoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -246,18 +258,8 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenu2.setText("Movimentações");
         jMenu2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
-        menuCadastrarProdutos1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        menuCadastrarProdutos1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/cardVerde1.png"))); // NOI18N
-        menuCadastrarProdutos1.setText("Lançamentos");
-        menuCadastrarProdutos1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuCadastrarProdutos1ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(menuCadastrarProdutos1);
-
         menuCadastrarProdutos2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        menuCadastrarProdutos2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/cardVerde1.png"))); // NOI18N
+        menuCadastrarProdutos2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
         menuCadastrarProdutos2.setText("Novo Lançamento");
         menuCadastrarProdutos2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -265,6 +267,16 @@ public class PrincipalView extends javax.swing.JFrame {
             }
         });
         jMenu2.add(menuCadastrarProdutos2);
+
+        menuListarLancamento.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuListarLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/garficoelupa.png"))); // NOI18N
+        menuListarLancamento.setText("Listar Lançamento");
+        menuListarLancamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuListarLancamentoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuListarLancamento);
 
         menuBarraPrincipal.add(jMenu2);
 
@@ -344,12 +356,6 @@ public class PrincipalView extends javax.swing.JFrame {
         centroDeCusto.setVisible(true);
     }//GEN-LAST:event_menuCadastrarCentroDeCustoActionPerformed
 
-    private void menuCadastrarProdutos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos1ActionPerformed
-        // TODO add your handling code here:
-        LancamentoMovimentacaoView lancamento = new LancamentoMovimentacaoView();
-        lancamento.setVisible(true);
-    }//GEN-LAST:event_menuCadastrarProdutos1ActionPerformed
-
     private void menuCadastrarProdutos2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos2ActionPerformed
         // TODO add your handling code here:
         NovoLancamentoView lancamento = new NovoLancamentoView();
@@ -361,6 +367,15 @@ public class PrincipalView extends javax.swing.JFrame {
         CadastroOperacoes opercao = new CadastroOperacoes();
         opercao.setVisible(true);
     }//GEN-LAST:event_menuCadastrarOpercaoesActionPerformed
+
+    private void barraNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraNovoLancamentoActionPerformed
+        NovoLancamentoView lancamento = new NovoLancamentoView();
+        lancamento.setVisible(true);
+    }//GEN-LAST:event_barraNovoLancamentoActionPerformed
+
+    private void menuListarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuListarLancamentoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuListarLancamentoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -400,6 +415,7 @@ public class PrincipalView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton barraCadastrarProdutos;
     private javax.swing.JButton barraListarProdutos;
+    private javax.swing.JButton barraNovoLancamento;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -429,9 +445,9 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuCadastrarCentroDeCusto;
     private javax.swing.JMenuItem menuCadastrarOpercaoes;
     private javax.swing.JMenuItem menuCadastrarProdutos;
-    private javax.swing.JMenuItem menuCadastrarProdutos1;
     private javax.swing.JMenuItem menuCadastrarProdutos2;
     private javax.swing.JMenuItem menuCadastrarUsuarios;
+    private javax.swing.JMenuItem menuListarLancamento;
     private javax.swing.JMenuItem menuListarProdutos;
     // End of variables declaration//GEN-END:variables
 }

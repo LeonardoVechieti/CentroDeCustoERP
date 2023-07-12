@@ -146,8 +146,8 @@
                             <Column editable="true" title="ID P" type="java.lang.Object"/>
                             <Column editable="true" title="PRODUTO" type="java.lang.Object"/>
                             <Column editable="true" title="QUANTIDADE" type="java.lang.Object"/>
-                            <Column editable="true" title="VAL UNI" type="java.lang.Object"/>
-                            <Column editable="true" title="VAL TOTAL" type="java.lang.Object"/>
+                            <Column editable="true" title="VALOR UNIT&#xc1;RIO" type="java.lang.Object"/>
+                            <Column editable="true" title="VALOR TOTAL" type="java.lang.Object"/>
                             <Column editable="true" title="" type="java.lang.Object"/>
                           </Table>
                         </Property>

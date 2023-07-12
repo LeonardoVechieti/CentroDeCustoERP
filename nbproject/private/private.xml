@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/LoginView.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/ControleDeEstoqueView.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/NovoLancamentoProdutoView.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/CadastroOperacoes.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/NovoLancamentoView.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/LancamentoMovimentacaoView.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/PrincipalView.java</file>
+            <file>file:/C:/Users/Leonardo/Documents/Projetos/Java/dev-project/src/com/leonardovechieti/dev/project/views/CadastroCentroDeCusto.java</file>
         </group>
     </open-files>
 </project-private>

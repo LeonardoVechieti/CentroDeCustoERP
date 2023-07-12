@@ -139,6 +139,11 @@ public class NovoLancamentoView extends javax.swing.JFrame {
 
         comboBoxOperacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxOperacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxOperacao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                comboBoxOperacaoFocusLost(evt);
+            }
+        });
         comboBoxOperacao.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 comboBoxOperacaoMouseClicked(evt);
@@ -253,6 +258,10 @@ public class NovoLancamentoView extends javax.swing.JFrame {
 
     private void comboBoxOperacaoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxOperacaoMouseExited
         // TODO add your handling code here:
+        
+    }//GEN-LAST:event_comboBoxOperacaoMouseExited
+
+    private void comboBoxOperacaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comboBoxOperacaoFocusLost
         if (comboBoxOperacao.getSelectedItem().equals("TRANSFERENCIA")) {
             labelCentroDeCustoDestino.setVisible(true);
             comboBoxCentroDeCustoDestino.setVisible(true);
@@ -260,7 +269,7 @@ public class NovoLancamentoView extends javax.swing.JFrame {
             labelCentroDeCustoDestino.setVisible(false);
             comboBoxCentroDeCustoDestino.setVisible(false);
         }
-    }//GEN-LAST:event_comboBoxOperacaoMouseExited
+    }//GEN-LAST:event_comboBoxOperacaoFocusLost
 
     /**
      * @param args the command line arguments

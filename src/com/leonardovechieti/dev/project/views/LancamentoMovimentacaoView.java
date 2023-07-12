@@ -138,11 +138,11 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         }
         adicionaBotaoDeletar();
         //Define o tamanho das colunas
-        tabelaEstoque.getColumnModel().getColumn(0).setPreferredWidth(30);
+        tabelaEstoque.getColumnModel().getColumn(0).setPreferredWidth(20);
         tabelaEstoque.getColumnModel().getColumn(1).setPreferredWidth(190);
         tabelaEstoque.getColumnModel().getColumn(2).setPreferredWidth(60);
-        tabelaEstoque.getColumnModel().getColumn(3).setPreferredWidth(60);
-        tabelaEstoque.getColumnModel().getColumn(4).setPreferredWidth(60);
+        tabelaEstoque.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tabelaEstoque.getColumnModel().getColumn(4).setPreferredWidth(65);
     }
 
     private void adicionaBotaoDeletar(){
@@ -154,7 +154,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
             model.setValueAt("Cancelar", i, 5);
         }
 
-        TableColumn buttonColumn = tabelaEstoque.getColumnModel().getColumn(4);
+        TableColumn buttonColumn = tabelaEstoque.getColumnModel().getColumn(5);
 
         // Define o renderer personalizado para exibir o botão
         buttonColumn.setCellRenderer(new ButtonRenderer());
@@ -304,7 +304,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID P", "PRODUTO", "QUANTIDADE", "VAL UNI", "VAL TOTAL", ""
+                "ID P", "PRODUTO", "QUANTIDADE", "VALOR UNITÁRIO", "VALOR TOTAL", ""
             }
         ));
         tabelaEstoque.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);

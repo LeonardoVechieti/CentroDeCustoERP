@@ -75,11 +75,11 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
             //Pega a descricao do produto
             lancamento.setDescricaoProduto(txtProduto.getText());
             //Pega a quantidade
-            lancamento.setQuantidade(Double.parseDouble(Func.trocaVirgulaPorPonto(txtQuantidade.getText())));
+            lancamento.setQuantidade(Double.parseDouble(Func.formataPrecoBanco(txtQuantidade.getText())));
             //Pega o valor unitario
-            lancamento.setValorUnitario(Double.parseDouble(Func.trocaVirgulaPorPonto(txtValorUnitario.getText())));
+            lancamento.setValorUnitario(Double.parseDouble(Func.formataPrecoBanco(txtValorUnitario.getText())));
             //Pega o valor total
-            lancamento.setValorTotal(Double.parseDouble(Func.trocaVirgulaPorPonto(txtValorTotal.getText())));
+            lancamento.setValorTotal(Double.parseDouble(Func.formataPrecoBanco(txtValorTotal.getText())));
             this.lancamento.adicionaEstoque(lancamento);
             this.dispose();
         }
@@ -141,7 +141,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
         //Pega o nome do produto
         txtProduto.setText(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 1).toString());
         //Pega o valor unitário do produto e seta no campo trocando o ponto por virgula
-        txtValorUnitario.setText(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 3).toString().replace(".", ","));
+        txtValorUnitario.setText(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 3).toString());
 
     }
     private void verificaEstoque(String idProduto) {
@@ -195,11 +195,13 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
 
     private void calculaValorTotal(){
         if(!txtQuantidade.getText().isEmpty()){
+
             //Troca a virgula por ponto
             Double quantidadeDigitada = Double.parseDouble(Func.formataPrecoBanco(txtQuantidade.getText()));
             Double valorUnitarioDigitado = Double.parseDouble(Func.formataPrecoBanco(txtValorUnitario.getText()));
             //Calcula o valor total
             Double valorTotal = quantidadeDigitada * valorUnitarioDigitado;
+            System.out.println(quantidadeDigitada + " " + valorUnitarioDigitado + " " + valorTotal);
             String valorTotalFinal = Func.formataPrecoPadrao(valorTotal.toString());
             txtValorTotal.setText(valorTotalFinal);
         }
@@ -211,7 +213,6 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
         } else if (id == null) {
             MessageView message = new MessageView("Erro", "Selecione um produto para alterar", "error");
         }
-
     }
 
     private void setIcon(){

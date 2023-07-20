@@ -1,7 +1,6 @@
 package com.leonardovechieti.dev.project.repository;
 
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
-import com.leonardovechieti.dev.project.model.CentroDeCusto;
 import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.model.Produto;
 
@@ -16,11 +15,11 @@ public class EstoqueRepository {
     }
 
     public String lancar(Estoque estoque) {
-        String sql = "insert into estoque (idProduto, idMovimentacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into estoque (idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao) values (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, estoque.getIdProduto());
-            pst.setInt(2, estoque.getIdMovimentacao());
+            pst.setInt(2, estoque.getIdLancamentoFinanceiro());
             pst.setInt(3, estoque.getIdCentroDeCusto());
             pst.setInt(4, estoque.getIdOperacao());
             pst.setString(5, String.valueOf(estoque.getQuantidade()));
@@ -36,7 +35,7 @@ public class EstoqueRepository {
     }
 
     public String editar(Estoque estoque) {
-        String sql = "update estoque set idProduto=?, idMovimentacao=?, idCentroDeCusto=?, quantidade=?, operacao=?, descricao=? where id=?";
+        String sql = "update estoque set idProduto=?, idLancamentoFinanceiro=?, idCentroDeCusto=?, quantidade=?, operacao=?, descricao=? where id=?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.executeUpdate();
@@ -92,7 +91,7 @@ public class EstoqueRepository {
             pst.setInt(1, Integer.parseInt(id));
             rs = pst.executeQuery();
             if (rs.next()) {
-                return new Estoque(rs.getInt("id"), rs.getInt("idProduto"), rs.getInt("idMovimentacao"), rs.getInt("idCentroDeCusto"), rs.getInt("idOperacao"), rs.getBigDecimal("quantidade"), rs.getBigDecimal("valorUnitario"), rs.getBigDecimal("valorTotal"), rs.getString("data"), rs.getString("descricao"));
+                return new Estoque(rs.getInt("id"), rs.getInt("idProduto"), rs.getInt("idLancamentoFinanceiro"), rs.getInt("idCentroDeCusto"), rs.getInt("idOperacao"), rs.getBigDecimal("quantidade"), rs.getBigDecimal("valorUnitario"), rs.getBigDecimal("valorTotal"), rs.getString("data"), rs.getString("descricao"));
             } else {
                 return null;
             }

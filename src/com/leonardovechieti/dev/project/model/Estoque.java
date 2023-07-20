@@ -5,7 +5,7 @@ import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
 public class Estoque {
     private int id;
     private int idProduto;
-    private int idMovimentacao;
+    private int idLancamentoFinanceiro;
     private int idCentroDeCusto;
 
     private int idOperacao;
@@ -22,10 +22,10 @@ public class Estoque {
     private String descricaoProduto;
 
 
-    public Estoque(int id, int idProduto, int idMovimentacao, int idCentroDeCusto, int idOperacao, Number quantidade, Number valorUnitario, Number valorTotal, String data, String descricao) {
+    public Estoque(int id, int idProduto, int idLancamentoFinanceiro, int idCentroDeCusto, int idOperacao, Number quantidade, Number valorUnitario, Number valorTotal, String data, String descricao) {
         this.id = id;
         this.idProduto = idProduto;
-        this.idMovimentacao = idMovimentacao;
+        this.idLancamentoFinanceiro = idLancamentoFinanceiro;
         this.idCentroDeCusto = idCentroDeCusto;
         this.idOperacao = idOperacao;
         this.quantidade = quantidade;
@@ -53,12 +53,12 @@ public class Estoque {
         this.idProduto = idProduto;
     }
 
-    public int getIdMovimentacao() {
-        return idMovimentacao;
+    public int getIdLancamentoFinanceiro() {
+        return idLancamentoFinanceiro;
     }
 
-    public void setIdMovimentacao(int idMovimentacao) {
-        this.idMovimentacao = idMovimentacao;
+    public void setIdLancamentoFinanceiro(int idMovimentacao) {
+        this.idLancamentoFinanceiro = idMovimentacao;
     }
 
     public int getIdCentroDeCusto() {

@@ -75,7 +75,7 @@ foreign key(usuario) references usuario(id)
 create table estoque(
 id int primary key auto_increment,
 idProduto int not null,
-idMoviementacao int not null,
+idLancamentoFinanceiro int not null,
 idCentroDeCusto int not null,
 idOperacao int not null,
 quantidade decimal(10,2),
@@ -84,7 +84,7 @@ valorTotal decimal(10,2),
 data timestamp default current_timestamp,
 descricao varchar(200),
 foreign key(idProduto) references produto(id),
-foreign key(idMoviementacao) references movimentacao(id),
+foreign key(idLancamentoFinanceiro) references lancamentofinanceiro(id),
 foreign key(idCentroDeCusto) references centrodecusto(id),
 foreign key(idOperacao) references operacao(id)
 );
@@ -92,16 +92,16 @@ foreign key(idOperacao) references operacao(id)
 -- Adciona campo valor no estoque
 -- alter table estoque add valor decimal(10,2);
 
-insert into lancamento_financeiro( idCentroDeCusto, idOperacao, valorTotal, descricao)
-values (1, 1, 100.10, 'MOVIMENTACAO 1');
+insert into lancamentofinanceiro( centrodecusto, operacao, valortotal, descricao, usuario)
+values (1, 1, 100.10, 'MOVIMENTACAO 1', 1);
 
-insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
+insert into estoque( idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
 values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 1');
 
-insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
+insert into estoque( idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
 values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 2');
 
-insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
+insert into estoque( idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
 values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 3');
 
 

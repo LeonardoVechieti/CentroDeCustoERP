@@ -194,8 +194,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
     }
 
     private void calculaValorTotal(){
-        if(!txtQuantidade.getText().isEmpty()){
-
+        if(!txtQuantidade.getText().isEmpty() && !txtValorUnitario.getText().isEmpty()){
             //Troca a virgula por ponto
             Double quantidadeDigitada = Double.parseDouble(Func.formataPrecoBanco(txtQuantidade.getText()));
             Double valorUnitarioDigitado = Double.parseDouble(Func.formataPrecoBanco(txtValorUnitario.getText()));

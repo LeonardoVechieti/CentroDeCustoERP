@@ -1,22 +1,21 @@
 package com.leonardovechieti.dev.project.model;
 
-import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
-
-public class Movimentacao {
+public class LancamentoFinanceiro {
     private int id;
     private int idCentroDeCusto;
 
     private int idOperacao;
 
-    private Number valorTotal;
+    private String valorTotal;
     private String data;
     private String descricao;
+    private int usuario;
 
-    public Movimentacao(int id) {
+    public LancamentoFinanceiro(int id) {
         this.id = id;
     }
 
-    public Movimentacao(int id, int idCentroDeCusto, int idOperacao, Number valorTotal, String data, String descricao) {
+    public LancamentoFinanceiro(int id, int idCentroDeCusto, int idOperacao, String valorTotal, String data, String descricao) {
         this.id = id;
         this.idCentroDeCusto = idCentroDeCusto;
         this.idOperacao = idOperacao;
@@ -25,7 +24,7 @@ public class Movimentacao {
         this.descricao = descricao;
     }
 
-    public Movimentacao() {}
+    public LancamentoFinanceiro() {}
 
     public int getId() {
         return id;
@@ -51,11 +50,11 @@ public class Movimentacao {
         this.idOperacao = idOperacao;
     }
 
-    public Number getValorTotal() {
+    public String getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Number valorTotal) {
+    public void setValorTotal(String valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -73,6 +72,14 @@ public class Movimentacao {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public int getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(int usuario) {
+        this.usuario = usuario;
     }
 }
 

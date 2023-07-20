@@ -79,6 +79,16 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         }
     }
 
+//    private void calculaTotal(){
+//        //calcula valor total de acordo com o array de estoque
+//        double total = 0;
+//        for (Estoque estoque : listaEstoque) {
+//            total = total + estoque.getValorTotal();
+//        }
+//        txtValorTotalMovimentacao.setText(Func.formataPrecoPadrao(String.valueOf(total)));
+//
+//    }
+
 
     private void initialize() {
         initComponents();
@@ -249,8 +259,26 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         } catch (Exception e) {
             new MessageView("Erro!", "Erro ao lançar produto na movimentação!", "error");
         }
+        //Atualiza o valor total
+        atualizaValorTotal();
     }
 
+    private void atualizaValorTotal() {
+        //Atualiza o valor total
+        double valorTotal = 0;
+        for (Estoque estoque : listaEstoque) {
+            valorTotal += estoque.getValorTotal().doubleValue();
+        }
+        txtValorTotalMovimentacao.setText(Func.formataPrecoPadrao(String.valueOf(valorTotal)));
+    }
+
+    private void finalizarLancamento(){
+        //Lanca uma movimentação
+
+        //Recupera o id da movimentação
+        //Atualiza os dados da movimentação no array de estoque
+        //Lança os produtos na movimentação
+    }
     private void limparCampos() {
         btnPrincipal.setText("Novo Lançamento");
         btnPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png")));

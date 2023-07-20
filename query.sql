@@ -56,17 +56,20 @@ descricao varchar(200) not null,
 operacao varchar(200) not null,
 inativo boolean
 );
-
-
-create table movimentacao(
+-- use dev;
+-- drop table estoque;
+-- drop table lancamentofinanceiro;
+create table lancamentofinanceiro(
 id int primary key auto_increment,
-idCentroDeCusto int not null,
-idOperacao int not null,
-valorTotal decimal(10,2),
+centrodecusto int not null,
+operacao int not null,
+valortotal decimal(10,2),
 data timestamp default current_timestamp,
 descricao varchar(200),
-foreign key(idCentroDeCusto) references centrodecusto(id),
-foreign key(idOperacao) references operacao(id)
+usuario int not null,
+foreign key(centrodecusto) references centrodecusto(id),
+foreign key(operacao) references operacao(id),
+foreign key(usuario) references usuario(id)
 );
 
 create table estoque(
@@ -89,7 +92,7 @@ foreign key(idOperacao) references operacao(id)
 -- Adciona campo valor no estoque
 -- alter table estoque add valor decimal(10,2);
 
-insert into movimentacao( idCentroDeCusto, idOperacao, valorTotal, descricao)
+insert into lancamento_financeiro( idCentroDeCusto, idOperacao, valorTotal, descricao)
 values (1, 1, 100.10, 'MOVIMENTACAO 1');
 
 insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
@@ -108,7 +111,7 @@ values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 3');
 
 
 select * from estoque;
-select * from movimentacao;
+select * from lancamento_financeiro;
 
 
 

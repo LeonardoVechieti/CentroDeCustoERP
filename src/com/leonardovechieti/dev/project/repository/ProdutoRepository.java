@@ -163,6 +163,21 @@ public class ProdutoRepository {
         return 0;
     }
 
+    public Boolean estoqueHabilitado(int idProduto){
+        String sql = "select estoque from produto where id=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idProduto);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
     public void fecharConexao() throws SQLException {
          conexao.close();
         System.out.println("Conexao fechada!");

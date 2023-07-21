@@ -111,7 +111,7 @@ values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 3');
 
 
 select * from estoque;
-select * from lancamento_financeiro;
+select * from lancamentofinanceiro;
 
 
 

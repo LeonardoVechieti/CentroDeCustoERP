@@ -5,15 +5,9 @@
  */
 package com.leonardovechieti.dev.project.views;
 
-import com.leonardovechieti.dev.project.model.CentroDeCusto;
-import com.leonardovechieti.dev.project.model.Estoque;
-import com.leonardovechieti.dev.project.model.Operacao;
-import com.leonardovechieti.dev.project.model.Produto;
+import com.leonardovechieti.dev.project.model.*;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
-import com.leonardovechieti.dev.project.repository.CentroDeCustoRepository;
-import com.leonardovechieti.dev.project.repository.EstoqueRepository;
-import com.leonardovechieti.dev.project.repository.OperacaoRepository;
-import com.leonardovechieti.dev.project.repository.ProdutoRepository;
+import com.leonardovechieti.dev.project.repository.*;
 import com.leonardovechieti.dev.project.util.Func;
 import net.proteanit.sql.DbUtils;
 import javax.swing.*;
@@ -30,7 +24,7 @@ import java.sql.ResultSet;
  *
  * @author Leonardo
  */
-public class LancamentoMovimentacaoView extends javax.swing.JFrame {
+public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private String id = null;
     private Operacao operacao = null;
     private CentroDeCusto centroDeCusto= null;
@@ -38,18 +32,18 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     ResultSet rs = null;
     private java.util.List<Estoque> listaEstoque = new java.util.ArrayList<Estoque>();
 
-    public LancamentoMovimentacaoView() {
+    public LancamentoFinanceiroView() {
         initialize();
         listaLancamentos();
     }
 
-    public LancamentoMovimentacaoView(String id) {
+    public LancamentoFinanceiroView(String id) {
         Produto produto = new Produto();
         produto.setId(Integer.parseInt(id));
         initialize();
     }
 
-    public LancamentoMovimentacaoView(Operacao operacao, CentroDeCusto centroDeCusto, CentroDeCusto centroDeCustoDestino) {
+    public LancamentoFinanceiroView(Operacao operacao, CentroDeCusto centroDeCusto, CentroDeCusto centroDeCustoDestino) {
         initialize();
         this.setVisible(true);
         this.operacao = operacao;
@@ -273,11 +267,33 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
     }
 
     private void finalizarLancamento(){
-        //Lanca uma movimentação
+        //Instancia os objetos utilizados
+        OperacaoRepository operacao = new OperacaoRepository();
+        CentroDeCustoRepository centroDeCusto = new CentroDeCustoRepository();
+        LancamentoFinanceiro lancamento = new LancamentoFinanceiro();
+        LancamentoFinanceiroRepository lancamentoFinanceiro = new LancamentoFinanceiroRepository();
 
-        //Recupera o id da movimentação
-        //Atualiza os dados da movimentação no array de estoque
-        //Lança os produtos na movimentação
+        //Percorre a lista de estoque adicionando o id do centro de custo e da operação
+        for (Estoque estoque : listaEstoque) {
+            estoque.setIdCentroDeCusto(centroDeCusto.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()).getId());
+            estoque.setIdOperacao(operacao.buscaIdDescricao(comboBoxOperacao.getSelectedItem().toString()));
+        }
+        //Lanca uma movimentação financeira
+        lancamento.setIdCentroDeCusto(centroDeCusto.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()).getId());
+        lancamento.setIdOperacao(operacao.buscaIdDescricao(comboBoxOperacao.getSelectedItem().toString()));
+        lancamento.setDescricao(txtDescricaoMovimentacao.getText());
+        lancamento.setValorTotal(txtValorTotalMovimentacao.getText());
+        lancamento.setUsuario(Integer.parseInt(PrincipalView.labelIdUsuario.getText()));
+        String retornoLancamento = lancamentoFinanceiro.novoLancamento(lancamento, listaEstoque);
+        if(retornoLancamento.equals("CREATE")){
+            int id = lancamentoFinanceiro.ultimoId();
+            new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+            listaEstoque.clear();
+            listaLancamentos();
+            atualizaValorTotal();
+        }else{
+            new MessageView("Erro!", "Erro ao lançar movimentação financeira!", "error");
+        }
     }
     private void limparCampos() {
         btnPrincipal.setText("Novo Lançamento");
@@ -550,7 +566,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
         if (id != null) {
             //alterarLancamento();
         } else {
-            //novoLancamento();
+            finalizarLancamento();
         }
     }//GEN-LAST:event_btnPrincipalActionPerformed
 
@@ -568,7 +584,7 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
 
     private void btnLancarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLancarProdutoActionPerformed
         // TODO add your handling code here:
-        NovoLancamentoProdutoView novoLancamentoProdutoView = new NovoLancamentoProdutoView(this, this.operacao);
+        LancamentoFinanceiroProduto novoLancamentoProdutoView = new LancamentoFinanceiroProduto(this, this.operacao);
         novoLancamentoProdutoView.setVisible(true);
         
     }//GEN-LAST:event_btnLancarProdutoActionPerformed
@@ -590,83 +606,19 @@ public class LancamentoMovimentacaoView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LancamentoMovimentacaoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LancamentoMovimentacaoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LancamentoMovimentacaoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LancamentoMovimentacaoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
+  
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LancamentoMovimentacaoView().setVisible(true);
+                new LancamentoFinanceiroView().setVisible(true);
             }
         });
     }

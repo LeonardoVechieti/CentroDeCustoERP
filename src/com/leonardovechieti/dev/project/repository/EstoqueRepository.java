@@ -5,11 +5,13 @@ import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.model.Produto;
 
 import java.sql.*;
+import java.util.List;
 
 public class EstoqueRepository {
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
+
     public EstoqueRepository() {
         conexao = ModuloConexao.conector();
     }
@@ -139,26 +141,72 @@ public class EstoqueRepository {
             pst.setInt(1, produto.getId());
             rs = pst.executeQuery();
 
-       } catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
         return rs;
     }
 
-    public String retornaTotalEstoque(Produto produto) {
+    public Double retornaTotalEstoque(Produto produto) {
         String sql = "select sum(quantidade) from estoque where idProduto = ?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, produto.getId());
             rs = pst.executeQuery();
             if (rs.next()) {
-                return rs.getString(1);
+                return rs.getDouble(1);
             } else {
-                return "0";
+                return 0.0;
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return "0";
+        return 0.0;
     }
+
+
+    public String lancarListaEstoque(List<Estoque> listaEstoque) {
+        //Verifica se a lista esta vazia
+        if (listaEstoque.isEmpty()) {
+            return "ERROR";
+        }
+        try {
+            for (Estoque estoque : listaEstoque) {
+                String sql = "insert into estoque (idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao) values (?, ?, ?, ?, ?, ?, ?, ?)";
+                try {
+                    pst = conexao.prepareStatement(sql);
+                    pst.setInt(1, estoque.getIdProduto());
+                    pst.setInt(2, estoque.getIdLancamentoFinanceiro());
+                    pst.setInt(3, estoque.getIdCentroDeCusto());
+                    pst.setInt(4, estoque.getIdOperacao());
+                    pst.setString(5, String.valueOf(estoque.getQuantidade()));
+                    pst.setString(6, String.valueOf(estoque.getValorUnitario()));
+                    pst.setString(7, String.valueOf(estoque.getValorTotal()));
+                    pst.setString(8, estoque.getDescricao());
+                    pst.executeUpdate();
+                    return "SUCCESS";
+                } catch (Exception e) {
+                    System.out.println(e);
+                    return "ERROR";
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return "ERROR";
+        }
+        return "ERROR";
+    }
+
+    public void cancelarLancamentoEstoque(String idLancamentoFinanceiro) {
+        String sql = "delete from estoque where idLancamentoFinanceiro = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(idLancamentoFinanceiro));
+            pst.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
 }

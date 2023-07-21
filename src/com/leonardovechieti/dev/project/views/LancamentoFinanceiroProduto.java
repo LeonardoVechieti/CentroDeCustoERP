@@ -29,10 +29,10 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Leonardo
  */
-public class NovoLancamentoProdutoView extends javax.swing.JFrame {
+public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
 
     //Armazena a referencia de quem chamou a tela
-    private LancamentoMovimentacaoView lancamento;
+    private LancamentoFinanceiroView lancamento;
     private Operacao operacao;
 
     Connection conexao = null;
@@ -43,11 +43,11 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
     /**
      * Creates new form ListProdutosView
      */
-    public NovoLancamentoProdutoView() {
+    public LancamentoFinanceiroProduto() {
         initialize();
     }
 
-    public NovoLancamentoProdutoView(LancamentoMovimentacaoView lancamento, Operacao operacao) {
+    public LancamentoFinanceiroProduto(LancamentoFinanceiroView lancamento, Operacao operacao) {
         this.lancamento = lancamento;
         this.operacao = operacao;
         initialize();
@@ -62,12 +62,12 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
         try {
             pesquisarProdutos();
         } catch (SQLException ex) {
-            Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void enviaLancamento(){
-        if (validaCampos() == true){
+        if (validaCampos()){
             //Cria um novo objeto estoque
             Estoque lancamento = new Estoque();
             //Pega o id do produto
@@ -142,53 +142,65 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
         txtProduto.setText(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 1).toString());
         //Pega o valor unitário do produto e seta no campo trocando o ponto por virgula
         txtValorUnitario.setText(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 3).toString());
-
+        //Reseta o campo quantidade e valor total
+        txtQuantidade.setText("");
+        txtValorTotal.setText("");
     }
-    private void verificaEstoque(String idProduto) {
-        if (idProduto == null) {
+    private void verificaEstoque(int idProduto) {
+        if (txtQuantidade.getText().isEmpty()) {
+        }
+        else if (idProduto == 0) {
             MessageView message = new MessageView("Alerta", "Selecione um produto!", "alert");
-            return;
-        }
-        ProdutoRepository produtoRepository = new ProdutoRepository();
-        Produto produto = produtoRepository.buscaId(idProduto);
-        EstoqueRepository estoqueRepository = new EstoqueRepository();
-        System.out.println(produto.getEstoque());
-        System.out.println(estoqueRepository.retornaTotalEstoque(produto));
-        //Troca a virgula por ponto
-        String quantidadeDigitada = txtQuantidade.getText().replace(",", ".");
+        } else {
+            ProdutoRepository produtoRepository = new ProdutoRepository();
+            Produto produto = produtoRepository.buscaId(String.valueOf(idProduto));
+            EstoqueRepository estoqueRepository = new EstoqueRepository();
 
-        if(produto.getEstoque()==true){
+            //Troca a virgula por ponto
+            String quantidadeDigitada = txtQuantidade.getText().replace(",", ".");
 
-            String totalEstoque = estoqueRepository.retornaTotalEstoque(produto);
-            System.out.println(Float.parseFloat(quantidadeDigitada));
-            if (Float.parseFloat(quantidadeDigitada) == 0.00) {
-                MessageView message = new MessageView("Alerta", "Quantidade não pode ser zero.", "alert");
-                //Resta o campo quantidade
-                txtQuantidade.setText("");
-                return;
-            }
-            if (Float.parseFloat(quantidadeDigitada) < 0) {
-                MessageView message = new MessageView("Alerta", "Quantidade não pode ser negativa.", "alert");
-                txtQuantidade.setText("");
-                return;
-            }
-            if (Float.parseFloat(quantidadeDigitada) > Float.parseFloat(totalEstoque)) {
-                MessageView message = new MessageView("Alerta", "Quantidade maior que o estoque atual ("+totalEstoque + ").", "alert");
-                txtQuantidade.setText("");
-                return;
+            //Verifica se o produto está com estoque habilitado
+            //System.out.println("Estoque habilitado: " + produtoRepository.estoqueHabilitado(idProduto));
+            if(produtoRepository.estoqueHabilitado(idProduto)){
 
-            }
-        }
-        if(produto.getEstoque()==false){
-            if (Float.parseFloat(quantidadeDigitada) == 0.00) {
-                MessageView message = new MessageView("Alerta", "Quantidade não pode ser zero.", "alert");
-                txtQuantidade.setText("");
-                return;
-            }
-            if (Float.parseFloat(quantidadeDigitada) < 0) {
-                MessageView message = new MessageView("Alerta", "Quantidade não pode ser negativa.", "alert");
-                txtQuantidade.setText("");
-                return;
+                Double totalEstoque = estoqueRepository.retornaTotalEstoque(produto);
+                //System.out.println("Total estoque que vem do banco: " + totalEstoque);
+                //System.out.println("Quantidade digitada: " + quantidadeDigitada);
+                //Verifica se a quantidade do estoque é zero ou nula ou negativa
+                if (totalEstoque != null && totalEstoque != 0.00 && totalEstoque != 0 && totalEstoque >= 0) {
+                    if (Double.parseDouble(quantidadeDigitada) == 0.00) {
+                        MessageView message = new MessageView("Alerta", "Quantidade não pode ser zero.", "alert");
+                        //Resta o campo quantidade
+                        txtQuantidade.setText("");
+                        return;
+                    }
+                    if (Float.parseFloat(quantidadeDigitada) < 0) {
+                        MessageView message = new MessageView("Alerta", "Quantidade não pode ser negativa.", "alert");
+                        txtQuantidade.setText("");
+                        return;
+                    }
+                    if (Double.parseDouble(quantidadeDigitada) > (totalEstoque)) {
+                        MessageView message = new MessageView("Alerta", "Quantidade maior que o estoque atual (" + totalEstoque + ").", "alert");
+                        txtQuantidade.setText("");
+
+                    }
+                } else {
+                    MessageView message = new MessageView("Alerta", "Produto sem estoque, verifique!.", "alert");
+                    //Resta o campo quantidade
+                    txtQuantidade.setText("");
+                    return;
+                }
+            } else {
+
+                if (Float.parseFloat(quantidadeDigitada) == 0.00) {
+                    MessageView message = new MessageView("Alerta", "Quantidade não pode ser zero.", "alert");
+                    txtQuantidade.setText("");
+                    return;
+                }
+                if (Float.parseFloat(quantidadeDigitada) < 0) {
+                    MessageView message = new MessageView("Alerta", "Quantidade não pode ser negativa.", "alert");
+                    txtQuantidade.setText("");
+                }
             }
         }
     }
@@ -200,7 +212,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
             Double valorUnitarioDigitado = Double.parseDouble(Func.formataPrecoBanco(txtValorUnitario.getText()));
             //Calcula o valor total
             Double valorTotal = quantidadeDigitada * valorUnitarioDigitado;
-            System.out.println(quantidadeDigitada + " " + valorUnitarioDigitado + " " + valorTotal);
+            //System.out.println(quantidadeDigitada + " " + valorUnitarioDigitado + " " + valorTotal);
             String valorTotalFinal = Func.formataPrecoPadrao(valorTotal.toString());
             txtValorTotal.setText(valorTotalFinal);
         }
@@ -346,7 +358,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
                 "ID", "PRODUTO", "UNIDADE", "PREÇO"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
 
@@ -515,7 +527,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
             // TODO add your handling code here:
             pesquisarProdutos();
         } catch (SQLException ex) {
-            Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_textPesquisarKeyReleased
 
@@ -524,7 +536,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
             // TODO add your handling code here:
             pesquisarProdutos();
         } catch (SQLException ex) {
-            Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnPesquisarMouseClicked
 
@@ -558,7 +570,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
 
     private void txtQuantidadeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQuantidadeFocusLost
         // TODO add your handling code here:
-        verificaEstoque(this.id);
+        verificaEstoque(Integer.parseInt(this.id));
     }//GEN-LAST:event_txtQuantidadeFocusLost
 
     private void txtValorUnitarioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtValorUnitarioFocusGained
@@ -574,7 +586,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -588,14 +600,18 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NovoLancamentoProdutoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancamentoFinanceiroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -604,7 +620,7 @@ public class NovoLancamentoProdutoView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NovoLancamentoProdutoView().setVisible(true);
+                new LancamentoFinanceiroProduto().setVisible(true);
             }
         });
     }

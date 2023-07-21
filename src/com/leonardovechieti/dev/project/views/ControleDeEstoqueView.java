@@ -43,7 +43,7 @@ public class ControleDeEstoqueView extends javax.swing.JFrame {
 
     private void buscaTotalDoEstoque(Produto produto) {
         EstoqueRepository estoqueRepository = new EstoqueRepository();
-        String total = estoqueRepository.retornaTotalEstoque(produto);
+        String total = estoqueRepository.retornaTotalEstoque(produto).toString();
         labelTotalEstoque.setText(total);
     }
 

@@ -358,7 +358,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
     private void menuCadastrarProdutos2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos2ActionPerformed
         // TODO add your handling code here:
-        NovoLancamentoView lancamento = new NovoLancamentoView();
+        LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView();
         lancamento.setVisible(true);
     }//GEN-LAST:event_menuCadastrarProdutos2ActionPerformed
 
@@ -369,7 +369,7 @@ public class PrincipalView extends javax.swing.JFrame {
     }//GEN-LAST:event_menuCadastrarOpercaoesActionPerformed
 
     private void barraNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraNovoLancamentoActionPerformed
-        NovoLancamentoView lancamento = new NovoLancamentoView();
+        LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView();
         lancamento.setVisible(true);
     }//GEN-LAST:event_barraNovoLancamentoActionPerformed
 

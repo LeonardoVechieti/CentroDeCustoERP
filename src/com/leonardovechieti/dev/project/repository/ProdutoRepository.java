@@ -1,14 +1,11 @@
 package com.leonardovechieti.dev.project.repository;
 
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
-import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.util.Func;
 import com.leonardovechieti.dev.project.util.Message;
 import com.leonardovechieti.dev.project.model.Produto;
 import com.leonardovechieti.dev.project.views.MessageView;
-
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoRepository {
@@ -112,7 +109,6 @@ public class ProdutoRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return listaProdutos;
     }
 
@@ -142,7 +138,6 @@ public class ProdutoRepository {
             }
         } catch (Exception e) {
             Message message = new Message("Erro!", "Erro ao buscar produto!" + e, "error");
-
         }
         return null;
     }

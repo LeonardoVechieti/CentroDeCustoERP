@@ -47,9 +47,8 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         initialize();
     }
 
-    public LancamentoFinanceiroProduto(LancamentoFinanceiroView lancamento, Operacao operacao) {
+    public LancamentoFinanceiroProduto(LancamentoFinanceiroView lancamento) {
         this.lancamento = lancamento;
-        this.operacao = operacao;
         initialize();
     }
 
@@ -87,24 +86,22 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
     
     private Boolean validaCampos(){
         if (id == null) {
-            MessageView message = new MessageView("Alerta", "Selecione um produto", "alert");
+            new MessageView("Alerta", "Selecione um produto", "alert");
             return false;
         }
         if (txtQuantidade.getText().isEmpty()) {
-            MessageView message = new MessageView("Alerta", "Informe a quantidade", "alert");
+            new MessageView("Alerta", "Informe a quantidade", "alert");
             return false;
         }
-        if (operacao.getOperacao().toString() != "AJUSTE") {
-            if (txtValorUnitario.getText().isEmpty()) {
-                MessageView message = new MessageView("Alerta", "Informe o valor unitário", "alert");
-                return false;
-            }
-            if (txtValorTotal.getText().isEmpty()) {
-                MessageView message = new MessageView("Alerta", "Informe o valor total", "alert");
-                return false;
-            }
-        }
 
+        if (txtValorUnitario.getText().isEmpty()) {
+            new MessageView("Alerta", "Informe o valor unitário", "alert");
+            return false;
+        }
+        if (txtValorTotal.getText().isEmpty()) {
+            new MessageView("Alerta", "Informe o valor total", "alert");
+            return false;
+        }
         return true;
     }
 
@@ -286,7 +283,6 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         txtProduto = new javax.swing.JTextField();
         labelValorUnitario = new javax.swing.JLabel();
         txtValorUnitario = new javax.swing.JFormattedTextField();
-        labelIdProduto2 = new javax.swing.JLabel();
         LabelQuantidade2 = new javax.swing.JLabel();
         txtQuantidade = new javax.swing.JFormattedTextField();
         btnLancarProduto = new javax.swing.JButton();
@@ -334,7 +330,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
                 .addComponent(btnPesquisar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnNovoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
         );
@@ -358,7 +354,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
                 "ID", "PRODUTO", "UNIDADE", "PREÇO"
             }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
 
@@ -403,9 +399,6 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             }
         });
 
-        labelIdProduto2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        labelIdProduto2.setText("ID");
-
         LabelQuantidade2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         LabelQuantidade2.setText("Quantidade:");
 
@@ -446,20 +439,6 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(LabelProduto2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(labelIdProduto2))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(LabelQuantidade2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                        .addComponent(btnLancarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(labelValorUnitario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtValorUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -467,7 +446,20 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
                         .addComponent(labelValorTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(LabelProduto2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(LabelQuantidade2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                        .addComponent(btnLancarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,8 +470,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(LabelProduto2)
-                            .addComponent(txtProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelIdProduto2))
+                            .addComponent(txtProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(LabelQuantidade2)
@@ -500,11 +491,13 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -634,7 +627,6 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel labelIdProduto2;
     private javax.swing.JLabel labelValorTotal;
     private javax.swing.JLabel labelValorUnitario;
     private javax.swing.JTable tabelaProdutos;

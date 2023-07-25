@@ -127,8 +127,8 @@ public class EstoqueRepository {
     }
 
     public ResultSet listarPorProduto(Produto produto) {
-        //Lista do mais recente para o mais antigo da uniao das tabelas estoque, produto e centrodecusto
-        String sql = "select e.id as ID, o.descricao as OPERACAO, e.quantidade as QUANTIDADE, c.nome as CENTRO, p.descricao as PRODUTO from estoque e\n" +
+        //Lista do mais recente para o mais antigo da uniao das tabelas estoque, produto e centrodecusto formatando a data
+        String sql = "select o.descricao as OPERACAO, e.quantidade as QUANTIDADE, c.nome as CENTRO, DATE_FORMAT(e.data,'%d/%m/%Y') as DATA from estoque e\n" +
                 "join produto p\n" +
                 "on e.idProduto = p.id\n" +
                 "join centrodecusto c\n" +

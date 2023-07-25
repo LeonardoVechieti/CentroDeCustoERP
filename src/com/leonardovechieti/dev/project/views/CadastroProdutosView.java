@@ -38,14 +38,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             ProdutoRepository produtoRepository = new ProdutoRepository();
             produto = produtoRepository.buscaId(id);
             txtDescricao.setText(produto.getDescricao());
-
-
             txtPreco.setText(produto.getPreco());
-
-
-
-
-
             checkBoxInativar.setSelected(produto.getInativo());
             checkBoxServico.setSelected(produto.getServico());
             checkBoxHabilitaEstoque.setSelected(produto.getEstoque());

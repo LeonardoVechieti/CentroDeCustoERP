@@ -52,9 +52,9 @@ public class ControleDeEstoqueView extends javax.swing.JFrame {
         setIcon();
         formataBotoes();
         formataTabela();
-
         btnDeletar.setVisible(false);
         btnCancelar.setVisible(false);
+        btnPrincipal.setVisible(false);
         EstoqueRepository estoqueRepository = new EstoqueRepository();
     }
 

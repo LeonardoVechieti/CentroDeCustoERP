@@ -55,4 +55,5 @@ public class Operacao {
     public void setOperacao(Enum<TipoOperacao> operacao) {
         this.operacao = operacao;
     }
+
 }

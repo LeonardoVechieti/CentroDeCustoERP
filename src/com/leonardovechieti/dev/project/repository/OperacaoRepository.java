@@ -168,6 +168,24 @@ public class OperacaoRepository {
         return null;
     }
 
+    //Retorna o tipo atraves do id
+    public String buscaTipoId(String id) {
+        String sql = "select operacao from operacao where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(id));
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getString("operacao");
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
     public void fecharConexao() throws SQLException {
         conexao.close();
         System.out.println("Conexao fechada!");

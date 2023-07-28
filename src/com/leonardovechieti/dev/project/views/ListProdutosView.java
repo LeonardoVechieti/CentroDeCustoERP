@@ -146,6 +146,7 @@ public class ListProdutosView extends javax.swing.JFrame {
         btnDeletar.setFocusPainted(false);
         btnDeletar.setContentAreaFilled(false);
         btnDeletar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
     }
 
     private void pegaId(){

@@ -72,7 +72,7 @@ public class NovoLancamentoView extends javax.swing.JFrame {
             } else {
                 OperacaoRepository operacaoRepository = new OperacaoRepository();
                 CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
-                LancamentoMovimentacaoView lancamento = new LancamentoMovimentacaoView(
+                LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView(
                         operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
                         centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
                         centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
@@ -82,7 +82,7 @@ public class NovoLancamentoView extends javax.swing.JFrame {
         } else {
             OperacaoRepository operacaoRepository = new OperacaoRepository();
             CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
-            LancamentoMovimentacaoView lancamento = new LancamentoMovimentacaoView(
+            LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView(
                     operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
                     centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
                     centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())

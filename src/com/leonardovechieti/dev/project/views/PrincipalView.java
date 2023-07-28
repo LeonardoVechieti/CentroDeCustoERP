@@ -260,7 +260,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
         menuCadastrarProdutos2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarProdutos2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
-        menuCadastrarProdutos2.setText("Novo Lançamento");
+        menuCadastrarProdutos2.setText("Novo Lançamento Financeiro");
         menuCadastrarProdutos2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuCadastrarProdutos2ActionPerformed(evt);
@@ -270,7 +270,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
         menuListarLancamento.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuListarLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/garficoelupa.png"))); // NOI18N
-        menuListarLancamento.setText("Listar Lançamento");
+        menuListarLancamento.setText("Listar Lançamento Financeiro");
         menuListarLancamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuListarLancamentoActionPerformed(evt);
@@ -358,7 +358,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
     private void menuCadastrarProdutos2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos2ActionPerformed
         // TODO add your handling code here:
-        NovoLancamentoView lancamento = new NovoLancamentoView();
+        LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView();
         lancamento.setVisible(true);
     }//GEN-LAST:event_menuCadastrarProdutos2ActionPerformed
 
@@ -369,7 +369,7 @@ public class PrincipalView extends javax.swing.JFrame {
     }//GEN-LAST:event_menuCadastrarOpercaoesActionPerformed
 
     private void barraNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraNovoLancamentoActionPerformed
-        NovoLancamentoView lancamento = new NovoLancamentoView();
+        LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView();
         lancamento.setVisible(true);
     }//GEN-LAST:event_barraNovoLancamentoActionPerformed
 

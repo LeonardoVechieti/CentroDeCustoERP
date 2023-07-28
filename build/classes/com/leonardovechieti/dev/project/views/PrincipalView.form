@@ -113,7 +113,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/graficobarras.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Novo Lan&#xe7;amento"/>
+                <Property name="text" type="java.lang.String" value="Novo Lan&#xe7;amento Financeiro"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuCadastrarProdutos2ActionPerformed"/>
@@ -127,7 +127,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/garficoelupa.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Listar Lan&#xe7;amento"/>
+                <Property name="text" type="java.lang.String" value="Listar Lan&#xe7;amento Financeiro"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuListarLancamentoActionPerformed"/>

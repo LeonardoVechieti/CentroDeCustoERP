@@ -22,10 +22,6 @@ import java.sql.SQLException;
  */
 public class CadastroCentroDeCusto extends javax.swing.JFrame {
     private String id = null;
-    ResultSet rs = null;
-
-    //private CentroDeCusto centroDeCusto = new CentroDeCusto();
-
 
     public CadastroCentroDeCusto() {
         initialize();
@@ -44,7 +40,6 @@ public class CadastroCentroDeCusto extends javax.swing.JFrame {
         }
         btnDeletar.setVisible(false);
         btnCancelar.setVisible(false);
-        CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
     }
     private void formataBotoes() {
         btnPrincipal.setBackground(new Color(0, 0, 0, 0));
@@ -53,40 +48,31 @@ public class CadastroCentroDeCusto extends javax.swing.JFrame {
         btnPrincipal.setContentAreaFilled(false);
         btnPrincipal.setOpaque(false);
         btnPrincipal.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         btnDeletar.setBackground(new Color(0, 0, 0, 0));
         btnDeletar.setBorderPainted(false);
         btnDeletar.setFocusPainted(false);
         btnDeletar.setContentAreaFilled(false);
         btnDeletar.setOpaque(false);
         btnDeletar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         btnCancelar.setBackground(new Color(0, 0, 0, 0));
         btnCancelar.setBorderPainted(false);
         btnCancelar.setFocusPainted(false);
         btnCancelar.setContentAreaFilled(false);
         btnCancelar.setOpaque(false);
         btnCancelar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
     }
 
     private void formataTabela(){
-
         //Seta o tamanho das linhas
         tabela.setRowHeight(25);
-
         //Seta o tamanho da fonte
         tabela.setFont(new Font("Arial", Font.PLAIN, 14));
-
         //Seta o tamanho da fonte do cabeçalho
         tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-
         //Seta a cor da linha quando selecionada
         tabela.setSelectionBackground(new Color(152, 156, 157));
-
         //Seta a cor da fonte quando selecionada
         tabela.setSelectionForeground(Color.black);
-
         //Bloqueia a edição da tabela
         tabela.setDefaultEditor(Object.class, null);
     }
@@ -154,21 +140,13 @@ public class CadastroCentroDeCusto extends javax.swing.JFrame {
         CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
         ResultSet rs = (ResultSet) centroDeCustoRepository.pesquisar(textPesquisar.getText());
         tabela.setModel(DbUtils.resultSetToTableModel(rs));
-
         //Seta o tamanho das colunas
         tabela.getColumnModel().getColumn(0).setPreferredWidth(30);
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(230);
-
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(480);
         //Limpa os campos
         limparCampos();
-
-        //Desabilita o botão de deletar
-        //btnDeletar.setVisible(false);
-
         //Fecha a conexão
         centroDeCustoRepository.fecharConexao();
-
-
     }
 
     private void deletar(String id) {
@@ -293,21 +271,21 @@ public class CadastroCentroDeCusto extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(LabeDescricao)
+                        .addComponent(LabeNome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(LabeNome)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(34, 34, 34)
                         .addComponent(checkBoxInativar)
-                        .addGap(18, 18, 18)
-                        .addComponent(labelId)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                        .addGap(37, 37, 37)
+                        .addComponent(labelId))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(LabeDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDescricao)))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,27 +355,26 @@ public class CadastroCentroDeCusto extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(btnPesquisar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(278, 278, 278))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );

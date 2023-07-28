@@ -27,9 +27,11 @@ public class CadastroProdutosView extends javax.swing.JFrame {
     private String id;
     public CadastroProdutosView() {
         initialize();
+        btnEstoque.setVisible(false);
     }
     public CadastroProdutosView(String id) {
         initialize();
+        btnEstoque.setVisible(true);
         painelInformacoes.setVisible(true);
         labelId.setVisible(true);
         Produto produto = new Produto();
@@ -38,14 +40,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             ProdutoRepository produtoRepository = new ProdutoRepository();
             produto = produtoRepository.buscaId(id);
             txtDescricao.setText(produto.getDescricao());
-
-
             txtPreco.setText(produto.getPreco());
-
-
-
-
-
             checkBoxInativar.setSelected(produto.getInativo());
             checkBoxServico.setSelected(produto.getServico());
             checkBoxHabilitaEstoque.setSelected(produto.getEstoque());
@@ -82,6 +77,13 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         btnPrincipal.setContentAreaFilled(false);
         btnPrincipal.setOpaque(false);
         btnPrincipal.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnEstoque.setBackground(new Color(0, 0, 0, 0));
+        btnEstoque.setBorderPainted(false);
+        btnEstoque.setFocusPainted(false);
+        btnEstoque.setContentAreaFilled(false);
+        btnEstoque.setOpaque(false);
+        btnEstoque.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
     }
     
     private void cadastrarProduto() {
@@ -203,7 +205,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         checkBoxHabilitaProducao = new javax.swing.JCheckBox();
         btnPrincipal = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnEstoque = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de produtos e serviços");
@@ -454,10 +456,12 @@ public class CadastroProdutosView extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Abre Lista de estoque");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEstoque.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnEstoque.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/caixa.png"))); // NOI18N
+        btnEstoque.setText("Estoque");
+        btnEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEstoqueActionPerformed(evt);
             }
         });
 
@@ -466,8 +470,8 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(jButton1)
+                .addGap(24, 24, 24)
+                .addComponent(btnEstoque)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
@@ -480,7 +484,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(btnEstoque))
                 .addGap(20, 20, 20))
         );
 
@@ -498,11 +502,11 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnPrincipalActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstoqueActionPerformed
         ControleDeEstoqueView controleEstoque = new ControleDeEstoqueView(this.id);
         controleEstoque.setVisible(true); 
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnEstoqueActionPerformed
 
     /**
      * @param args the command line arguments
@@ -544,13 +548,13 @@ public class CadastroProdutosView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LabelDescricao;
+    private javax.swing.JButton btnEstoque;
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JCheckBox checkBoxHabilitaEstoque;
     private javax.swing.JCheckBox checkBoxHabilitaProducao;
     private javax.swing.JCheckBox checkBoxInativar;
     private javax.swing.JCheckBox checkBoxServico;
     private javax.swing.JComboBox<String> comboBoxUnidade;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;

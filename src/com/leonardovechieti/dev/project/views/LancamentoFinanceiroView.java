@@ -275,10 +275,12 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         lancamento.setDescricao(txtDescricaoMovimentacao.getText());
         lancamento.setValorTotal(txtValorTotalMovimentacao.getText());
         lancamento.setUsuario(Integer.parseInt(PrincipalView.labelIdUsuario.getText()));
-        String retornoLancamento = lancamentoFinanceiro.novoLancamento(lancamento, listaEstoque);
+        String retornoLancamento = lancamentoFinanceiro.novoLancamento(
+                lancamento,
+                listaEstoque,
+                centroDeCusto.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString()).getId()
+                );
         if(retornoLancamento.equals("CREATE")){
-            int id = lancamentoFinanceiro.ultimoId();
-            new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
             listaEstoque.clear();
             listaLancamentos();
             atualizaValorTotal();

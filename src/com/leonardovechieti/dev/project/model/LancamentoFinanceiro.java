@@ -1,5 +1,7 @@
 package com.leonardovechieti.dev.project.model;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 public class LancamentoFinanceiro {
     private int id;
     private int idCentroDeCusto;
@@ -10,6 +12,9 @@ public class LancamentoFinanceiro {
     private String data;
     private String descricao;
     private int usuario;
+    private int idLancamentoAnexo;
+
+    //Todo: No momento não temos os atributos usuario e idlancamentoanexo em construtores, verificar se necessário
 
     public LancamentoFinanceiro(int id) {
         this.id = id;
@@ -80,6 +85,14 @@ public class LancamentoFinanceiro {
 
     public void setUsuario(int usuario) {
         this.usuario = usuario;
+    }
+
+    public int getIdLancamentoAnexo() {
+        return idLancamentoAnexo;
+    }
+
+    public void setIdlancamentoanexo(int idLancamentoAnexo) {
+        this.idLancamentoAnexo = idLancamentoAnexo;
     }
 }
 

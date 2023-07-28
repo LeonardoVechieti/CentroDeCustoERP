@@ -255,6 +255,12 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         btnNovoCadastro.setContentAreaFilled(false);
         btnNovoCadastro.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        btnLancarProduto.setBorderPainted(false);
+        btnLancarProduto.setFocusPainted(false);
+        btnLancarProduto.setContentAreaFilled(false);
+        btnLancarProduto.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+
     }
 
     private void pegaId(){

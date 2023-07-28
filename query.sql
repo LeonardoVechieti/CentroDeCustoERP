@@ -59,17 +59,19 @@ inativo boolean
 -- use dev;
 -- drop table estoque;
 -- drop table lancamentofinanceiro;
-create table lancamentofinanceiro(
-id int primary key auto_increment,
-centrodecusto int not null,
-operacao int not null,
-valortotal decimal(10,2),
-data timestamp default current_timestamp,
-descricao varchar(200),
-usuario int not null,
-foreign key(centrodecusto) references centrodecusto(id),
-foreign key(operacao) references operacao(id),
-foreign key(usuario) references usuario(id)
+CREATE TABLE lancamentofinanceiro (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    centroDeCusto INT NOT NULL,
+    operacao INT NOT NULL,
+    valorTotal DECIMAL(10, 2),
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    descricao VARCHAR(200),
+    usuario INT NOT NULL,
+    idLancamentoAnexo INT,
+    FOREIGN KEY (centroDeCusto) REFERENCES centroDeCusto (id),
+    FOREIGN KEY (operacao) REFERENCES operacao (id),
+    FOREIGN KEY (usuario) REFERENCES usuario (id),
+    FOREIGN KEY (idLancamentoAnexo) REFERENCES lancamentofinanceiro (id)
 );
 
 create table estoque(

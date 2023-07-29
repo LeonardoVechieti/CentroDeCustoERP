@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
@@ -26,17 +28,28 @@ import java.sql.ResultSet;
  */
 public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private String id = null;
-    //private Operacao operacao = null;
-    //private CentroDeCusto centroDeCusto= null;
-    //private CentroDeCusto centroDeCustoDestino = null;
     ResultSet rs = null;
     private java.util.List<Estoque> listaEstoque = new java.util.ArrayList<Estoque>();
 
     public LancamentoFinanceiroView() {
         initialize();
         this.setVisible(true);
-        //Habilita os botoes
         btnLancarProduto.setEnabled(true);
+        labelCentroDeCustoDestino.setEnabled(false);
+        btnCancelarLancamento.setEnabled(false);
+        comboBoxCentroDeCustoDestino.setEnabled(false);
+
+        comboBoxOperacao.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    System.out.println(comboBoxOperacao.getSelectedItem().toString());
+                    OperacaoRepository operacaoRepository = new OperacaoRepository();
+                    Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
+                    verificaTipoDeOperacao(operacao);
+                }
+            }
+        });
     }
 
     public LancamentoFinanceiroView(String id) {
@@ -48,10 +61,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     public LancamentoFinanceiroView(Operacao operacao, CentroDeCusto centroDeCusto, CentroDeCusto centroDeCustoDestino) {
         initialize();
         this.setVisible(true);
-        //this.operacao = operacao;
-        //this.centroDeCusto = centroDeCusto;
-        //this.centroDeCustoDestino = centroDeCustoDestino;
-        //verificaTipoDeOperacao(operacao);
         //Seta os valores do select box
         comboBoxOperacao.setSelectedItem(operacao.getDescricao());
         comboBoxCentroDeCusto.setSelectedItem(centroDeCusto.getNome());
@@ -69,9 +78,13 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     private void verificaTipoDeOperacao(Operacao operacao) {
-        if(operacao.getOperacao().equals("TRANSFERENCIA")){
-            comboBoxCentroDeCustoDestino.setVisible(true);
-            labelCentroDeCustoDestino.setVisible(true);
+        //Todo: Essa função deve ser melhorada, pois ela seta um contexto de acordo com a operação selecionada
+        if(operacao.getDescricao().equals("TRANSFERENCIA")){
+            comboBoxCentroDeCustoDestino.setEnabled(true);
+            labelCentroDeCustoDestino.setEnabled(true);
+        } else {
+            comboBoxCentroDeCustoDestino.setEnabled(false);
+            labelCentroDeCustoDestino.setEnabled(false);
         }
     }
 
@@ -82,8 +95,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         formataBotoes();
         formataTabela();
         setSelectBox();
-        btnCancelarLancamento.setEnabled(false);
-        EstoqueRepository estoqueRepository = new EstoqueRepository();
     }
 
     private void setSelectBox(){
@@ -382,9 +393,24 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
         comboBoxOperacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxOperacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxOperacao.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBoxOperacaoItemStateChanged(evt);
+            }
+        });
+        comboBoxOperacao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                comboBoxOperacaoFocusLost(evt);
+            }
+        });
         comboBoxOperacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxOperacaoActionPerformed(evt);
+            }
+        });
+        comboBoxOperacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                comboBoxOperacaoKeyReleased(evt);
             }
         });
 
@@ -589,13 +615,25 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxOperacaoActionPerformed
 
     private void btnLancarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLancarProdutoActionPerformed
-        // TODO add your handling code here:
         LancamentoFinanceiroProduto novoLancamentoProdutoView = new LancamentoFinanceiroProduto(
                 this
                 );
         novoLancamentoProdutoView.setVisible(true);
         
     }//GEN-LAST:event_btnLancarProdutoActionPerformed
+
+    private void comboBoxOperacaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comboBoxOperacaoFocusLost
+        
+    }//GEN-LAST:event_comboBoxOperacaoFocusLost
+
+    private void comboBoxOperacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxOperacaoKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_comboBoxOperacaoKeyReleased
+
+    private void comboBoxOperacaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxOperacaoItemStateChanged
+        
+    }//GEN-LAST:event_comboBoxOperacaoItemStateChanged
 
     /**
      * @param args the command line arguments

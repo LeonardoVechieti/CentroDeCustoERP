@@ -22,6 +22,8 @@ import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -125,6 +127,11 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         tabelaProdutos.getColumnModel().getColumn(1).setPreferredWidth(230);
         tabelaProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
         tabelaProdutos.getColumnModel().getColumn(3).setPreferredWidth(80);
+
+        //Seta o alinhamento a direita nas colunas
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        tabelaProdutos.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
 
         //Reseta o id do produto selecionado
         id=null;

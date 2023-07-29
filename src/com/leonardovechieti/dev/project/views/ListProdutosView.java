@@ -13,6 +13,8 @@ import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -57,16 +59,17 @@ public class ListProdutosView extends javax.swing.JFrame {
             row[3] = listaProdutos.get(i).getPreco();
             model.addRow(row);
         }
-
         //Seta o tamanho das colunas
         tabelaProdutos.getColumnModel().getColumn(0).setPreferredWidth(40);
         tabelaProdutos.getColumnModel().getColumn(1).setPreferredWidth(230);
         tabelaProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
         tabelaProdutos.getColumnModel().getColumn(3).setPreferredWidth(80);
-
+        //Seta o alinhamento a direita nas colunas
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        tabelaProdutos.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
         //Reseta o id do produto selecionado
         id=null;
-
         //Desabilita os botões de alterar e excluir
         btnAlterar.setEnabled(false);
         btnDeletar.setEnabled(false);
@@ -108,22 +111,16 @@ public class ListProdutosView extends javax.swing.JFrame {
     }
 
     private void formataTabela(){
-
         //Seta o tamanho das linhas
         tabelaProdutos.setRowHeight(25);
-
         //Seta o tamanho da fonte
         tabelaProdutos.setFont(new Font("Arial", Font.PLAIN, 14));
-
         //Seta o tamanho da fonte do cabeçalho
         tabelaProdutos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-
         //Seta a cor da linha quando selecionada
         tabelaProdutos.setSelectionBackground(new Color(152, 156, 157));
-
         //Seta a cor da fonte quando selecionada
         tabelaProdutos.setSelectionForeground(Color.black);
-
         //Bloqueia a edição da tabela
         tabelaProdutos.setDefaultEditor(Object.class, null);
     }

@@ -43,7 +43,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED){
-                    System.out.println(comboBoxOperacao.getSelectedItem().toString());
+                    //System.out.println(comboBoxOperacao.getSelectedItem().toString());
                     OperacaoRepository operacaoRepository = new OperacaoRepository();
                     Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
                     verificaTipoDeOperacao(operacao);
@@ -191,9 +191,9 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                     //Atualiza a tabela
                     listaLancamentos();
                     //Mostra o array
-                    for (Estoque estoque : listaEstoque) {
-                        System.out.println(estoque.getIdProduto());
-                    }
+                    //for (Estoque estoque : listaEstoque) {
+                    //    System.out.println(estoque.getIdProduto());
+                    //}
                 }
             }
         });
@@ -269,6 +269,9 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     private void finalizarLancamento(){
+        if(validaCampos()==false){
+            return;
+        }
         //Instancia os objetos utilizados
         OperacaoRepository operacao = new OperacaoRepository();
         CentroDeCustoRepository centroDeCusto = new CentroDeCustoRepository();
@@ -299,6 +302,23 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             new MessageView("Erro!", "Erro ao lançar movimentação financeira!", "error");
         }
     }
+
+    private boolean validaCampos() {
+        //Todos os campos juntos
+        if (txtValorTotalMovimentacao.getText().equals("")) {
+            new MessageView("Alerta!", "Preencha o campo valor total!", "alert");
+            return false;
+        }
+        //Se for uma transferência centro de custo destino não pode ser igual ao centro de custo origem
+        if (comboBoxOperacao.getSelectedItem().toString().equals("TRANSFERENCIA")) {
+            if (comboBoxCentroDeCusto.getSelectedItem().toString().equals(comboBoxCentroDeCustoDestino.getSelectedItem().toString())) {
+                new MessageView("Alerta!", "Centro de custo destino não pode ser igual ao centro de custo origem em uma operação de transferência!", "alert");
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void limparCampos() {
         btnPrincipal.setText("Novo Lançamento");
         btnPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png")));

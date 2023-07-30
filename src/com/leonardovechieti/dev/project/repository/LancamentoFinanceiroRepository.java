@@ -98,32 +98,32 @@ public class LancamentoFinanceiroRepository {
                         lancamentoTransferencia.setIdOperacao(1); //Todo: O id está fixo, porem isso não é o mais correto, verificar outra alternativa
                         lancamentoTransferencia.setIdlancamentoanexo(idLancamento);
                         //Percorre a lista atualizando o id da operacao
-                        for (Estoque estoque : listaEstoqueTransferencia) {
-                            estoque.setIdOperacao(1);
-                            estoque.setIdCentroDeCusto(idEstoqueDestino);
+                        if (!listaEstoqueTransferencia.isEmpty()) {
+                            for (Estoque estoque : listaEstoqueTransferencia) {
+                                estoque.setIdOperacao(1);
+                                estoque.setIdCentroDeCusto(idEstoqueDestino);
+                            }
+                            //Chama o metodo de salvar a movimentação de transferencia
+                            this.novoLancamento(lancamentoTransferencia, listaEstoqueTransferencia, lancamento.getIdCentroDeCusto());
                         }
-                        //Chama o metodo de salvar a movimentação de transferencia
-                        this.novoLancamento(lancamentoTransferencia, listaEstoqueTransferencia, lancamento.getIdCentroDeCusto());
                     }
-                    int id = lancamentoFinanceiro.ultimoId();
-                    new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+                    //int id = lancamentoFinanceiro.ultimoId();
+                    //new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+                    return "CREATE";
                 } else {
                     //Caso erro cancela o lancamento
                     this.cancelarLancamento(String.valueOf(idLancamento));
                     return "ERROR";
                 }
-            }else{
-                return "ERROR";
+            } else {
+                //Caso a lista esteja vazia, apenas retorna sucesso
+                //int id = lancamentoFinanceiro.ultimoId();
+                //new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+                return "CREATE";
             }
-        } else {
-            return "ERROR";
         }
-
-        int id = lancamentoFinanceiro.ultimoId();
-        //new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
-        return "CREATE";
-     }
-
+        return "ERROR";
+    }
 
     public String cancelarLancamento(String id) {
         //Cancela o lancamento do estoque

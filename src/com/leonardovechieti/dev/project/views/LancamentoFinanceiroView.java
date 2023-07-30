@@ -298,6 +298,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             listaEstoque.clear();
             listaLancamentos();
             atualizaValorTotal();
+            new MessageView("Sucesso!", "Movimentação financeira lançada com sucesso!", "success");
         }else{
             new MessageView("Erro!", "Erro ao lançar movimentação financeira!", "error");
         }

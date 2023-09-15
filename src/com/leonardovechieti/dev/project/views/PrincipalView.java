@@ -81,6 +81,8 @@ public class PrincipalView extends javax.swing.JFrame {
         barraCadastrarProdutos = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         barraListarProdutos = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        barraCadastroCentroCusto = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         barraNovoLancamento = new javax.swing.JButton();
         jToolBar3 = new javax.swing.JToolBar();
@@ -121,7 +123,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
 
         barraCadastrarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
-        barraCadastrarProdutos.setToolTipText("");
+        barraCadastrarProdutos.setToolTipText("Cadastrar Produtos e Serviços ");
         barraCadastrarProdutos.setFocusable(false);
         barraCadastrarProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         barraCadastrarProdutos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -134,6 +136,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jToolBar1.add(jSeparator2);
 
         barraListarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
+        barraListarProdutos.setToolTipText("Listar Produtos e Serviços ");
         barraListarProdutos.setFocusable(false);
         barraListarProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         barraListarProdutos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -143,9 +146,23 @@ public class PrincipalView extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(barraListarProdutos);
+        jToolBar1.add(jSeparator3);
+
+        barraCadastroCentroCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
+        barraCadastroCentroCusto.setToolTipText("Cadastro de Centro de Custo");
+        barraCadastroCentroCusto.setFocusable(false);
+        barraCadastroCentroCusto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraCadastroCentroCusto.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraCadastroCentroCusto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraCadastroCentroCustoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraCadastroCentroCusto);
         jToolBar1.add(jSeparator1);
 
         barraNovoLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
+        barraNovoLancamento.setToolTipText("Novo Lançamento Financeiro");
         barraNovoLancamento.setFocusable(false);
         barraNovoLancamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         barraNovoLancamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -156,7 +173,6 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jToolBar1.add(barraNovoLancamento);
 
-        jToolBar3.setFloatable(false);
         jToolBar3.setRollover(true);
         jToolBar3.add(jSeparator9);
 
@@ -377,6 +393,12 @@ public class PrincipalView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuListarLancamentoActionPerformed
 
+    private void barraCadastroCentroCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraCadastroCentroCustoActionPerformed
+        // TODO add your handling code here:
+        CadastroCentroDeCusto centroDeCusto = new CadastroCentroDeCusto();
+        centroDeCusto.setVisible(true);
+    }//GEN-LAST:event_barraCadastroCentroCustoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -414,6 +436,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton barraCadastrarProdutos;
+    private javax.swing.JButton barraCadastroCentroCusto;
     private javax.swing.JButton barraListarProdutos;
     private javax.swing.JButton barraNovoLancamento;
     private javax.swing.JLabel jLabel2;
@@ -431,6 +454,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar3;

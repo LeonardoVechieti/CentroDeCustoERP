@@ -79,7 +79,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void verificaTipoDeOperacao(Operacao operacao) {
         //Todo: Essa função deve ser melhorada, pois ela seta um contexto de acordo com a operação selecionada
-        if(operacao.getDescricao().equals("TRANSFERENCIA")){
+        if(operacao.getOperacao() == TipoOperacao.TRANSFERENCIA){
             comboBoxCentroDeCustoDestino.setEnabled(true);
             labelCentroDeCustoDestino.setEnabled(true);
         } else {
@@ -638,7 +638,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private void btnLancarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLancarProdutoActionPerformed
         LancamentoFinanceiroProduto novoLancamentoProdutoView = new LancamentoFinanceiroProduto(
                 this
-                );
+        );
         novoLancamentoProdutoView.setVisible(true);
         
     }//GEN-LAST:event_btnLancarProdutoActionPerformed

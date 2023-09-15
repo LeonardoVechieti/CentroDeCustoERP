@@ -64,7 +64,7 @@ public class EstoqueRepository {
 
     public ResultSet listarAll() {
         //Lista do mais recente para o mais antigo
-        String sql = "select id as ID,operacao as OPERACAO, quantidade as QUANTIDADE, idCentroDeCusto as CENTRO from estoque order by id desc";
+        String sql = "select id as ID,idOperacao as OPERACAO, quantidade as QUANTIDADE, idCentroDeCusto as CENTRO from estoque order by id desc";
         try {
             pst = conexao.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -127,6 +127,7 @@ public class EstoqueRepository {
     }
 
     public ResultSet listarPorProduto(Produto produto) {
+        System.out.println(produto.getId() +"Cheguei aqui");
         //Lista do mais recente para o mais antigo da uniao das tabelas estoque, produto e centrodecusto formatando a data
         String sql = "select e.id as ID, o.descricao as OPERACAO, e.quantidade as QUANTIDADE, c.nome as CENTRO, DATE_FORMAT(e.data,'%d/%m/%Y') as DATA from estoque e\n" +
                 "join produto p\n" +

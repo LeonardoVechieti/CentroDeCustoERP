@@ -109,7 +109,6 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             new MessageView("Alerta", "Valor total não confere com o calculado", "alert");
             return false;
         }
-        //new MessageView("Alerta", "Valor total não pode ser zero", "alert");
         return true;
     }
 

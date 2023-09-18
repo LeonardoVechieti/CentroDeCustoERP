@@ -104,6 +104,12 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             new MessageView("Alerta", "Informe o valor total", "alert");
             return false;
         }
+        //Verifica se o valor total é diferente do calculado
+        if (Double.parseDouble(Func.formataPrecoBanco(txtValorTotal.getText())) != calculaValorTotal() ) {
+            new MessageView("Alerta", "Valor total não confere com o calculado", "alert");
+            return false;
+        }
+        //new MessageView("Alerta", "Valor total não pode ser zero", "alert");
         return true;
     }
 
@@ -165,7 +171,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
 
             //Verifica se o produto está com estoque habilitado
             //System.out.println("Estoque habilitado: " + produtoRepository.estoqueHabilitado(idProduto));
-            if(produtoRepository.estoqueHabilitado(idProduto)){
+            if(produtoRepository.estoqueHabilitado(idProduto) && !lancamento.enumOperacao.equals("ENTRADA")){
 
                 Double totalEstoque = estoqueRepository.retornaTotalEstoque(produto);
                 //System.out.println("Total estoque que vem do banco: " + totalEstoque);
@@ -209,7 +215,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         }
     }
 
-    private void calculaValorTotal(){
+    private double calculaValorTotal(){
         if(!txtQuantidade.getText().isEmpty() && !txtValorUnitario.getText().isEmpty()){
             //Troca a virgula por ponto
             Double quantidadeDigitada = Double.parseDouble(Func.formataPrecoBanco(txtQuantidade.getText()));
@@ -219,7 +225,9 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             //System.out.println(quantidadeDigitada + " " + valorUnitarioDigitado + " " + valorTotal);
             String valorTotalFinal = Func.formataPrecoPadrao(valorTotal.toString());
             txtValorTotal.setText(valorTotalFinal);
+            return valorTotal;
         }
+        return 0.00;
     }
     public void abreCadastro(){
         if (id != null) {

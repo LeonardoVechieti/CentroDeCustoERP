@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private String id = null;
     ResultSet rs = null;
+    //Seta com esntrada
+    public String enumOperacao = "ENTRADA";
     private java.util.List<Estoque> listaEstoque = new java.util.ArrayList<Estoque>();
 
     public LancamentoFinanceiroView() {
@@ -79,6 +81,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void verificaTipoDeOperacao(Operacao operacao) {
         //Todo: Essa função deve ser melhorada, pois ela seta um contexto de acordo com a operação selecionada
+        // Salva o valor em uma variavel publica
+        enumOperacao = operacao.getOperacao().toString();
         if(operacao.getOperacao() == TipoOperacao.TRANSFERENCIA){
             comboBoxCentroDeCustoDestino.setEnabled(true);
             labelCentroDeCustoDestino.setEnabled(true);
@@ -190,6 +194,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                     }
                     //Atualiza a tabela
                     listaLancamentos();
+                    //Calcula novo valor total
+                    atualizaValorTotal();
                     //Mostra o array
                     //for (Estoque estoque : listaEstoque) {
                     //    System.out.println(estoque.getIdProduto());

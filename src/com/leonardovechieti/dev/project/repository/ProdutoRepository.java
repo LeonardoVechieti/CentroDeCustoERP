@@ -85,8 +85,34 @@ public class ProdutoRepository {
         return rs;
     }
 
-    public List<Produto> pesquisar(String nome) {
+    public List<Produto> pesquisarTodos(String nome) {
         String sql = "select id as ID, descricao as PRODUTO, unidade as UNIDADE, preco as PREÇO from produto where descricao like ?";;
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, "%" + nome + "%");
+            rs = pst.executeQuery();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        //Percorre o ResultSet e adiciona os dados em um ArrayList
+        java.util.List<Produto> listaProdutos = new java.util.ArrayList<Produto>();
+
+        try {
+            while (rs.next()) {
+                Produto produto = new Produto();
+                produto.setId(rs.getInt(1));
+                produto.setDescricao(rs.getString(2));
+                produto.setUnidade(rs.getString(3));
+                produto.setPreco(Func.formataPrecoPadrao(rs.getString(4)));
+                listaProdutos.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaProdutos;
+    }
+    public List<Produto> pesquisar(String nome) {
+        String sql = "select id as ID, descricao as PRODUTO, unidade as UNIDADE, preco as PREÇO from produto where inativo = false and descricao like ?";;
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, "%" + nome + "%");

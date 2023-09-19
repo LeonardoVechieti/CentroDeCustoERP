@@ -40,6 +40,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         labelCentroDeCustoDestino.setEnabled(false);
         btnCancelarLancamento.setEnabled(false);
         comboBoxCentroDeCustoDestino.setEnabled(false);
+        txtDesconto.setEnabled(false);
+        percent.setEnabled(false);
+        txtValorDesconto.setEnabled(false);
+        labelDesconto.setEnabled(false);
+        labelValorDesconto.setEnabled(false);
 
         //Gatilhos para os campos
         comboBoxOperacao.addItemListener(new ItemListener() {
@@ -117,6 +122,20 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         } else {
             comboBoxCentroDeCustoDestino.setEnabled(false);
             labelCentroDeCustoDestino.setEnabled(false);
+        }
+
+        if (operacao.getOperacao() == TipoOperacao.SAIDA) {
+            txtDesconto.setEnabled(true);
+            percent.setEnabled(true);
+            txtValorDesconto.setEnabled(true);
+            labelDesconto.setEnabled(true);
+            labelValorDesconto.setEnabled(true);
+        } else {
+            txtDesconto.setEnabled(false);
+            percent.setEnabled(false);
+            txtValorDesconto.setEnabled(false);
+            labelDesconto.setEnabled(false);
+            labelValorDesconto.setEnabled(false);
         }
     }
 

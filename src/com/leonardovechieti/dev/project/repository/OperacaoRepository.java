@@ -119,7 +119,8 @@ public class OperacaoRepository {
     }
     //Retorna todos os nome do centro de custo em uma string
     public String todasDescricao() {
-        String sql = "select descricao from operacao";
+        String sql = "select descricao from operacao where inativo = false";
+        //String sql = "select descricao from operacao";
         String descricao = "";
         try {
             pst = conexao.prepareStatement(sql);

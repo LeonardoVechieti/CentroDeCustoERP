@@ -47,7 +47,7 @@ public class ListProdutosView extends javax.swing.JFrame {
     public void pesquisarProdutos() {
         ProdutoRepository produtoRepository = new ProdutoRepository();
         java.util.List<Produto> listaProdutos = new java.util.ArrayList<Produto>();
-        listaProdutos = produtoRepository.pesquisar(textPesquisar.getText());
+        listaProdutos = produtoRepository.pesquisarTodos(textPesquisar.getText());
 
         DefaultTableModel model = (DefaultTableModel) tabelaProdutos.getModel();
         model.setRowCount(0);

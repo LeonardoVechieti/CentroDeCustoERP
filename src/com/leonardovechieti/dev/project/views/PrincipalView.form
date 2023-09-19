@@ -113,7 +113,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/graficobarras.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Novo Lan&#xe7;amento"/>
+                <Property name="text" type="java.lang.String" value="Novo Lan&#xe7;amento Financeiro"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuCadastrarProdutos2ActionPerformed"/>
@@ -127,7 +127,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/garficoelupa.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Listar Lan&#xe7;amento"/>
+                <Property name="text" type="java.lang.String" value="Listar Lan&#xe7;amento Financeiro"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuListarLancamentoActionPerformed"/>
@@ -221,7 +221,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/produto1.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" value="Cadastrar Produtos e Servi&#xe7;os "/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -237,12 +237,29 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/produtoList1.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Listar Produtos e Servi&#xe7;os "/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barraListarProdutosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator3">
+        </Component>
+        <Component class="javax.swing.JButton" name="barraCadastroCentroCusto">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/statistics.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Cadastro de Centro de Custo"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barraCadastroCentroCustoActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
@@ -252,6 +269,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/graficobarras.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Novo Lan&#xe7;amento Financeiro"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -264,7 +282,6 @@
     </Container>
     <Container class="javax.swing.JToolBar" name="jToolBar3">
       <Properties>
-        <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
       </Properties>
 

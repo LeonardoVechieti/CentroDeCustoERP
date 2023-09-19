@@ -1,14 +1,11 @@
 package com.leonardovechieti.dev.project.repository;
 
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
-import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.util.Func;
 import com.leonardovechieti.dev.project.util.Message;
 import com.leonardovechieti.dev.project.model.Produto;
 import com.leonardovechieti.dev.project.views.MessageView;
-
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoRepository {
@@ -88,7 +85,7 @@ public class ProdutoRepository {
         return rs;
     }
 
-    public List<Produto> pesquisar(String nome) {
+    public List<Produto> pesquisarTodos(String nome) {
         String sql = "select id as ID, descricao as PRODUTO, unidade as UNIDADE, preco as PREÇO from produto where descricao like ?";;
         try {
             pst = conexao.prepareStatement(sql);
@@ -112,7 +109,32 @@ public class ProdutoRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return listaProdutos;
+    }
+    public List<Produto> pesquisar(String nome) {
+        String sql = "select id as ID, descricao as PRODUTO, unidade as UNIDADE, preco as PREÇO from produto where inativo = false and descricao like ?";;
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, "%" + nome + "%");
+            rs = pst.executeQuery();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        //Percorre o ResultSet e adiciona os dados em um ArrayList
+        java.util.List<Produto> listaProdutos = new java.util.ArrayList<Produto>();
 
+        try {
+            while (rs.next()) {
+                Produto produto = new Produto();
+                produto.setId(rs.getInt(1));
+                produto.setDescricao(rs.getString(2));
+                produto.setUnidade(rs.getString(3));
+                produto.setPreco(Func.formataPrecoPadrao(rs.getString(4)));
+                listaProdutos.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return listaProdutos;
     }
 
@@ -142,7 +164,6 @@ public class ProdutoRepository {
             }
         } catch (Exception e) {
             Message message = new Message("Erro!", "Erro ao buscar produto!" + e, "error");
-
         }
         return null;
     }
@@ -161,6 +182,21 @@ public class ProdutoRepository {
             System.out.println(e);
         }
         return 0;
+    }
+
+    public Boolean estoqueHabilitado(int idProduto){
+        String sql = "select estoque from produto where id=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idProduto);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return false;
     }
 
     public void fecharConexao() throws SQLException {

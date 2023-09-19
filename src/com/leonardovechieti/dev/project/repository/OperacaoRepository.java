@@ -119,7 +119,8 @@ public class OperacaoRepository {
     }
     //Retorna todos os nome do centro de custo em uma string
     public String todasDescricao() {
-        String sql = "select descricao from operacao";
+        String sql = "select descricao from operacao where inativo = false";
+        //String sql = "select descricao from operacao";
         String descricao = "";
         try {
             pst = conexao.prepareStatement(sql);
@@ -159,6 +160,24 @@ public class OperacaoRepository {
             rs = pst.executeQuery();
             if (rs.next()) {
                 return new Operacao(rs.getInt("id"), rs.getString("descricao"), rs.getString("operacao"), rs.getBoolean("inativo"));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    //Retorna o tipo atraves do id
+    public String buscaTipoId(String id) {
+        String sql = "select operacao from operacao where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(id));
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getString("operacao");
             } else {
                 return null;
             }

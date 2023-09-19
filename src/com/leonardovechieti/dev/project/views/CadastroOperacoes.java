@@ -196,6 +196,8 @@ public class CadastroOperacoes extends javax.swing.JFrame {
             txtDescricao.setText(Func.formatarString(txtDescricao.getText()));
             //UpperCase
             txtDescricao.setText(txtDescricao.getText().toUpperCase());
+            //Troca os espaços em branco
+            txtDescricao.setText(Func.removeEspaco(txtDescricao.getText()));
             return true;
         }
 

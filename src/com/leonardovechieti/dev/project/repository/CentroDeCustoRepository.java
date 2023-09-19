@@ -118,7 +118,8 @@ public class CentroDeCustoRepository {
     }
     //Retorna todos os nome do centro de custo em uma string
     public String todosNomes() {
-        String sql = "select nome from centrodecusto";
+        String sql = "select nome from centrodecusto where inativo = false";
+        //String sql = "select nome from centrodecusto";
         String nomes = "";
         try {
             pst = conexao.prepareStatement(sql);

@@ -56,23 +56,28 @@ descricao varchar(200) not null,
 operacao varchar(200) not null,
 inativo boolean
 );
-
-
-create table movimentacao(
-id int primary key auto_increment,
-idCentroDeCusto int not null,
-idOperacao int not null,
-valorTotal decimal(10,2),
-data timestamp default current_timestamp,
-descricao varchar(200),
-foreign key(idCentroDeCusto) references centrodecusto(id),
-foreign key(idOperacao) references operacao(id)
+-- use dev;
+-- drop table estoque;
+-- drop table lancamentofinanceiro;
+CREATE TABLE lancamentofinanceiro (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    centroDeCusto INT NOT NULL,
+    operacao INT NOT NULL,
+    valorTotal DECIMAL(10, 2),
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    descricao VARCHAR(200),
+    usuario INT NOT NULL,
+    idLancamentoAnexo INT,
+    FOREIGN KEY (centroDeCusto) REFERENCES centroDeCusto (id),
+    FOREIGN KEY (operacao) REFERENCES operacao (id),
+    FOREIGN KEY (usuario) REFERENCES usuario (id),
+    FOREIGN KEY (idLancamentoAnexo) REFERENCES lancamentofinanceiro (id)
 );
 
 create table estoque(
 id int primary key auto_increment,
 idProduto int not null,
-idMoviementacao int not null,
+idLancamentoFinanceiro int not null,
 idCentroDeCusto int not null,
 idOperacao int not null,
 quantidade decimal(10,2),
@@ -81,7 +86,7 @@ valorTotal decimal(10,2),
 data timestamp default current_timestamp,
 descricao varchar(200),
 foreign key(idProduto) references produto(id),
-foreign key(idMoviementacao) references movimentacao(id),
+foreign key(idLancamentoFinanceiro) references lancamentofinanceiro(id),
 foreign key(idCentroDeCusto) references centrodecusto(id),
 foreign key(idOperacao) references operacao(id)
 );
@@ -89,16 +94,16 @@ foreign key(idOperacao) references operacao(id)
 -- Adciona campo valor no estoque
 -- alter table estoque add valor decimal(10,2);
 
-insert into movimentacao( idCentroDeCusto, idOperacao, valorTotal, descricao)
-values (1, 1, 100.10, 'MOVIMENTACAO 1');
+insert into lancamentofinanceiro( centrodecusto, operacao, valortotal, descricao, usuario)
+values (1, 1, 100.10, 'MOVIMENTACAO 1', 1);
 
-insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
+insert into estoque( idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
 values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 1');
 
-insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
+insert into estoque( idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
 values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 2');
 
-insert into estoque( idProduto, idMoviementacao, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
+insert into estoque( idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao)
 values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 3');
 
 
@@ -108,7 +113,7 @@ values (1, 1, 1, 1, 10, 10.10, 100.10, 'ESTOQUE 3');
 
 
 select * from estoque;
-select * from movimentacao;
+select * from lancamentofinanceiro;
 
 
 

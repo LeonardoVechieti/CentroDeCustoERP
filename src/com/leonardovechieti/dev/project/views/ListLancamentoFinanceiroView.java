@@ -6,11 +6,13 @@
 package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.*;
+import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
 import com.leonardovechieti.dev.project.repository.*;
 import com.leonardovechieti.dev.project.util.Func;
 import net.proteanit.sql.DbUtils;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -32,24 +34,81 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     public ListLancamentoFinanceiroView() {
         initialize();
+        pesquisarLancamentos();
         this.setVisible(true);
         btnCancelarLancamento.setEnabled(false);
         //Gatilhos para os campos
-//        comboBoxFiltro.addItemListener(new ItemListener() {
-//            @Override
-//            public void itemStateChanged(ItemEvent e) {
-//                if(e.getStateChange() == ItemEvent.SELECTED){
-//                    //System.out.println(comboBoxOperacao.getSelectedItem().toString());
-//                    OperacaoRepository operacaoRepository = new OperacaoRepository();
-//                    Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
-//                    verificaTipoDeOperacao(operacao);
-//                }
-//            }
-//        });
+        comboBoxCentroDeCusto.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    pesquisarLancamentos();
+                }
+            }
+        });
+        comboBoxOperacao.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    pesquisarLancamentos();
+                }
+            }
+        });
     }
 
     private void verificaFiltro() {
 
+    }
+
+    private void pesquisarLancamentos() {
+        //Verifica se o campo data inicial e valido e o campo data final está vazio, se sim, seta a data final como a data inicial
+        if (!txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+            txtDataFinal.setText(txtDataInicial.getText());
+        }
+        LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
+        java.util.List<LancamentoFinanceiroDTO> listaLancamentoFinanceiro = new java.util.ArrayList<>();
+        if (comboBoxCentroDeCusto.getSelectedItem().toString().equals("TODOS")) {
+            if (comboBoxOperacao.getSelectedItem().toString().equals("TODAS")) {
+                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll();
+                } else {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll(Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                }
+            } else {
+                OperacaoRepository operacaoRepository = new OperacaoRepository();
+                Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
+                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(operacao.getId());
+                } else {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(operacao.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                }
+            }
+        } else {
+            CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
+            CentroDeCusto centroDeCusto = centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString());
+            if (comboBoxOperacao.getSelectedItem().toString().equals("TODAS")) {
+                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(centroDeCusto.getId());
+                } else {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(centroDeCusto.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                }
+            } else {
+                OperacaoRepository operacaoRepository = new OperacaoRepository();
+                Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
+                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(centroDeCusto.getId(), operacao.getId());
+                } else {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(centroDeCusto.getId(), operacao.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                }
+            }
+        }
+        //Seta a tabela com os dados do ArrayList
+        DefaultTableModel model = (DefaultTableModel) tabelaLancamentos.getModel();
+        model.setRowCount(0);
+        for (LancamentoFinanceiroDTO lancamentoFinanceiroDTO : listaLancamentoFinanceiro) {
+            model.addRow(new Object[]{lancamentoFinanceiroDTO.getId(), lancamentoFinanceiroDTO.getOperacao(), lancamentoFinanceiroDTO.getCentro(), lancamentoFinanceiroDTO.getUsuario(), lancamentoFinanceiroDTO.getData(), lancamentoFinanceiroDTO.getValor()});
+        }
+        formataTabela();
     }
 
 
@@ -62,6 +121,24 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     private void setSelectBox(){
+        //seta os itens do select box centro de custo
+        comboBoxCentroDeCusto.removeAllItems();
+        comboBoxCentroDeCusto.addItem("TODOS");
+        CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
+        String todosOsNomes = centroDeCustoRepository.todosNomes();
+        String[] nomes = todosOsNomes.split(",");
+        for (String nome : nomes) {
+            comboBoxCentroDeCusto.addItem(nome);
+        }
+        //seta os itens do select box tipo de opercao
+        comboBoxOperacao.removeAllItems();
+        comboBoxOperacao.addItem("TODAS");
+        OperacaoRepository operacaoRepository = new OperacaoRepository();
+        String todasAsOperacoes = operacaoRepository.todasDescricao();
+        String[] operacoes = todasAsOperacoes.split(",");
+        for (String operacao : operacoes) {
+            comboBoxOperacao.addItem(operacao);
+        }
 
     }
     private void formataBotoes() {
@@ -79,21 +156,40 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         btnCancelarLancamento.setOpaque(false);
         btnCancelarLancamento.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        btnPesquisar.setBackground(new Color(0, 0, 0, 0));
+        btnPesquisar.setBorderPainted(false);
+        btnPesquisar.setFocusPainted(false);
+        btnPesquisar.setContentAreaFilled(false);
+        btnPesquisar.setOpaque(false);
+        btnPesquisar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+
     }
 
     private void formataTabela(){
         //Seta o tamanho das linhas
-        tabelaEstoque.setRowHeight(25);       
+        tabelaLancamentos.setRowHeight(25);       
         //Seta o tamanho da fonte
-        tabelaEstoque.setFont(new Font("Arial", Font.PLAIN, 14));  
+        tabelaLancamentos.setFont(new Font("Arial", Font.PLAIN, 14));  
         //Seta o tamanho da fonte do cabeçalho
-        tabelaEstoque.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tabelaLancamentos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         //Seta a cor da linha quando selecionada
-        tabelaEstoque.setSelectionBackground(new Color(152, 156, 157));
+        tabelaLancamentos.setSelectionBackground(new Color(152, 156, 157));
         //Seta a cor da fonte quando selecionada
-        tabelaEstoque.setSelectionForeground(Color.black);
+        tabelaLancamentos.setSelectionForeground(Color.black);
         //Bloqueia a edição da tabela
-        tabelaEstoque.setDefaultEditor(Object.class, null);
+        tabelaLancamentos.setDefaultEditor(Object.class, null);
+        tabelaLancamentos.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tabelaLancamentos.getColumnModel().getColumn(1).setPreferredWidth(170);
+        tabelaLancamentos.getColumnModel().getColumn(2).setPreferredWidth(85);
+        tabelaLancamentos.getColumnModel().getColumn(3).setPreferredWidth(85);
+        tabelaLancamentos.getColumnModel().getColumn(4).setPreferredWidth(40);
+        tabelaLancamentos.getColumnModel().getColumn(5).setPreferredWidth(40);
+        //Seta o alinhamento a direita nas colunas
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        tabelaLancamentos.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+        tabelaLancamentos.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
     }
 
     private boolean validaCampos() {
@@ -124,11 +220,17 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         painel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelaEstoque = new javax.swing.JTable();
+        tabelaLancamentos = new javax.swing.JTable();
         Filtrar = new javax.swing.JPanel();
-        btnPesquisar = new javax.swing.JLabel();
-        textPesquisar = new javax.swing.JTextField();
-        comboBoxUnidade = new javax.swing.JComboBox<>();
+        btnPesquisar = new javax.swing.JButton();
+        comboBoxCentroDeCusto = new javax.swing.JComboBox<>();
+        labelCentroDeCusto2 = new javax.swing.JLabel();
+        labelOperacao2 = new javax.swing.JLabel();
+        comboBoxOperacao = new javax.swing.JComboBox<>();
+        labelOperacao3 = new javax.swing.JLabel();
+        labelOperacao4 = new javax.swing.JLabel();
+        txtDataInicial = new javax.swing.JFormattedTextField();
+        txtDataFinal = new javax.swing.JFormattedTextField();
         btnPrincipal = new javax.swing.JButton();
         btnCancelarLancamento = new javax.swing.JButton();
 
@@ -138,8 +240,8 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
         painelProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
-        tabelaEstoque.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
-        tabelaEstoque.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaLancamentos.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        tabelaLancamentos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -147,41 +249,102 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
                 "ID", "OPERACAO", "CENTRO", "USUARIO", "DATA", "VALOR TOTAL"
             }
         ));
-        tabelaEstoque.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tabelaEstoque.setGridColor(java.awt.SystemColor.scrollbar);
-        tabelaEstoque.setRequestFocusEnabled(false);
-        tabelaEstoque.setRowMargin(2);
-        tabelaEstoque.setSelectionBackground(java.awt.SystemColor.controlHighlight);
-        tabelaEstoque.setShowHorizontalLines(false);
-        tabelaEstoque.setShowVerticalLines(false);
-        tabelaEstoque.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabelaLancamentos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabelaLancamentos.setGridColor(java.awt.SystemColor.scrollbar);
+        tabelaLancamentos.setRequestFocusEnabled(false);
+        tabelaLancamentos.setRowMargin(2);
+        tabelaLancamentos.setSelectionBackground(java.awt.SystemColor.controlHighlight);
+        tabelaLancamentos.setShowHorizontalLines(false);
+        tabelaLancamentos.setShowVerticalLines(false);
+        tabelaLancamentos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelaEstoqueMouseClicked(evt);
+                tabelaLancamentosMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tabelaEstoque);
+        jScrollPane1.setViewportView(tabelaLancamentos);
 
         Filtrar.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Filtrar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14))); // NOI18N
         Filtrar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
-        btnPesquisar.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
+        btnPesquisar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/search-file.png"))); // NOI18N
-        btnPesquisar.setText("Pesquisar:");
-        btnPesquisar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnPesquisarMouseClicked(evt);
+        btnPesquisar.setText("Pesquisar");
+        btnPesquisar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarActionPerformed(evt);
             }
         });
 
-        textPesquisar.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        textPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
+        comboBoxCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        comboBoxCentroDeCusto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        labelCentroDeCusto2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelCentroDeCusto2.setText("Centro de Custo:");
+
+        labelOperacao2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelOperacao2.setText("Operação:");
+
+        comboBoxOperacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        comboBoxOperacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxOperacao.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBoxOperacaoItemStateChanged(evt);
+            }
+        });
+        comboBoxOperacao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                comboBoxOperacaoFocusLost(evt);
+            }
+        });
+        comboBoxOperacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxOperacaoActionPerformed(evt);
+            }
+        });
+        comboBoxOperacao.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                textPesquisarKeyReleased(evt);
+                comboBoxOperacaoKeyReleased(evt);
             }
         });
 
-        comboBoxUnidade.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        comboBoxUnidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        labelOperacao3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelOperacao3.setText("Data:");
+
+        labelOperacao4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelOperacao4.setText("a");
+
+        try {
+            txtDataInicial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtDataInicial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDataInicialFocusLost(evt);
+            }
+        });
+        txtDataInicial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDataInicialActionPerformed(evt);
+            }
+        });
+
+        try {
+            txtDataFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtDataFinal.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDataFinalFocusLost(evt);
+            }
+        });
+        txtDataFinal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDataFinalActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout FiltrarLayout = new javax.swing.GroupLayout(Filtrar);
         Filtrar.setLayout(FiltrarLayout);
@@ -189,19 +352,46 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FiltrarLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnPesquisar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(comboBoxUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelCentroDeCusto2))
                 .addGap(18, 18, 18)
-                .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelOperacao2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(FiltrarLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(labelOperacao3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(FiltrarLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtDataInicial)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelOperacao4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtDataFinal, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                .addGap(109, 109, 109)
+                .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         FiltrarLayout.setVerticalGroup(
             FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-                .addComponent(textPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(comboBoxUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(FiltrarLayout.createSequentialGroup()
+                .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(FiltrarLayout.createSequentialGroup()
+                        .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelCentroDeCusto2)
+                            .addComponent(labelOperacao2)
+                            .addComponent(labelOperacao3))
+                        .addGap(4, 4, 4)
+                        .addGroup(FiltrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelOperacao4)
+                            .addComponent(txtDataInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDataFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
@@ -223,8 +413,6 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        Filtrar.getAccessibleContext().setAccessibleName("Filtrar");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -294,17 +482,60 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarLancamentoActionPerformed
 
-    private void tabelaEstoqueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaEstoqueMouseClicked
+    private void tabelaLancamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaLancamentosMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_tabelaEstoqueMouseClicked
+    }//GEN-LAST:event_tabelaLancamentosMouseClicked
 
-    private void btnPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarMouseClicked
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPesquisarMouseClicked
+        pesquisarLancamentos();
+    }//GEN-LAST:event_btnPesquisarActionPerformed
 
-    private void textPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textPesquisarKeyReleased
+    private void comboBoxOperacaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxOperacaoItemStateChanged
+
+    }//GEN-LAST:event_comboBoxOperacaoItemStateChanged
+
+    private void comboBoxOperacaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comboBoxOperacaoFocusLost
+
+    }//GEN-LAST:event_comboBoxOperacaoFocusLost
+
+    private void comboBoxOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOperacaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textPesquisarKeyReleased
+    }//GEN-LAST:event_comboBoxOperacaoActionPerformed
+
+    private void comboBoxOperacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxOperacaoKeyReleased
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_comboBoxOperacaoKeyReleased
+
+    private void txtDataInicialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDataInicialActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDataInicialActionPerformed
+
+    private void txtDataFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDataFinalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDataFinalActionPerformed
+
+    private void txtDataInicialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDataInicialFocusLost
+        // TODO add your handling code here:
+        String text = txtDataInicial.getText().trim();
+        if (text.length() < 10) {
+            txtDataInicial.setValue(null);
+        } else if (!Func.validaData(txtDataInicial.getText())) {
+            txtDataInicial.setValue(null);
+        }
+
+    }//GEN-LAST:event_txtDataInicialFocusLost
+
+    private void txtDataFinalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDataFinalFocusLost
+        // TODO add your handling code here:
+        String text = txtDataFinal.getText().trim();
+        if (text.length() < 10) {
+            txtDataFinal.setValue(null);
+        } else if (!Func.validaData(txtDataFinal.getText())) {
+            txtDataFinal.setValue(null);
+        }
+    }//GEN-LAST:event_txtDataFinalFocusLost
 
     /**
      * @param args the command line arguments
@@ -343,15 +574,21 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Filtrar;
     private javax.swing.JButton btnCancelarLancamento;
-    private javax.swing.JLabel btnPesquisar;
+    private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnPrincipal;
-    private javax.swing.JComboBox<String> comboBoxUnidade;
+    private javax.swing.JComboBox<String> comboBoxCentroDeCusto;
+    private javax.swing.JComboBox<String> comboBoxOperacao;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelCentroDeCusto2;
+    private javax.swing.JLabel labelOperacao2;
+    private javax.swing.JLabel labelOperacao3;
+    private javax.swing.JLabel labelOperacao4;
     private javax.swing.JPanel painel;
     private javax.swing.JTabbedPane painelProdutos;
-    private javax.swing.JTable tabelaEstoque;
-    private javax.swing.JTextField textPesquisar;
+    private javax.swing.JTable tabelaLancamentos;
+    private javax.swing.JFormattedTextField txtDataFinal;
+    private javax.swing.JFormattedTextField txtDataInicial;
     // End of variables declaration//GEN-END:variables
 }

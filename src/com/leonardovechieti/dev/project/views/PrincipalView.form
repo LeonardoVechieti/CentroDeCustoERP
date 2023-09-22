@@ -89,7 +89,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/integracao.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Oper&#xe7;oes"/>
+                <Property name="text" type="java.lang.String" value="Opera&#xe7;&#xf5;es"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuCadastrarOpercaoesActionPerformed"/>

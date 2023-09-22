@@ -276,7 +276,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
         menuCadastrarOpercaoes.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/integracao.png"))); // NOI18N
-        menuCadastrarOpercaoes.setText("Operçoes");
+        menuCadastrarOpercaoes.setText("Operações");
         menuCadastrarOpercaoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuCadastrarOpercaoesActionPerformed(evt);

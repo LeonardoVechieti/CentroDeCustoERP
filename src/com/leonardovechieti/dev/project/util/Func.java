@@ -68,5 +68,47 @@ public class Func {
         //System.out.println(valorFormatado);
         return valorFormatado;
     }
+
+    //Recebe uma string de data e formata para padrao de exibicao do sistema
+    public static String formataDataPadrao(String data) {
+        String dataFormatada = data.substring(8, 10) + "/" + data.substring(5, 7) + "/" + data.substring(0, 4);
+        return dataFormatada;
+    }
+
+    //Recebe uma string de data e formata para padrao banco de dados
+    public static String formataDataBanco(String data) {
+        String dataFormatada = data.substring(6, 10) + "-" + data.substring(3, 5) + "-" + data.substring(0, 2);
+        return dataFormatada;
+    }
+
+    //Valida se a string e uma data se ele
+    public static boolean validaData(String data) {
+        if (data.length() != 10) {
+            return false;
+        }
+        if (!data.substring(2, 3).equals("/") || !data.substring(5, 6).equals("/")) {
+            return false;
+        }
+        System.out.println("Data: " + data);
+        if (data.length() != 10) {
+            return false;
+        }
+        if (!data.substring(2, 3).equals("/") || !data.substring(5, 6).equals("/")) {
+            return false;
+        }
+        int dia = Integer.parseInt(data.substring(0, 2));
+        int mes = Integer.parseInt(data.substring(3, 5));
+        int ano = Integer.parseInt(data.substring(6, 10));
+        if (dia < 1 || dia > 31) {
+            return false;
+        }
+        if (mes < 1 || mes > 12) {
+            return false;
+        }
+        if (ano < 1900 || ano > 2100) {
+            return false;
+        }
+        return true;
+    }
 }
 

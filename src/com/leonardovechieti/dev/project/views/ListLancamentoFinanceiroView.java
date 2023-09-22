@@ -30,14 +30,13 @@ import java.sql.ResultSet;
  */
 public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
     private String id = null;
-    ResultSet rs = null;
 
     public ListLancamentoFinanceiroView() {
         initialize();
         pesquisarLancamentos();
         this.setVisible(true);
         btnCancelarLancamento.setEnabled(false);
-        //Gatilhos para os campos
+
         comboBoxCentroDeCusto.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -54,10 +53,6 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
                 }
             }
         });
-    }
-
-    private void verificaFiltro() {
-
     }
 
     private void pesquisarLancamentos() {
@@ -278,6 +273,11 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
         comboBoxCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxCentroDeCusto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxCentroDeCusto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBoxCentroDeCustoKeyPressed(evt);
+            }
+        });
 
         labelCentroDeCusto2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelCentroDeCusto2.setText("Centro de Custo:");
@@ -303,6 +303,9 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             }
         });
         comboBoxOperacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBoxOperacaoKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 comboBoxOperacaoKeyReleased(evt);
             }
@@ -329,6 +332,11 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
                 txtDataInicialActionPerformed(evt);
             }
         });
+        txtDataInicial.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDataInicialKeyPressed(evt);
+            }
+        });
 
         try {
             txtDataFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -343,6 +351,11 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         txtDataFinal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDataFinalActionPerformed(evt);
+            }
+        });
+        txtDataFinal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDataFinalKeyPressed(evt);
             }
         });
 
@@ -536,6 +549,34 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             txtDataFinal.setValue(null);
         }
     }//GEN-LAST:event_txtDataFinalFocusLost
+
+    private void comboBoxCentroDeCustoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxCentroDeCustoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //01
+             comboBoxOperacao.requestFocus();
+       }
+    }//GEN-LAST:event_comboBoxCentroDeCustoKeyPressed
+
+    private void comboBoxOperacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxOperacaoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //02
+             txtDataInicial.requestFocus();
+       }
+    }//GEN-LAST:event_comboBoxOperacaoKeyPressed
+
+    private void txtDataInicialKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDataInicialKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //03
+             txtDataFinal.requestFocus();
+       }
+    }//GEN-LAST:event_txtDataInicialKeyPressed
+
+    private void txtDataFinalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDataFinalKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //04
+             btnPesquisar.requestFocus();
+       }
+    }//GEN-LAST:event_txtDataFinalKeyPressed
 
     /**
      * @param args the command line arguments

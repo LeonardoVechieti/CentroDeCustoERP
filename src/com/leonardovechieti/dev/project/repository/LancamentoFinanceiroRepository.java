@@ -3,13 +3,10 @@ package com.leonardovechieti.dev.project.repository;
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
 import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.model.LancamentoFinanceiro;
-import com.leonardovechieti.dev.project.model.Produto;
+import com.leonardovechieti.dev.project.model.dto.EstoqueDTO;
 import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
 import com.leonardovechieti.dev.project.util.Func;
 import com.leonardovechieti.dev.project.util.Message;
-import com.leonardovechieti.dev.project.views.MessageView;
-import org.hibernate.mapping.Array;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +45,6 @@ public class LancamentoFinanceiroRepository {
     }
 
     public String novoLancamento(LancamentoFinanceiro lancamento, List<Estoque> listaEstoque, int idEstoqueDestino) {
-
         //Primeira etapa, salva o lancamento
         LancamentoFinanceiroRepository lancamentoFinanceiro = new LancamentoFinanceiroRepository();
         //Copia os dados do lancamento
@@ -141,7 +137,7 @@ public class LancamentoFinanceiroRepository {
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
-            Message message = new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
+            new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
             return "ERROR";
         }
     }
@@ -177,7 +173,6 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    //Lista todos por data
     public List<LancamentoFinanceiroDTO> listarAll(String dataInicial, String dataFinal) {
 
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
@@ -210,6 +205,39 @@ public class LancamentoFinanceiroRepository {
             System.out.println(e);
         }
         return lista;
+    }
+    public LancamentoFinanceiroDTO buscaLacamento(int id) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, String.valueOf(id));
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+
+                //Busca os itens do estoque
+                EstoqueRepository estoqueRepository = new EstoqueRepository();
+                List<EstoqueDTO> listaEstoqueDTO = estoqueRepository.listarPorLancamentoFinanceiro(id);
+                lancamentoFinanceiroDTO.addArrayEstoque((ArrayList<EstoqueDTO>) listaEstoqueDTO);
+                return lancamentoFinanceiroDTO;
+            }
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao buscar produto!" + e, "error");
+        }
+        return null;
     }
 
     public ResultSet buscaId(String id) {
@@ -399,7 +427,7 @@ public class LancamentoFinanceiroRepository {
     }
 
     public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, String dataInicial, String dataFinal) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.descricao as DESCRICAO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
@@ -423,6 +451,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setDescricao(rs.getString(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {

@@ -57,14 +57,15 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void pesquisarLancamentos() {
         //Verifica se o campo data inicial e valido e o campo data final está vazio, se sim, seta a data final como a data inicial
-        if (!txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+        boolean campoData = (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    "));
+        if (!campoData) {
             txtDataFinal.setText(txtDataInicial.getText());
         }
         LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
         java.util.List<LancamentoFinanceiroDTO> listaLancamentoFinanceiro = new java.util.ArrayList<>();
         if (comboBoxCentroDeCusto.getSelectedItem().toString().equals("TODOS")) {
             if (comboBoxOperacao.getSelectedItem().toString().equals("TODAS")) {
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                if (campoData) {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll();
                 } else {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll(Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
@@ -72,7 +73,7 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             } else {
                 OperacaoRepository operacaoRepository = new OperacaoRepository();
                 Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                if (campoData) {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(operacao.getId());
                 } else {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(operacao.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
@@ -82,7 +83,7 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
             CentroDeCusto centroDeCusto = centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString());
             if (comboBoxOperacao.getSelectedItem().toString().equals("TODAS")) {
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                if (campoData) {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(centroDeCusto.getId());
                 } else {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(centroDeCusto.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
@@ -90,7 +91,7 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             } else {
                 OperacaoRepository operacaoRepository = new OperacaoRepository();
                 Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
+                if (campoData) {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(centroDeCusto.getId(), operacao.getId());
                 } else {
                     listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(centroDeCusto.getId(), operacao.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
@@ -134,7 +135,6 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         for (String operacao : operacoes) {
             comboBoxOperacao.addItem(operacao);
         }
-
     }
     private void formataBotoes() {
         btnPrincipal.setBackground(new Color(0, 0, 0, 0));
@@ -189,6 +189,18 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private boolean validaCampos() {
         return true;
+    }
+
+    private void pegaId() {
+        int linha = tabelaLancamentos.getSelectedRow();
+        this.id = tabelaLancamentos.getValueAt(linha, 0).toString();
+    }
+
+    private void abreLancamento() {
+        pegaId();
+        //Abre a tela do lancamento
+        LancamentoFinanceiroView lancamentoFinanceiroView = new LancamentoFinanceiroView(this.id);
+
     }
 
     private void limparCampos() {
@@ -497,6 +509,7 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void tabelaLancamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaLancamentosMouseClicked
         // TODO add your handling code here:
+        abreLancamento();
     }//GEN-LAST:event_tabelaLancamentosMouseClicked
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed

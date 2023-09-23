@@ -6,11 +6,14 @@
 package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.*;
+import com.leonardovechieti.dev.project.model.dto.EstoqueDTO;
+import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
 import com.leonardovechieti.dev.project.repository.*;
 import com.leonardovechieti.dev.project.util.Func;
 import net.proteanit.sql.DbUtils;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -32,6 +35,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     //Seta com esntrada
     public String enumOperacao = "ENTRADA";
     private java.util.List<Estoque> listaEstoque = new java.util.ArrayList<Estoque>();
+
+    private java.util.List<EstoqueDTO> listaEstoqueDTO = new java.util.ArrayList<EstoqueDTO>();
 
     public LancamentoFinanceiroView() {
         initialize();
@@ -88,29 +93,32 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     public LancamentoFinanceiroView(String id) {
-        Produto produto = new Produto();
-        produto.setId(Integer.parseInt(id));
-        initialize();
-    }
-
-    public LancamentoFinanceiroView(Operacao operacao, CentroDeCusto centroDeCusto, CentroDeCusto centroDeCustoDestino) {
         initialize();
         this.setVisible(true);
-        //Seta os valores do select box
-        comboBoxOperacao.setSelectedItem(operacao.getDescricao());
-        comboBoxCentroDeCusto.setSelectedItem(centroDeCusto.getNome());
-        comboBoxCentroDeCustoDestino.setSelectedItem(centroDeCustoDestino.getNome());
-        //Desabilita os campos
-        comboBoxOperacao.setEnabled(false);
-        comboBoxCentroDeCusto.setEnabled(false);
+        btnLancarProduto.setEnabled(false);
+        labelCentroDeCustoDestino.setEnabled(false);
+        btnCancelarLancamento.setEnabled(false);
         comboBoxCentroDeCustoDestino.setEnabled(false);
-        comboBoxCentroDeCustoDestino.setVisible(false);
-        labelCentroDeCustoDestino.setVisible(false);
-        //Habilita os botoes
-        btnLancarProduto.setEnabled(true);
-        //Troca o nome do botao
-        btnPrincipal.setText("Finalizar Lançamento");
+        txtDesconto.setEnabled(false);
+        percent.setEnabled(false);
+        txtValorDesconto.setEnabled(false);
+        labelDesconto.setEnabled(false);
+        labelValorDesconto.setEnabled(false);
+        buscaLancamento(Integer.parseInt(id));
     }
+
+    private void buscaLancamento(int id){
+        LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
+        LancamentoFinanceiroDTO lancamentoFinanceiroDTO = lancamentoFinanceiroRepository.buscaLacamento(id);
+        txtDescricaoMovimentacao.setText(lancamentoFinanceiroDTO.getDescricao());
+        txtValorTotalMovimentacao.setText(lancamentoFinanceiroDTO.getValor());
+        comboBoxCentroDeCusto.setSelectedItem(lancamentoFinanceiroDTO.getCentro());
+        comboBoxOperacao.setSelectedItem(lancamentoFinanceiroDTO.getOperacao());
+        listaEstoqueDTO = lancamentoFinanceiroDTO.getEstoque();
+        listaLancamentosDTO();
+        //atualizaValorTotal();
+    }
+
 
     private void verificaTipoDeOperacao(Operacao operacao) {
         //Todo: Essa função deve ser melhorada, pois ela seta um contexto de acordo com a operação selecionada
@@ -169,18 +177,51 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         }
     }
 
-    private void buscaLancamentos() {
-        EstoqueRepository estoqueRepository = new EstoqueRepository();
-        rs = estoqueRepository.listarAll();
-        tabelaEstoque.setModel(DbUtils.resultSetToTableModel(rs));
-        adicionaBotaoDeletar();
+    private void listaLancamentosDTO() {
+        //Passa os valores do array para a tabela
+        DefaultTableModel model = (DefaultTableModel) tabelaEstoque.getModel();
+        //Adiciona mais uma coluna na tabela
+        model.addColumn("");
+        model.setRowCount(0);
+        for (EstoqueDTO estoqueDTO : listaEstoqueDTO) {
+            model.addRow(new Object[]{
+                    estoqueDTO.getId(),
+                    estoqueDTO.getProduto() + " - " + estoqueDTO.getIdProduto(),
+                    estoqueDTO.getOperacao(),
+                    estoqueDTO.getCentro(),
+                    Func.formataPrecoPadrao(estoqueDTO.getQuantidade()),
+                    Func.formataPrecoPadrao(estoqueDTO.getValorUnitario()),
+                    Func.formataPrecoPadrao(estoqueDTO.getValorTotal())
+            });
+        }
+
+        //Formata nome de campos da tabela
+        tabelaEstoque.getColumnModel().getColumn(0).setHeaderValue("ID");
+        tabelaEstoque.getColumnModel().getColumn(1).setHeaderValue("PRODUTO");
+        tabelaEstoque.getColumnModel().getColumn(2).setHeaderValue("OPERAÇÃO");
+        tabelaEstoque.getColumnModel().getColumn(3).setHeaderValue("CENTRO");
+        tabelaEstoque.getColumnModel().getColumn(4).setHeaderValue("QUANTIDADE");
+        tabelaEstoque.getColumnModel().getColumn(5).setHeaderValue("UNITÁRIO");
+        tabelaEstoque.getColumnModel().getColumn(6).setHeaderValue("TOTAL");
+
+        //Define o tamanho das colunas
+        tabelaEstoque.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tabelaEstoque.getColumnModel().getColumn(1).setPreferredWidth(170);
+        tabelaEstoque.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tabelaEstoque.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tabelaEstoque.getColumnModel().getColumn(4).setPreferredWidth(20);
+        tabelaEstoque.getColumnModel().getColumn(5).setPreferredWidth(65);
+        tabelaEstoque.getColumnModel().getColumn(6).setPreferredWidth(65);
+
+        //alinha o texto da coluna
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        tabelaEstoque.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+        tabelaEstoque.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+        tabelaEstoque.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+
     }
 
-    private void buscaLancamentosPorProduto(Produto produto) {
-        EstoqueRepository estoqueRepository = new EstoqueRepository();
-        rs = estoqueRepository.listarPorProduto(produto);
-        tabelaEstoque.setModel(DbUtils.resultSetToTableModel(rs));
-    }
 
     private void listaLancamentos() {
         //Passa os valores do array para a tabela

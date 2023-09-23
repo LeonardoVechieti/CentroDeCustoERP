@@ -3,8 +3,10 @@ package com.leonardovechieti.dev.project.repository;
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
 import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.model.Produto;
+import com.leonardovechieti.dev.project.model.dto.EstoqueDTO;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EstoqueRepository {
@@ -126,9 +128,45 @@ public class EstoqueRepository {
         System.out.println("Conexao fechada!");
     }
 
+    public ArrayList<EstoqueDTO> listarPorLancamentoFinanceiro(int id) {
+        ArrayList<EstoqueDTO> listaEstoqueDTO = new ArrayList<>();
+        String sql = "select e.id as ID, p.id as IDPRODUTO, p.descricao as PRODUTO, o.descricao as OPERACAO, c.nome as CENTRO," +
+                " e.quantidade as QUANTIDADE,  e.valorUnitario as VALOR_UNITARIO, e.valorTotal as VALOR_TOTAL from estoque e\n" +
+                "join produto p\n" +
+                "on e.idProduto = p.id\n" +
+                "join centrodecusto c\n" +
+                "on e.idCentroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on e.idOperacao = o.id\n" +
+                "where e.idLancamentoFinanceiro = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, id);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                EstoqueDTO estoqueDTO = new EstoqueDTO();
+                estoqueDTO.setId(rs.getInt("ID"));
+                estoqueDTO.setIdProduto(rs.getInt("IDPRODUTO"));
+                estoqueDTO.setProduto(rs.getString("PRODUTO"));
+                estoqueDTO.setOperacao(rs.getString("OPERACAO"));
+                estoqueDTO.setCentro(rs.getString("CENTRO"));
+                estoqueDTO.setQuantidade(rs.getString("QUANTIDADE"));
+                estoqueDTO.setValorUnitario(rs.getString("VALOR_UNITARIO"));
+                estoqueDTO.setValorTotal(rs.getString("VALOR_TOTAL"));
+                listaEstoqueDTO.add(estoqueDTO);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        //Printa a lista
+        for (EstoqueDTO estoqueDTO : listaEstoqueDTO) {
+            System.out.println(estoqueDTO.getProduto());
+        }
+        return listaEstoqueDTO;
+    }
+
     public ResultSet listarPorProduto(Produto produto) {
-        System.out.println(produto.getId() +"Cheguei aqui");
-        //Lista do mais recente para o mais antigo da uniao das tabelas estoque, produto e centrodecusto formatando a data
         String sql = "select e.id as ID, o.descricao as OPERACAO, e.quantidade as QUANTIDADE, c.nome as CENTRO, DATE_FORMAT(e.data,'%d/%m/%Y') as DATA from estoque e\n" +
                 "join produto p\n" +
                 "on e.idProduto = p.id\n" +
@@ -167,36 +205,13 @@ public class EstoqueRepository {
 
 
     public String lancarListaEstoque(List<Estoque> listaEstoque) {
-        //Verifica se a lista esta vazia
         if (listaEstoque.isEmpty()) {
             return "ERROR";
         }
-        try {
-            for (Estoque estoque : listaEstoque) {
-                String sql = "insert into estoque (idProduto, idLancamentoFinanceiro, idCentroDeCusto, idOperacao, quantidade, valorUnitario, valorTotal, descricao) values (?, ?, ?, ?, ?, ?, ?, ?)";
-                try {
-                    pst = conexao.prepareStatement(sql);
-                    pst.setInt(1, estoque.getIdProduto());
-                    pst.setInt(2, estoque.getIdLancamentoFinanceiro());
-                    pst.setInt(3, estoque.getIdCentroDeCusto());
-                    pst.setInt(4, estoque.getIdOperacao());
-                    pst.setString(5, String.valueOf(estoque.getQuantidade()));
-                    pst.setString(6, String.valueOf(estoque.getValorUnitario()));
-                    pst.setString(7, String.valueOf(estoque.getValorTotal()));
-                    pst.setString(8, estoque.getDescricao());
-                    pst.executeUpdate();
-                    return "SUCCESS";
-                } catch (Exception e) {
-                    System.out.println(e);
-                    return "ERROR";
-                }
-
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-            return "ERROR";
+        for (Estoque estoque : listaEstoque) {
+            lancar(estoque);
         }
-        return "ERROR";
+        return "SUCCESS";
     }
 
     public void cancelarLancamentoEstoque(String idLancamentoFinanceiro) {

@@ -163,7 +163,7 @@ public class ProdutoRepository {
                 return produto;
             }
         } catch (Exception e) {
-            Message message = new Message("Erro!", "Erro ao buscar produto!" + e, "error");
+            new Message("Erro!", "Erro ao buscar produto!" + e, "error");
         }
         return null;
     }

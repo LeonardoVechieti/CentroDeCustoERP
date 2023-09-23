@@ -66,29 +66,29 @@ public class NovoLancamentoView extends javax.swing.JFrame {
     }
 
     private void abreNovaMovimentacao() {
-        if (comboBoxOperacao.getSelectedItem().equals("TRANSFERENCIA")) {
-            if (comboBoxCentroDeCusto.getSelectedItem().equals(comboBoxCentroDeCustoDestino.getSelectedItem())) {
-                new MessageView("Alerta!", "Selecione centros de custo diferentes", "alert");
-            } else {
-                OperacaoRepository operacaoRepository = new OperacaoRepository();
-                CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
-                LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView(
-                        operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
-                        centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
-                        centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
-                );
-                dispose();
-            }
-        } else {
-            OperacaoRepository operacaoRepository = new OperacaoRepository();
-            CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
-            LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView(
-                    operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
-                    centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
-                    centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
-            );
-            dispose();
-        }
+//        if (comboBoxOperacao.getSelectedItem().equals("TRANSFERENCIA")) {
+//            if (comboBoxCentroDeCusto.getSelectedItem().equals(comboBoxCentroDeCustoDestino.getSelectedItem())) {
+//                new MessageView("Alerta!", "Selecione centros de custo diferentes", "alert");
+//            } else {
+//                OperacaoRepository operacaoRepository = new OperacaoRepository();
+//                CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
+//                LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView(
+//                        operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
+//                        centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
+//                        centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
+//                );
+//                dispose();
+//            }
+//        } else {
+//            OperacaoRepository operacaoRepository = new OperacaoRepository();
+//            CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
+//            LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView(
+//                    operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString()),
+//                    centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString()),
+//                    centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString())
+//            );
+//            dispose();
+//        }
     }
 
  

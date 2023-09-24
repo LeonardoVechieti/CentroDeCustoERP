@@ -1,7 +1,5 @@
 package com.leonardovechieti.dev.project.model.dto;
 
-import com.leonardovechieti.dev.project.model.Estoque;
-
 import java.util.ArrayList;
 
 public class LancamentoFinanceiroDTO {
@@ -13,6 +11,8 @@ public class LancamentoFinanceiroDTO {
     private String data;
 
     private String descricao;
+
+    private Boolean cancelado;
 
     private ArrayList<EstoqueDTO> estoqueDTO = new ArrayList<>();
 
@@ -98,4 +98,13 @@ public class LancamentoFinanceiroDTO {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public Boolean getCancelado() {
+        return cancelado;
+    }
+
+    public void setCancelado(Boolean cancelado) {
+        this.cancelado = cancelado;
+    }
+
 }

@@ -109,7 +109,7 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="btnLancarProduto" min="-2" pref="158" max="-2" attributes="0"/>
                                       <Component id="labelValorTotalMovimentacao2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtValorTotalMovimentacao" alignment="1" min="-2" pref="104" max="-2" attributes="0"/>
+                                      <Component id="txtValorTotalMovimentacao" alignment="1" min="-2" pref="142" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                               </Group>
@@ -130,7 +130,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                                   <Component id="btnLancarProduto" min="-2" pref="49" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="36" max="32767" attributes="0"/>
                                   <Component id="labelValorTotalMovimentacao2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txtValorTotalMovimentacao" min="-2" max="-2" attributes="0"/>
@@ -237,7 +237,14 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jScrollPane2" min="-2" pref="588" max="-2" attributes="0"/>
+                                          <Component id="labelDescricao2" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" attributes="0">
                                               <Component id="comboBoxCentroDeCusto" min="-2" pref="197" max="-2" attributes="0"/>
@@ -253,29 +260,21 @@
                                               <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
                                               <Component id="labelCentroDeCustoDestino" min="-2" max="-2" attributes="0"/>
                                           </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="labelDesconto" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="txtDesconto" min="-2" pref="104" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="percent" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="labelValorDesconto" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="txtValorDesconto" min="-2" pref="104" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
+                                              <Component id="labelId" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                       <EmptySpace pref="30" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="labelDesconto" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtDesconto" min="-2" pref="104" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="percent" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="labelValorDesconto" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtValorDesconto" min="-2" pref="104" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jScrollPane2" min="-2" pref="588" max="-2" attributes="0"/>
-                                          <Component id="labelDescricao2" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -307,9 +306,9 @@
                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                       <Component id="labelValorDesconto" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="txtValorDesconto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelId" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="labelDesconto" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="txtDesconto" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="percent" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -387,7 +386,7 @@
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel3">
+                    <Component class="javax.swing.JLabel" name="labelId">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="ID:"/>
                       </Properties>

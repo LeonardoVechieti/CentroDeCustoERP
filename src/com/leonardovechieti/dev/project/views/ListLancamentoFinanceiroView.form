@@ -236,8 +236,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="labelOperacao4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="txtDataFinal" pref="85" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
+                              <Component id="txtDataFinal" pref="91" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="boxCancelado" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               <Component id="btnPesquisar" min="-2" pref="156" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -261,6 +263,7 @@
                                           <Component id="labelOperacao4" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="txtDataInicial" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                                           <Component id="txtDataFinal" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                                          <Component id="boxCancelado" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -390,6 +393,11 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtDataFinalActionPerformed"/>
                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDataFinalKeyPressed"/>
                       </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="boxCancelado">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Cancelado"/>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>

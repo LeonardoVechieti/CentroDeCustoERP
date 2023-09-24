@@ -112,7 +112,7 @@ public class LancamentoFinanceiroRepository {
                     return "CREATE";
                 } else {
                     //Caso erro cancela o lancamento
-                    this.cancelarLancamento(String.valueOf(idLancamento));
+                    this.excluirLancamento(String.valueOf(idLancamento));
                     return "ERROR";
                 }
             } else {
@@ -125,7 +125,7 @@ public class LancamentoFinanceiroRepository {
         return "ERROR";
     }
 
-    public String cancelarLancamento(String id) {
+    public String excluirLancamento(String id) {
         //Cancela o lancamento do estoque
         EstoqueRepository estoqueRepository = new EstoqueRepository();
         estoqueRepository.cancelarLancamentoEstoque(id);
@@ -142,20 +142,37 @@ public class LancamentoFinanceiroRepository {
         }
     }
 
-    public List<LancamentoFinanceiroDTO> listarAll() {
+    public void cancelarLancamento(int id) {
+        //Cancela o lancamento do estoque
+        EstoqueRepository estoqueRepository = new EstoqueRepository();
+        estoqueRepository.cancelarLancamentoEstoque(String.valueOf(id));
+        //Cancela o lancamento financeiro
+        String sql = "update lancamentofinanceiro set cancelado = 1 where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, String.valueOf(id));
+            pst.executeUpdate();
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
+        }
+    }
 
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarAll(Boolean cancelado) {
+
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
+                "where l.cancelado = ?\n" +
                 "order by l.id desc\n" +
                 "limit 100";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
+            pst.setBoolean(1, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -165,6 +182,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -173,9 +191,9 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    public List<LancamentoFinanceiroDTO> listarAll(String dataInicial, String dataFinal) {
+    public List<LancamentoFinanceiroDTO> listarAll(String dataInicial, String dataFinal, Boolean cancelado) {
 
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
@@ -183,6 +201,7 @@ public class LancamentoFinanceiroRepository {
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
                 "where l.data between ? and ?\n" +
+                "and l.cancelado = ?\n" +
                 "order by l.id desc\n" +
                 "limit 100";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
@@ -190,6 +209,7 @@ public class LancamentoFinanceiroRepository {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, dataInicial);
             pst.setString(2, dataFinal);
+            pst.setBoolean(3, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -199,6 +219,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -271,19 +292,22 @@ public class LancamentoFinanceiroRepository {
          conexao.close();
         System.out.println("Conexao fechada!");
     }
-    public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao) {
-         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, Boolean cancelado) {
+         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                 " l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
-                "where l.operacao = ? order by l.id desc";
+                "where l.operacao = ? " +
+                "and l.cancelado = ?\n" + "order by l.id desc";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, idOperacao);
+            pst.setBoolean(2, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -293,6 +317,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -301,21 +326,26 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, String dataInicial, String dataFinal) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
-                "where l.operacao = ? and l.data between ? and ? order by l.id desc";
+                "where l.operacao = ?" +
+                " and l.data between ? and ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, idOperacao);
             pst.setString(2, dataInicial);
             pst.setString(3, dataFinal);
+            pst.setBoolean(4, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -325,6 +355,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -333,19 +364,22 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
-                "where l.centrodecusto = ? order by l.id desc";
+                "where l.centrodecusto = ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, idCentroDeCusto);
+            pst.setBoolean(2, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -355,6 +389,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -363,21 +398,24 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, String dataInicial, String dataFinal) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
-                "where l.centrodecusto = ? and l.data between ? and ? order by l.id desc";
+                "where l.centrodecusto = ? and l.data between ? and ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, idCentroDeCusto);
             pst.setString(2, dataInicial);
             pst.setString(3, dataFinal);
+            pst.setBoolean(4, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -387,6 +425,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -395,20 +434,23 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
-                "where l.centrodecusto = ? and l.operacao = ? order by l.id desc";
+                "where l.centrodecusto = ? and l.operacao = ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, idCentroDeCusto);
             pst.setInt(2, idOperacao);
+            pst.setBoolean(3, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -418,6 +460,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {
@@ -426,15 +469,17 @@ public class LancamentoFinanceiroRepository {
         return lista;
     }
 
-    public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, String dataInicial, String dataFinal) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.descricao as DESCRICAO from lancamentofinanceiro l\n" +
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.descricao as DESCRICAO, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
                 "on l.centroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on l.operacao = o.id\n" +
-                "where l.centrodecusto = ? and l.operacao = ? and l.data between ? and ? order by l.id desc";
+                "where l.centrodecusto = ? and l.operacao = ? and l.data between ? and ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
         List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
         try {
             pst = conexao.prepareStatement(sql);
@@ -442,6 +487,7 @@ public class LancamentoFinanceiroRepository {
             pst.setInt(2, idOperacao);
             pst.setString(3, dataInicial);
             pst.setString(4, dataFinal);
+            pst.setBoolean(5, cancelado);
             rs = pst.executeQuery();
             while (rs.next()) {
                 LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
@@ -452,6 +498,7 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
                 lancamentoFinanceiroDTO.setDescricao(rs.getString(7));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(8));
                 lista.add(lancamentoFinanceiroDTO);
             }
         } catch (Exception e) {

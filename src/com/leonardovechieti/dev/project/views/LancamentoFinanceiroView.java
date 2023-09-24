@@ -30,7 +30,7 @@ import java.sql.ResultSet;
  * @author Leonardo
  */
 public class LancamentoFinanceiroView extends javax.swing.JFrame {
-    private String id = null;
+    private int id = 0;
     ResultSet rs = null;
     //Seta com esntrada
     public String enumOperacao = "ENTRADA";
@@ -96,9 +96,18 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         initialize();
         this.setVisible(true);
         btnLancarProduto.setEnabled(false);
+        btnPrincipal.setText("Novo Lançamento");
         labelCentroDeCustoDestino.setEnabled(false);
-        btnCancelarLancamento.setEnabled(false);
+        btnCancelarLancamento.setEnabled(true);
         comboBoxCentroDeCustoDestino.setEnabled(false);
+        comboBoxOperacao.setEnabled(false);
+        txtDescricaoMovimentacao.setEditable(false);
+        txtValorTotalMovimentacao.setEditable(false);
+        comboBoxCentroDeCusto.setEnabled(false);
+        txtDesconto.setEditable(false);
+        percent.setEnabled(false);
+        txtValorDesconto.setEditable(false);
+
         txtDesconto.setEnabled(false);
         percent.setEnabled(false);
         txtValorDesconto.setEnabled(false);
@@ -110,13 +119,14 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private void buscaLancamento(int id){
         LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
         LancamentoFinanceiroDTO lancamentoFinanceiroDTO = lancamentoFinanceiroRepository.buscaLacamento(id);
+        this.id = lancamentoFinanceiroDTO.getId();
+        labelId.setText("ID: " + lancamentoFinanceiroDTO.getId());
         txtDescricaoMovimentacao.setText(lancamentoFinanceiroDTO.getDescricao());
         txtValorTotalMovimentacao.setText(lancamentoFinanceiroDTO.getValor());
         comboBoxCentroDeCusto.setSelectedItem(lancamentoFinanceiroDTO.getCentro());
         comboBoxOperacao.setSelectedItem(lancamentoFinanceiroDTO.getOperacao());
         listaEstoqueDTO = lancamentoFinanceiroDTO.getEstoque();
         listaLancamentosDTO();
-        //atualizaValorTotal();
     }
 
 
@@ -420,6 +430,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         }
     }
 
+    private void cancelarLancamento(int id){
+        LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
+        lancamentoFinanceiroRepository.cancelarLancamento(id);
+    }
+
     private boolean validaCampos() {
         //Todos os campos juntos
         if (txtValorTotalMovimentacao.getText().equals("")) {
@@ -439,7 +454,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private void limparCampos() {
         btnPrincipal.setText("Novo Lançamento");
         btnPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png")));
-        this.id = null;
+        this.id = 0;
     }
 
     private void setIcon(){
@@ -467,7 +482,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         labelDescricao2 = new javax.swing.JLabel();
         labelOperacao2 = new javax.swing.JLabel();
         comboBoxOperacao = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
+        labelId = new javax.swing.JLabel();
         labelCentroDeCustoDestino = new javax.swing.JLabel();
         comboBoxCentroDeCustoDestino = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -550,7 +565,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("ID:");
+        labelId.setText("ID:");
 
         labelCentroDeCustoDestino.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelCentroDeCustoDestino.setText("Destino:");
@@ -593,6 +608,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelDescricao2))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel7Layout.createSequentialGroup()
                                 .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -604,26 +624,20 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                                 .addGap(110, 110, 110)
                                 .addComponent(labelOperacao2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(93, 93, 93)
-                                .addComponent(labelCentroDeCustoDestino)))
-                        .addContainerGap(30, Short.MAX_VALUE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(labelDesconto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(percent)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(labelValorDesconto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(82, 82, 82))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelDescricao2))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(labelCentroDeCustoDestino))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(labelDesconto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(percent)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(labelValorDesconto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(87, 87, 87)
+                                .addComponent(labelId)))
+                        .addContainerGap(30, Short.MAX_VALUE))))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -647,9 +661,9 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelValorDesconto)
-                        .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelId))
                     .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
                         .addComponent(labelDesconto)
                         .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(percent)))
@@ -689,7 +703,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnLancarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelValorTotalMovimentacao2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30))))
         );
         painelLayout.setVerticalGroup(
@@ -704,7 +718,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                     .addGroup(painelLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addComponent(btnLancarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                         .addComponent(labelValorTotalMovimentacao2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -776,8 +790,10 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private void btnPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrincipalActionPerformed
         // TODO add your handling code here:
         //se o id for diferente de nulo
-        if (id != null) {
-            //alterarLancamento();
+        if (btnPrincipal.getText().equals("Novo Lançamento")) {
+            LancamentoFinanceiroView novoLancamentoView = new LancamentoFinanceiroView();
+            novoLancamentoView.setVisible(true);
+            this.dispose();
         } else {
             finalizarLancamento();
         }
@@ -785,6 +801,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void btnCancelarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarLancamentoActionPerformed
         // TODO add your handling code here:
+        cancelarLancamento(id);
     }//GEN-LAST:event_btnCancelarLancamentoActionPerformed
 
     private void tabelaEstoqueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaEstoqueMouseClicked
@@ -862,7 +879,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboBoxCentroDeCusto;
     private javax.swing.JComboBox<String> comboBoxCentroDeCustoDestino;
     private javax.swing.JComboBox<String> comboBoxOperacao;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPopupMenu jPopupMenu1;
@@ -872,6 +888,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private javax.swing.JLabel labelCentroDeCustoDestino;
     private javax.swing.JLabel labelDesconto;
     private javax.swing.JLabel labelDescricao2;
+    private javax.swing.JLabel labelId;
     private javax.swing.JLabel labelOperacao2;
     private javax.swing.JLabel labelValorDesconto;
     private javax.swing.JLabel labelValorTotalMovimentacao2;

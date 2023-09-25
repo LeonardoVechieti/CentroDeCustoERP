@@ -160,9 +160,9 @@ public class EstoqueRepository {
             System.out.println(e);
         }
         //Printa a lista
-        for (EstoqueDTO estoqueDTO : listaEstoqueDTO) {
-            System.out.println(estoqueDTO.getProduto());
-        }
+//        for (EstoqueDTO estoqueDTO : listaEstoqueDTO) {
+//            System.out.println(estoqueDTO.getProduto());
+//        }
         return listaEstoqueDTO;
     }
 
@@ -174,7 +174,7 @@ public class EstoqueRepository {
                 "on e.idCentroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on e.idOperacao = o.id\n" +
-                "where e.idProduto = ? order by e.id desc";
+                "where e.idProduto = ? and e.cancelado = 0 order by e.id desc";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, produto.getId());
@@ -187,7 +187,7 @@ public class EstoqueRepository {
     }
 
     public Double retornaTotalEstoque(Produto produto) {
-        String sql = "select sum(quantidade) from estoque where idProduto = ?";
+        String sql = "select sum(quantidade) from estoque where idProduto = ? and cancelado = 0";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, produto.getId());
@@ -215,7 +215,7 @@ public class EstoqueRepository {
     }
 
     public void cancelarLancamentoEstoque(String idLancamentoFinanceiro) {
-        String sql = "delete from estoque where idLancamentoFinanceiro = ?";
+        String sql = "update estoque set cancelado = 1 where idLancamentoFinanceiro = ?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(idLancamentoFinanceiro));

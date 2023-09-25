@@ -8,12 +8,12 @@ public class LancamentoFinanceiroDTO {
     private String centro;
     private String usuario;
     private String valor;
+    private String desconto;
+    private String descontoTipo;
     private String data;
-
     private String descricao;
-
     private Boolean cancelado;
-
+    private int idLancamentoAnexo;
     private ArrayList<EstoqueDTO> estoqueDTO = new ArrayList<>();
 
     public LancamentoFinanceiroDTO(int id, String operacao, String centro, String usuario, String data, String valor, String descricao) {
@@ -105,6 +105,30 @@ public class LancamentoFinanceiroDTO {
 
     public void setCancelado(Boolean cancelado) {
         this.cancelado = cancelado;
+    }
+
+    public int getIdLancamentoAnexo() {
+        return idLancamentoAnexo;
+    }
+
+    public void setIdLancamentoAnexo(int idLancamentoAnexo) {
+        this.idLancamentoAnexo = idLancamentoAnexo;
+    }
+
+    public String getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(String desconto) {
+        this.desconto = desconto;
+    }
+
+    public String getDescontoTipo() {
+        return descontoTipo;
+    }
+
+    public void setDescontoTipo(String descontoTipo) {
+        this.descontoTipo = descontoTipo;
     }
 
 }

@@ -21,7 +21,7 @@ public class LancamentoFinanceiroRepository {
     }
 
     public String save(LancamentoFinanceiro lancamento) {
-        String sql = "insert into lancamentofinanceiro (centroDeCusto, operacao, valorTotal, data, descricao, usuario, idLancamentoAnexo) values (?,?,?,?,?,?,?)";
+        String sql = "insert into lancamentofinanceiro (centroDeCusto, operacao, valorTotal, data, descricao, usuario, idLancamentoAnexo, desconto, descontoTipo) values (?,?,?,?,?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, lancamento.getIdCentroDeCusto());
@@ -36,6 +36,8 @@ public class LancamentoFinanceiroRepository {
             } else {
                 pst.setInt(7, lancamento.getIdLancamentoAnexo());
             }
+            pst.setString(8, Func.formataPrecoBanco(lancamento.getDesconto()));
+            pst.setString(9, lancamento.getDescontoTipo());
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -159,7 +161,8 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarAll(Boolean cancelado) {
 
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
@@ -227,8 +230,11 @@ public class LancamentoFinanceiroRepository {
         }
         return lista;
     }
+
     public LancamentoFinanceiroDTO buscaLacamento(int id) {
-        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA, l.valorTotal as VALOR from lancamentofinanceiro l\n" +
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.descricao as DESCRICAO, l.desconto as DESCONTO, l.descontoTipo as TIPO, l.cancelado as CANCELADO," +
+                " l.idLancamentoAnexo as ANEXO from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
                 "join centrodecusto c\n" +
@@ -248,6 +254,12 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
                 lancamentoFinanceiroDTO.setData(rs.getString(5));
                 lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setDescricao(rs.getString(7));
+                lancamentoFinanceiroDTO.setDesconto(Func.formataPrecoPadrao(rs.getString(8)));
+                lancamentoFinanceiroDTO.setDescontoTipo(rs.getString(9));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(10));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(11));
+
 
                 //Busca os itens do estoque
                 EstoqueRepository estoqueRepository = new EstoqueRepository();
@@ -268,7 +280,7 @@ public class LancamentoFinanceiroRepository {
             pst.setString(1, id);
             rs = pst.executeQuery();
         } catch (Exception e) {
-            Message message = new Message("Erro!", "Erro ao buscar produto!" + e, "error");
+            new Message("Erro!", "Erro ao buscar produto!" + e, "error");
         }
         return rs;
     }

@@ -49,24 +49,32 @@ public class Func {
     }
 
     public static String formataPrecoBanco(String preco) {
-        //Remove o ponto do preco
-        preco = preco.replace(".", ""); //Troca o ponto por nada
-        //Troca a virgula por ponto
-        preco = preco.replace(",", ".");
-        return preco;
+        if (preco==null || preco.equals("")) {
+            return "0.00";
+        } else {
+            //Remove o ponto do preco
+            preco = preco.replace(".", ""); //Troca o ponto por nada
+            //Troca a virgula por ponto
+            preco = preco.replace(",", ".");
+            return preco;
+        }
     }
 
     public static String formataPrecoPadrao(String preco) {
-        double valor = Double.parseDouble(preco);
-        // Criar o formatador para o valor monetário
-        NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        // Formatar o valor como uma string
-        String valorFormatado = formatador.format(valor);
-        //Remover o R$
-        valorFormatado = valorFormatado.replace("R$ ", "");
-        // Exibir o valor formatado
-        //System.out.println(valorFormatado);
-        return valorFormatado;
+        if (preco==null || preco.equals("")) {
+            return "0,00";
+        } else {
+            double valor = Double.parseDouble(preco);
+            // Criar o formatador para o valor monetário
+            NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+            // Formatar o valor como uma string
+            String valorFormatado = formatador.format(valor);
+            //Remover o R$
+            valorFormatado = valorFormatado.replace("R$ ", "");
+            // Exibir o valor formatado
+            //System.out.println(valorFormatado);
+            return valorFormatado;
+        }
     }
 
     //Recebe uma string de data e formata para padrao de exibicao do sistema

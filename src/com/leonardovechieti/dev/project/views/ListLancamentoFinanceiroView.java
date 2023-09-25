@@ -58,7 +58,7 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
     private void pesquisarLancamentos() {
         //Verifica se o campo data inicial e valido e o campo data final está vazio, se sim, seta a data final como a data inicial
         boolean campoData = (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    "));
-        if (!campoData) {
+        if (!txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
             txtDataFinal.setText(txtDataInicial.getText());
         }
         LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
@@ -545,6 +545,9 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void btnPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrincipalActionPerformed
         // TODO add your handling code here
+        LancamentoFinanceiroView novoLancamentoView = new LancamentoFinanceiroView();
+        novoLancamentoView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnPrincipalActionPerformed
 
     private void btnCancelarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarLancamentoActionPerformed

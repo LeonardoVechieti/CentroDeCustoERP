@@ -13,6 +13,7 @@ public class EstoqueDTO {
     private String valorUnitario;
     private String valor;
     private String valorTotal;
+
     private String data;
     private String descricao;
 
@@ -130,4 +131,5 @@ public class EstoqueDTO {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
 }

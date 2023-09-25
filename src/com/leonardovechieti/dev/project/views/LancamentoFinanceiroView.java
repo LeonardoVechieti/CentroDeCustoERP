@@ -105,13 +105,12 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         txtValorTotalMovimentacao.setEditable(false);
         comboBoxCentroDeCusto.setEnabled(false);
         txtDesconto.setEditable(false);
-        percent.setEnabled(false);
+        //percent.setEnabled(false);
         txtValorDesconto.setEditable(false);
-
-        txtDesconto.setEnabled(false);
+        txtDesconto.setEditable(false);
         percent.setEnabled(false);
         txtValorDesconto.setEnabled(false);
-        labelDesconto.setEnabled(false);
+        //labelDesconto.setEnabled(false);
         labelValorDesconto.setEnabled(false);
         buscaLancamento(Integer.parseInt(id));
     }
@@ -125,6 +124,9 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         txtValorTotalMovimentacao.setText(lancamentoFinanceiroDTO.getValor());
         comboBoxCentroDeCusto.setSelectedItem(lancamentoFinanceiroDTO.getCentro());
         comboBoxOperacao.setSelectedItem(lancamentoFinanceiroDTO.getOperacao());
+        txtDesconto.setText(lancamentoFinanceiroDTO.getDesconto());
+        //txtValorDesconto.setText(lancamentoFinanceiroDTO.getDesconto());
+        //percent.setSelected(lancamentoFinanceiroDTO.getDescontoTipo().equals("PERCENT"));
         listaEstoqueDTO = lancamentoFinanceiroDTO.getEstoque();
         listaLancamentosDTO();
     }
@@ -414,6 +416,12 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         lancamento.setIdOperacao(operacao.buscaIdDescricao(comboBoxOperacao.getSelectedItem().toString()));
         lancamento.setDescricao(txtDescricaoMovimentacao.getText());
         lancamento.setValorTotal(txtValorTotalMovimentacao.getText());
+        lancamento.setDesconto(txtDesconto.getText());
+        if(percent.isSelected()){
+            lancamento.setDescontoTipo("PERCENT");
+        } else {
+            lancamento.setDescontoTipo("VALOR");
+        }
         lancamento.setUsuario(Integer.parseInt(PrincipalView.labelIdUsuario.getText()));
         String retornoLancamento = lancamentoFinanceiro.novoLancamento(
                 lancamento,
@@ -421,9 +429,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                 centroDeCusto.buscaCentroDeCustoNome(comboBoxCentroDeCustoDestino.getSelectedItem().toString()).getId()
                 );
         if(retornoLancamento.equals("CREATE")){
-            listaEstoque.clear();
-            listaLancamentos();
-            atualizaValorTotal();
+            limparCampos();
             new MessageView("Sucesso!", "Movimentação financeira lançada com sucesso!", "success");
         }else{
             new MessageView("Erro!", "Erro ao lançar movimentação financeira!", "error");
@@ -453,6 +459,17 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void limparCampos() {
         btnPrincipal.setText("Novo Lançamento");
+        txtDescricaoMovimentacao.setText("");
+        txtValorTotalMovimentacao.setText("");
+        comboBoxCentroDeCusto.setSelectedIndex(0);
+        comboBoxOperacao.setSelectedIndex(0);
+        comboBoxCentroDeCustoDestino.setSelectedIndex(0);
+        txtDesconto.setText("");
+        txtValorDesconto.setText("");
+        percent.setSelected(false);
+        listaEstoque.clear();
+        listaLancamentos();
+        atualizaValorTotal();
         btnPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png")));
         this.id = 0;
     }

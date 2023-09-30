@@ -447,6 +447,10 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             new MessageView("Alerta!", "Preencha o campo valor total!", "alert");
             return false;
         }
+        if (txtValorTotalMovimentacao.getText().equals("0,00")) {
+            new MessageView("Alerta!", "Valor total não pode ser igual a zero!", "alert");
+            return false;
+        }
         //Se for uma transferência centro de custo destino não pode ser igual ao centro de custo origem
         if (comboBoxOperacao.getSelectedItem().toString().equals("TRANSFERENCIA")) {
             if (comboBoxCentroDeCusto.getSelectedItem().toString().equals(comboBoxCentroDeCustoDestino.getSelectedItem().toString())) {
@@ -544,11 +548,16 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaEstoque);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentação", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14))); // NOI18N
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentação", 0, 0, new java.awt.Font("Arial", 0, 14))); // NOI18N
         jPanel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         comboBoxCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxCentroDeCusto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxCentroDeCusto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBoxCentroDeCustoKeyPressed(evt);
+            }
+        });
 
         labelCentroDeCusto2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelCentroDeCusto2.setText("Centro de Custo:");
@@ -577,6 +586,9 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             }
         });
         comboBoxOperacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBoxOperacaoKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 comboBoxOperacaoKeyReleased(evt);
             }
@@ -589,10 +601,20 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
         comboBoxCentroDeCustoDestino.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxCentroDeCustoDestino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxCentroDeCustoDestino.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBoxCentroDeCustoDestinoKeyPressed(evt);
+            }
+        });
 
         txtDescricaoMovimentacao.setColumns(20);
         txtDescricaoMovimentacao.setLineWrap(true);
         txtDescricaoMovimentacao.setRows(5);
+        txtDescricaoMovimentacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDescricaoMovimentacaoKeyPressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtDescricaoMovimentacao);
 
         labelDesconto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -600,6 +622,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
         txtDesconto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtDesconto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtDesconto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDescontoKeyPressed(evt);
+            }
+        });
 
         percent.setSelected(true);
         percent.setText("%");
@@ -854,6 +881,49 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         // TODO add your handling code here:
         atualizaValorTotal();
     }//GEN-LAST:event_percentActionPerformed
+
+    private void comboBoxCentroDeCustoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxCentroDeCustoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //01
+             comboBoxOperacao.requestFocus();
+        }
+    }//GEN-LAST:event_comboBoxCentroDeCustoKeyPressed
+
+    private void comboBoxOperacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxOperacaoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //02
+            if (comboBoxOperacao.isEnabled() && comboBoxOperacao.isEditable()) {
+                comboBoxCentroDeCustoDestino.requestFocus();
+            } else {
+                txtDescricaoMovimentacao.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_comboBoxOperacaoKeyPressed
+
+    private void comboBoxCentroDeCustoDestinoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxCentroDeCustoDestinoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //03
+            txtDescricaoMovimentacao.requestFocus();
+        }
+    }//GEN-LAST:event_comboBoxCentroDeCustoDestinoKeyPressed
+
+    private void txtDescontoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescontoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //05
+            btnPrincipal.requestFocus();
+        }
+    }//GEN-LAST:event_txtDescontoKeyPressed
+
+    private void txtDescricaoMovimentacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescricaoMovimentacaoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){//04
+            if (txtDesconto.isEnabled() && txtDesconto.isEditable()) {
+                txtDesconto.requestFocus();
+            } else {
+                btnPrincipal.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txtDescricaoMovimentacaoKeyPressed
 
     /**
      * @param args the command line arguments

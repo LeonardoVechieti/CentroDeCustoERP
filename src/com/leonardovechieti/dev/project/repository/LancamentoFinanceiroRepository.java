@@ -107,6 +107,9 @@ public class LancamentoFinanceiroRepository {
                             }
                             //Chama o metodo de salvar a movimentação de transferencia
                             this.novoLancamento(lancamentoTransferencia, listaEstoqueTransferencia, lancamento.getIdCentroDeCusto());
+                            //Atualiza o id do anexo no lancamento de transferencia
+                            int idAnexo = this.ultimoId();
+                            this.atualizaIdAnexo(idLancamento, idAnexo);
                         }
                     }
                     //int id = lancamentoFinanceiro.ultimoId();
@@ -127,6 +130,18 @@ public class LancamentoFinanceiroRepository {
         return "ERROR";
     }
 
+    private void atualizaIdAnexo(int id, int idAnexo){
+        String sql = "update lancamentofinanceiro set idLancamentoAnexo = ? where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idAnexo);
+            pst.setInt(2, id);
+            pst.executeUpdate();
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao atualizar id do anexo!" + e, "error");
+        }
+    }
+
     public String excluirLancamento(String id) {
         //Cancela o lancamento do estoque
         EstoqueRepository estoqueRepository = new EstoqueRepository();
@@ -145,7 +160,14 @@ public class LancamentoFinanceiroRepository {
     }
 
     public void cancelarLancamento(int id) {
-        //Cancela o lancamento do estoque
+        //Verifica se o lacamento possui anexo
+        int idAnexo = buscaIdLancamentoAnexo(id);
+        if (idAnexo != 0) {
+            cancelar(idAnexo);
+        }
+        cancelar(id);
+    }
+    private void cancelar(int id) {
         EstoqueRepository estoqueRepository = new EstoqueRepository();
         estoqueRepository.cancelarLancamentoEstoque(String.valueOf(id));
         //Cancela o lancamento financeiro
@@ -158,6 +180,21 @@ public class LancamentoFinanceiroRepository {
             new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
         }
     }
+     private int buscaIdLancamentoAnexo(int id) {
+        String sql = "select idLancamentoAnexo from lancamentofinanceiro where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, String.valueOf(id));
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao buscar lancamento anexo!" + e, "error");
+        }
+        return 0;
+    }
+
 
     public List<LancamentoFinanceiroDTO> listarAll(Boolean cancelado) {
 

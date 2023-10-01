@@ -43,13 +43,18 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         this.setVisible(true);
         btnLancarProduto.setEnabled(true);
         labelCentroDeCustoDestino.setEnabled(false);
-        btnCancelarLancamento.setEnabled(false);
+        btnImprimir.setEnabled(false);
         comboBoxCentroDeCustoDestino.setEnabled(false);
         txtDesconto.setEnabled(false);
         percent.setEnabled(false);
         txtValorDesconto.setEnabled(false);
         labelDesconto.setEnabled(false);
         labelValorDesconto.setEnabled(false);
+        labelCancelado.setVisible(false);
+        btnImprimir.setVisible(false);
+        labelId.setVisible(false);
+        labelIdAnexo.setVisible(false);
+        btnCancelarLancamento.setVisible(false);
 
         //Gatilhos para os campos
         comboBoxOperacao.addItemListener(new ItemListener() {
@@ -105,7 +110,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         txtValorTotalMovimentacao.setEditable(false);
         comboBoxCentroDeCusto.setEnabled(false);
         txtDesconto.setEditable(false);
-        //percent.setEnabled(false);
         txtValorDesconto.setEditable(false);
         txtDesconto.setEditable(false);
         percent.setEnabled(false);
@@ -113,6 +117,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         //labelDesconto.setEnabled(false);
         labelValorDesconto.setEnabled(false);
         buscaLancamento(Integer.parseInt(id));
+        btnImprimir.setVisible(true);
+        labelId.setVisible(true);
+        labelIdAnexo.setVisible(true);
+        labelCancelado.setVisible(false);
+        btnCancelarLancamento.setVisible(true);
     }
 
     private void buscaLancamento(int id){
@@ -120,13 +129,26 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         LancamentoFinanceiroDTO lancamentoFinanceiroDTO = lancamentoFinanceiroRepository.buscaLacamento(id);
         this.id = lancamentoFinanceiroDTO.getId();
         labelId.setText("ID: " + lancamentoFinanceiroDTO.getId());
+        labelIdAnexo.setText("ID ANEXO: " + lancamentoFinanceiroDTO.getIdLancamentoAnexo());
         txtDescricaoMovimentacao.setText(lancamentoFinanceiroDTO.getDescricao());
         txtValorTotalMovimentacao.setText(lancamentoFinanceiroDTO.getValor());
         comboBoxCentroDeCusto.setSelectedItem(lancamentoFinanceiroDTO.getCentro());
         comboBoxOperacao.setSelectedItem(lancamentoFinanceiroDTO.getOperacao());
         txtDesconto.setText(lancamentoFinanceiroDTO.getDesconto());
         //txtValorDesconto.setText(lancamentoFinanceiroDTO.getDesconto());
-        //percent.setSelected(lancamentoFinanceiroDTO.getDescontoTipo().equals("PERCENT"));
+
+        if ( lancamentoFinanceiroDTO.getDescontoTipo() != null && lancamentoFinanceiroDTO.getDescontoTipo().equals("PERCENT")) {
+            percent.setSelected(true);
+        } else {
+            percent.setSelected(false);
+        }
+
+        System.out.println("Está Cancelado: " + lancamentoFinanceiroDTO.getCancelado());
+        if (lancamentoFinanceiroDTO.getCancelado()) {
+            labelCancelado.setVisible(true);
+            btnCancelarLancamento.setEnabled(false);
+        }
+        btnCancelarLancamento.setVisible(lancamentoFinanceiroDTO.getCancelado());
         listaEstoqueDTO = lancamentoFinanceiroDTO.getEstoque();
         listaLancamentosDTO();
     }
@@ -292,14 +314,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                             break;
                         }
                     }
-                    //Atualiza a tabela
                     listaLancamentos();
-                    //Calcula novo valor total
                     atualizaValorTotal();
-                    //Mostra o array
-                    //for (Estoque estoque : listaEstoque) {
-                    //    System.out.println(estoque.getIdProduto());
-                    //}
                 }
             }
         });
@@ -319,6 +335,14 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         btnCancelarLancamento.setContentAreaFilled(false);
         btnCancelarLancamento.setOpaque(false);
         btnCancelarLancamento.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+
+        btnImprimir.setBackground(new Color(0, 0, 0, 0));
+        btnImprimir.setBorderPainted(false);
+        btnImprimir.setFocusPainted(false);
+        btnImprimir.setContentAreaFilled(false);
+        btnImprimir.setOpaque(false);
+        btnImprimir.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         btnLancarProduto.setBackground(new Color(0, 0, 0, 0));
         btnLancarProduto.setBorderPainted(false);
@@ -343,8 +367,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         //Bloqueia a edição da tabela
         tabelaEstoque.setDefaultEditor(Object.class, null);
     }
-
-  
     
     public void adicionaEstoque(Estoque lancamento) {
         //Verifica se o produto já foi lançado
@@ -437,8 +459,15 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     private void cancelarLancamento(int id){
-        LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
-        lancamentoFinanceiroRepository.cancelarLancamento(id);
+        //Mensagem de confirmaçao
+        MessageView confirmationDialog = new MessageView(this,"Confirmação", "Deseja realmente cancelar o lancamento?", "confirm");
+        boolean confirmed = confirmationDialog.showConfirmationDialog();
+        if (confirmed) {
+            LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
+            lancamentoFinanceiroRepository.cancelarLancamento(id);
+            labelCancelado.setVisible(true);
+            btnCancelarLancamento.setEnabled(false);
+        }
     }
 
     private boolean validaCampos() {
@@ -513,10 +542,13 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         percent = new javax.swing.JCheckBox();
         labelValorDesconto = new javax.swing.JLabel();
         txtValorDesconto = new javax.swing.JFormattedTextField();
+        labelIdAnexo = new javax.swing.JLabel();
         btnLancarProduto = new javax.swing.JButton();
         labelValorTotalMovimentacao2 = new javax.swing.JLabel();
         txtValorTotalMovimentacao = new javax.swing.JFormattedTextField();
+        labelCancelado = new javax.swing.JLabel();
         btnPrincipal = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         btnCancelarLancamento = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -608,6 +640,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         });
 
         txtDescricaoMovimentacao.setColumns(20);
+        txtDescricaoMovimentacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtDescricaoMovimentacao.setLineWrap(true);
         txtDescricaoMovimentacao.setRows(5);
         txtDescricaoMovimentacao.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -643,49 +676,48 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         txtValorDesconto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtValorDesconto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
+        labelIdAnexo.setText("ID Anexo:");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelDescricao2))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboBoxCentroDeCustoDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(comboBoxCentroDeCusto, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(comboBoxCentroDeCustoDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(labelCentroDeCusto2)
-                                .addGap(110, 110, 110)
-                                .addComponent(labelOperacao2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(93, 93, 93)
-                                .addComponent(labelCentroDeCustoDestino))
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(labelDesconto)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(percent)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(labelValorDesconto)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(87, 87, 87)
-                                .addComponent(labelId)))
-                        .addContainerGap(30, Short.MAX_VALUE))))
+                        .addComponent(labelCentroDeCusto2)
+                        .addGap(110, 110, 110)
+                        .addComponent(labelOperacao2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(93, 93, 93)
+                        .addComponent(labelCentroDeCustoDestino))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(labelDesconto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(percent)
+                        .addGap(4, 4, 4)
+                        .addComponent(labelValorDesconto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelId)
+                        .addGap(44, 44, 44)
+                        .addComponent(labelIdAnexo))
+                    .addComponent(labelDescricao2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelCentroDeCusto2)
@@ -700,17 +732,16 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(labelDescricao2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelValorDesconto)
-                        .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelId))
-                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelDesconto)
-                        .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(percent)))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelDesconto)
+                    .addComponent(txtDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelValorDesconto)
+                    .addComponent(txtValorDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelId)
+                    .addComponent(labelIdAnexo)
+                    .addComponent(percent))
                 .addContainerGap())
         );
 
@@ -731,6 +762,10 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         txtValorTotalMovimentacao.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtValorTotalMovimentacao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
 
+        labelCancelado.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        labelCancelado.setForeground(new java.awt.Color(255, 0, 51));
+        labelCancelado.setText("Cancelado");
+
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
         painel.setLayout(painelLayout);
         painelLayout.setHorizontalGroup(
@@ -742,12 +777,13 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(painelLayout.createSequentialGroup()
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnLancarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelValorTotalMovimentacao2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCancelado, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnLancarProduto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30))))
         );
         painelLayout.setVerticalGroup(
@@ -762,11 +798,13 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
                     .addGroup(painelLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addComponent(btnLancarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                         .addComponent(labelValorTotalMovimentacao2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtValorTotalMovimentacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(49, 49, 49))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelCancelado, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))))
         );
 
         jPanel7.getAccessibleContext().setAccessibleName("Dados da Movimentação");
@@ -794,6 +832,15 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             }
         });
 
+        btnImprimir.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         btnCancelarLancamento.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnCancelarLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/inativar1.png"))); // NOI18N
         btnCancelarLancamento.setText("Cancelar Lançamento");
@@ -809,9 +856,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
+                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCancelarLancamento, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
             .addComponent(painelProdutos)
@@ -820,11 +869,13 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(painelProdutos)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelarLancamento, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCancelarLancamento, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23))
         );
 
         setSize(new java.awt.Dimension(891, 635));
@@ -843,10 +894,9 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnPrincipalActionPerformed
 
-    private void btnCancelarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarLancamentoActionPerformed
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         // TODO add your handling code here:
-        cancelarLancamento(id);
-    }//GEN-LAST:event_btnCancelarLancamentoActionPerformed
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     private void tabelaEstoqueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaEstoqueMouseClicked
         // TODO add your handling code here:
@@ -925,6 +975,11 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtDescricaoMovimentacaoKeyPressed
 
+    private void btnCancelarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarLancamentoActionPerformed
+        // TODO add your handling code here:
+        cancelarLancamento(id);
+    }//GEN-LAST:event_btnCancelarLancamentoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -961,6 +1016,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarLancamento;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnLancarProduto;
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JComboBox<String> comboBoxCentroDeCusto;
@@ -971,11 +1027,13 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelCancelado;
     private javax.swing.JLabel labelCentroDeCusto2;
     private javax.swing.JLabel labelCentroDeCustoDestino;
     private javax.swing.JLabel labelDesconto;
     private javax.swing.JLabel labelDescricao2;
     private javax.swing.JLabel labelId;
+    private javax.swing.JLabel labelIdAnexo;
     private javax.swing.JLabel labelOperacao2;
     private javax.swing.JLabel labelValorDesconto;
     private javax.swing.JLabel labelValorTotalMovimentacao2;

@@ -1,25 +1,28 @@
 package com.leonardovechieti.dev.project.model;
 
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
+import com.leonardovechieti.dev.project.model.enums.TipoReceita;
 
 public class Operacao {
 
     private int id;
     private String descricao;
     private Enum<TipoOperacao> operacao;
-
+    private Enum<TipoReceita> receita;
     private Boolean inativo;
 
-    public Operacao(int id, String descricao, String operacao, boolean inativo) {
+    public Operacao(int id, String descricao, String operacao, String receita, boolean inativo) {
         this.id = id;
         this.descricao = descricao;
         this.operacao = TipoOperacao.valueOf(operacao);
+        this.receita = TipoReceita.valueOf(receita);
         this.inativo = inativo;
     }
 
-    public Operacao(String descricao, String operacao, boolean inativo) {
+    public Operacao(String descricao, String operacao, String receita, boolean inativo) {
         this.descricao = descricao;
         this.operacao = TipoOperacao.valueOf(operacao);
+        this.receita = TipoReceita.valueOf(receita);
         this.inativo = inativo;
 
     }
@@ -54,6 +57,14 @@ public class Operacao {
 
     public void setOperacao(Enum<TipoOperacao> operacao) {
         this.operacao = operacao;
+    }
+
+    public Enum<TipoReceita> getReceita() {
+        return receita;
+    }
+
+    public void setReceita(Enum<TipoReceita> receita) {
+        this.receita = receita;
     }
 
 }

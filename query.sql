@@ -54,8 +54,13 @@ create table operacao(
 id int primary key auto_increment,
 descricao varchar(200) not null,
 operacao varchar(200) not null,
+receita varchar(200) not null,
 inativo boolean
 );
+
+-- alter table operacao add receita varchar(200) not null after operacao;
+-- update operacao set receita = 'ENTRADA' where id=7;
+
 -- use dev;
 -- drop table estoque;
 -- drop table lancamentofinanceiro;

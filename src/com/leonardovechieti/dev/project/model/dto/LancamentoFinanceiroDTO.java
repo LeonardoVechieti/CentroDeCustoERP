@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class LancamentoFinanceiroDTO {
     private int id;
     private String operacao;
+    private String tipoOperacao;
     private String centro;
     private String usuario;
     private String valor;
@@ -15,21 +16,9 @@ public class LancamentoFinanceiroDTO {
     private Boolean cancelado;
     private int idLancamentoAnexo;
     private ArrayList<EstoqueDTO> estoqueDTO = new ArrayList<>();
+    private ReportDTO report;
 
-    public LancamentoFinanceiroDTO(int id, String operacao, String centro, String usuario, String data, String valor, String descricao) {
-        this.id = id;
-        this.operacao = operacao;
-        this.centro = centro;
-        this.usuario = usuario;
-        this.data = data;
-        this.valor = valor;
-        this.descricao = descricao;
-    }
-
-    public LancamentoFinanceiroDTO() {
-
-    }
-
+    public LancamentoFinanceiroDTO() { }
 
     public void addArrayEstoque(ArrayList<EstoqueDTO> estoqueDTO) {
         this.estoqueDTO = estoqueDTO;
@@ -131,4 +120,11 @@ public class LancamentoFinanceiroDTO {
         this.descontoTipo = descontoTipo;
     }
 
+    public ReportDTO getReport() { return report; }
+
+    public void setReport(ReportDTO report) { this.report = report; }
+
+    public String getTipoOperacao() { return tipoOperacao; }
+
+    public void setTipoOperacao(String tipoOperacao) { this.tipoOperacao = tipoOperacao; }
 }

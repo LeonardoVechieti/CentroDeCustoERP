@@ -9,6 +9,7 @@ import com.leonardovechieti.dev.project.model.*;
 import com.leonardovechieti.dev.project.model.dto.EstoqueDTO;
 import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
+import com.leonardovechieti.dev.project.reports.LancamentoFinanceiroReport;
 import com.leonardovechieti.dev.project.repository.*;
 import com.leonardovechieti.dev.project.util.Func;
 import net.proteanit.sql.DbUtils;
@@ -418,6 +419,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     }
 
+    //TODO: Essa função deve ser melhorada
     private void finalizarLancamento(){
         if(validaCampos()==false){
             return;
@@ -896,6 +898,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         // TODO add your handling code here:
+//        LancamentoFinanceiroReport raport = new LancamentoFinanceiroReport();
+//        raport.listarLancamentosFinanceiros(
     }//GEN-LAST:event_btnImprimirActionPerformed
 
     private void tabelaEstoqueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaEstoqueMouseClicked

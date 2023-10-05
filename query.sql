@@ -120,4 +120,20 @@ select * from estoque;
 select * from lancamentofinanceiro;
 
 
-
+---- Adapte a sql abaixo para o seu banco de dados
+--SUM(CASE WHEN operacao = 'ENTRADA' THEN valorTotal ELSE 0 END) AS total_entradas,
+--    SUM(CASE WHEN operacao = 'SAIDA' THEN valorTotal ELSE 0 END) AS total_saidas,
+--    SUM(CASE WHEN operacao = 'ENTRADA' THEN valorTotal ELSE -valorTotal END) AS saldo_total
+--
+--
+--
+--select
+--    SUM(CASE WHEN o.operacao = 'ENTRADA' THEN l.valorTotal ELSE 0 END) AS entradas,
+--    SUM(CASE WHEN o.operacao = 'SAIDA' THEN l.valorTotal ELSE 0 END) AS saidas,
+--    SUM(CASE WHEN o.operacao = 'ENTRADA' THEN l.valorTotal ELSE -l.valorTotal END) AS saldo
+--    from lancamentofinanceiro l
+--        join operacao o
+--        on l.operacao = o.id
+--        where l.cancelado = false
+--        order by l.id desc
+--        limit 100;

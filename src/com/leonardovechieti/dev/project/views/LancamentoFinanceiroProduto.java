@@ -22,6 +22,8 @@ import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -102,6 +104,11 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             new MessageView("Alerta", "Informe o valor total", "alert");
             return false;
         }
+        //Verifica se o valor total é diferente do calculado
+        if (Double.parseDouble(Func.formataPrecoBanco(txtValorTotal.getText())) != calculaValorTotal() ) {
+            new MessageView("Alerta", "Valor total não confere com o calculado", "alert");
+            return false;
+        }
         return true;
     }
 
@@ -125,6 +132,11 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         tabelaProdutos.getColumnModel().getColumn(1).setPreferredWidth(230);
         tabelaProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
         tabelaProdutos.getColumnModel().getColumn(3).setPreferredWidth(80);
+
+        //Seta o alinhamento a direita nas colunas
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        tabelaProdutos.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
 
         //Reseta o id do produto selecionado
         id=null;
@@ -158,7 +170,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
 
             //Verifica se o produto está com estoque habilitado
             //System.out.println("Estoque habilitado: " + produtoRepository.estoqueHabilitado(idProduto));
-            if(produtoRepository.estoqueHabilitado(idProduto)){
+            if(produtoRepository.estoqueHabilitado(idProduto) && !lancamento.enumOperacao.equals("ENTRADA")){
 
                 Double totalEstoque = estoqueRepository.retornaTotalEstoque(produto);
                 //System.out.println("Total estoque que vem do banco: " + totalEstoque);
@@ -202,7 +214,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         }
     }
 
-    private void calculaValorTotal(){
+    private double calculaValorTotal(){
         if(!txtQuantidade.getText().isEmpty() && !txtValorUnitario.getText().isEmpty()){
             //Troca a virgula por ponto
             Double quantidadeDigitada = Double.parseDouble(Func.formataPrecoBanco(txtQuantidade.getText()));
@@ -212,7 +224,9 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             //System.out.println(quantidadeDigitada + " " + valorUnitarioDigitado + " " + valorTotal);
             String valorTotalFinal = Func.formataPrecoPadrao(valorTotal.toString());
             txtValorTotal.setText(valorTotalFinal);
+            return valorTotal;
         }
+        return 0.00;
     }
     public void abreCadastro(){
         if (id != null) {
@@ -382,7 +396,7 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaProdutos);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14))); // NOI18N
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produto", 0, 0, new java.awt.Font("Arial", 0, 14))); // NOI18N
         jPanel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         LabelProduto2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -390,6 +404,11 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
 
         txtProduto.setEditable(false);
         txtProduto.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        txtProduto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtProdutoKeyPressed(evt);
+            }
+        });
 
         labelValorUnitario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelValorUnitario.setText("Valor Unitário:");
@@ -404,6 +423,11 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
                 txtValorUnitarioFocusLost(evt);
             }
         });
+        txtValorUnitario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtValorUnitarioKeyPressed(evt);
+            }
+        });
 
         LabelQuantidade2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         LabelQuantidade2.setText("Quantidade:");
@@ -416,6 +440,9 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
             }
         });
         txtQuantidade.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtQuantidadeKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtQuantidadeKeyReleased(evt);
             }
@@ -433,6 +460,11 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
 
         txtValorTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtValorTotal.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        txtValorTotal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtValorTotalKeyPressed(evt);
+            }
+        });
 
         labelValorTotal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelValorTotal.setText("Valor Total:");
@@ -581,6 +613,34 @@ public class LancamentoFinanceiroProduto extends javax.swing.JFrame {
         // TODO add your handling code here:
         calculaValorTotal();
     }//GEN-LAST:event_txtValorUnitarioFocusLost
+
+    private void txtProdutoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProdutoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //01
+             txtQuantidade.requestFocus();
+        }
+    }//GEN-LAST:event_txtProdutoKeyPressed
+
+    private void txtQuantidadeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQuantidadeKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //02
+            txtValorUnitario.requestFocus();
+        }
+    }//GEN-LAST:event_txtQuantidadeKeyPressed
+
+    private void txtValorUnitarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorUnitarioKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //03
+            txtValorTotal.requestFocus();
+        }
+    }//GEN-LAST:event_txtValorUnitarioKeyPressed
+
+    private void txtValorTotalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorTotalKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //04
+            btnLancarProduto.requestFocus();
+        }
+    }//GEN-LAST:event_txtValorTotalKeyPressed
 
     /**
      * @param args the command line arguments

@@ -81,7 +81,11 @@ public class PrincipalView extends javax.swing.JFrame {
         barraCadastrarProdutos = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         barraListarProdutos = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        barraCadastroCentroCusto = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        barraListLancamento = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
         barraNovoLancamento = new javax.swing.JButton();
         jToolBar3 = new javax.swing.JToolBar();
         jSeparator9 = new javax.swing.JToolBar.Separator();
@@ -121,7 +125,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
 
         barraCadastrarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
-        barraCadastrarProdutos.setToolTipText("");
+        barraCadastrarProdutos.setToolTipText("Cadastrar Produtos e Serviços ");
         barraCadastrarProdutos.setFocusable(false);
         barraCadastrarProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         barraCadastrarProdutos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -134,6 +138,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jToolBar1.add(jSeparator2);
 
         barraListarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
+        barraListarProdutos.setToolTipText("Listar Produtos e Serviços ");
         barraListarProdutos.setFocusable(false);
         barraListarProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         barraListarProdutos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -143,9 +148,36 @@ public class PrincipalView extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(barraListarProdutos);
+        jToolBar1.add(jSeparator3);
+
+        barraCadastroCentroCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
+        barraCadastroCentroCusto.setToolTipText("Cadastro de Centro de Custo");
+        barraCadastroCentroCusto.setFocusable(false);
+        barraCadastroCentroCusto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraCadastroCentroCusto.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraCadastroCentroCusto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraCadastroCentroCustoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraCadastroCentroCusto);
         jToolBar1.add(jSeparator1);
 
+        barraListLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/garficoelupa.png"))); // NOI18N
+        barraListLancamento.setToolTipText("Listar Lançamento Financeiro");
+        barraListLancamento.setFocusable(false);
+        barraListLancamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraListLancamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraListLancamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraListLancamentoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraListLancamento);
+        jToolBar1.add(jSeparator4);
+
         barraNovoLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
+        barraNovoLancamento.setToolTipText("Novo Lançamento Financeiro");
         barraNovoLancamento.setFocusable(false);
         barraNovoLancamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         barraNovoLancamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -156,44 +188,43 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jToolBar1.add(barraNovoLancamento);
 
-        jToolBar3.setFloatable(false);
         jToolBar3.setRollover(true);
         jToolBar3.add(jSeparator9);
 
-        labelVersao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        labelVersao.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         labelVersao.setText("Versão: 1.0");
         jToolBar3.add(labelVersao);
         jToolBar3.add(jSeparator10);
 
-        labelIdEmpresa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        labelIdEmpresa.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelIdEmpresa.setText("ID");
         jToolBar3.add(labelIdEmpresa);
 
         jLabel3.setText(" - ");
         jToolBar3.add(jLabel3);
 
-        labelNomeEmpresa.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        labelNomeEmpresa.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         labelNomeEmpresa.setText("Nome da Empresa");
         jToolBar3.add(labelNomeEmpresa);
         jToolBar3.add(jSeparator11);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         jLabel2.setText("Usuário: ");
         jToolBar3.add(jLabel2);
 
-        labelIdUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        labelIdUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelIdUsuario.setText("ID");
         jToolBar3.add(labelIdUsuario);
 
         jLabel4.setText(" - ");
         jToolBar3.add(jLabel4);
 
-        labelNomeUsuario.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        labelNomeUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelNomeUsuario.setText("Nome do Usuário");
         jToolBar3.add(labelNomeUsuario);
         jToolBar3.add(jSeparator12);
 
-        lblData1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblData1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         lblData1.setText("Data Atual:  ");
         jToolBar3.add(lblData1);
 
@@ -245,7 +276,7 @@ public class PrincipalView extends javax.swing.JFrame {
 
         menuCadastrarOpercaoes.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/integracao.png"))); // NOI18N
-        menuCadastrarOpercaoes.setText("Operçoes");
+        menuCadastrarOpercaoes.setText("Operações");
         menuCadastrarOpercaoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuCadastrarOpercaoesActionPerformed(evt);
@@ -306,13 +337,13 @@ public class PrincipalView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 907, Short.MAX_VALUE)
+            .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 1213, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 518, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 652, Short.MAX_VALUE)
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -375,7 +406,21 @@ public class PrincipalView extends javax.swing.JFrame {
 
     private void menuListarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuListarLancamentoActionPerformed
         // TODO add your handling code here:
+        ListLancamentoFinanceiroView lancamento = new ListLancamentoFinanceiroView();
+        lancamento.setVisible(true);
     }//GEN-LAST:event_menuListarLancamentoActionPerformed
+
+    private void barraCadastroCentroCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraCadastroCentroCustoActionPerformed
+        // TODO add your handling code here:
+        CadastroCentroDeCusto centroDeCusto = new CadastroCentroDeCusto();
+        centroDeCusto.setVisible(true);
+    }//GEN-LAST:event_barraCadastroCentroCustoActionPerformed
+
+    private void barraListLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraListLancamentoActionPerformed
+        // TODO add your handling code here:
+        ListLancamentoFinanceiroView lancamento = new ListLancamentoFinanceiroView();
+        lancamento.setVisible(true);
+    }//GEN-LAST:event_barraListLancamentoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,6 +459,8 @@ public class PrincipalView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton barraCadastrarProdutos;
+    private javax.swing.JButton barraCadastroCentroCusto;
+    private javax.swing.JButton barraListLancamento;
     private javax.swing.JButton barraListarProdutos;
     private javax.swing.JButton barraNovoLancamento;
     private javax.swing.JLabel jLabel2;
@@ -431,6 +478,8 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar3;

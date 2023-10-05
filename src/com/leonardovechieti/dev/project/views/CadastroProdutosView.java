@@ -179,9 +179,9 @@ public class CadastroProdutosView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        paneRoot = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        paneGeral = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         LabelDescricao = new javax.swing.JLabel();
         txtDescricao = new javax.swing.JTextField();
@@ -199,7 +199,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         labelNomeUsuario = new javax.swing.JLabel();
         labelDataModificacao = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        paneEstoque = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         checkBoxHabilitaEstoque = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
@@ -211,14 +211,19 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         setTitle("Cadastro de produtos e serviços");
         setResizable(false);
 
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        paneRoot.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados Gerais", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 12))); // NOI18N
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados Gerais", 0, 0, new java.awt.Font("Arial", 0, 12))); // NOI18N
 
         LabelDescricao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         LabelDescricao.setText("Descrição:");
 
         txtDescricao.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        txtDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDescricaoKeyPressed(evt);
+            }
+        });
 
         labelPreco.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelPreco.setText("Preço:");
@@ -228,15 +233,35 @@ public class CadastroProdutosView extends javax.swing.JFrame {
 
         comboBoxUnidade.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxUnidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxUnidade.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBoxUnidadeKeyPressed(evt);
+            }
+        });
 
         checkBoxServico.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         checkBoxServico.setText("Serviço");
+        checkBoxServico.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                checkBoxServicoKeyPressed(evt);
+            }
+        });
 
         txtPreco.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtPreco.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        txtPreco.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPrecoKeyPressed(evt);
+            }
+        });
 
         checkBoxInativar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         checkBoxInativar.setText("Inativar cadastro");
+        checkBoxInativar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                checkBoxInativarKeyPressed(evt);
+            }
+        });
 
         labelId.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelId.setText("ID");
@@ -252,7 +277,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                         .addComponent(LabelDescricao)
                         .addGap(18, 18, 18)
                         .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(21, Short.MAX_VALUE))
+                        .addContainerGap(44, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -295,7 +320,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addGap(15, 15, 15))
         );
 
-        painelInformacoes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informações do cadastro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
+        painelInformacoes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informações do cadastro", 0, 0, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
         jLabel3.setText("Data de cadastro: ");
 
@@ -325,8 +350,8 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelNomeUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(labelNomeUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         painelInformacoesLayout.setVerticalGroup(
             painelInformacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,48 +366,52 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                         .addComponent(labelDataCriacao)
                         .addComponent(jLabel7)
                         .addComponent(labelDataModificacao)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+        javax.swing.GroupLayout paneGeralLayout = new javax.swing.GroupLayout(paneGeral);
+        paneGeral.setLayout(paneGeralLayout);
+        paneGeralLayout.setHorizontalGroup(
+            paneGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneGeralLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paneGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(painelInformacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        paneGeralLayout.setVerticalGroup(
+            paneGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneGeralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(painelInformacoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(painelInformacoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(paneGeral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(paneGeral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Geral", jPanel2);
+        paneRoot.addTab("Geral", jPanel2);
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados de estoque", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados de estoque", 0, 0, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
         checkBoxHabilitaEstoque.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         checkBoxHabilitaEstoque.setText("Habilita controle de estoque");
+        checkBoxHabilitaEstoque.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                checkBoxHabilitaEstoqueKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -401,10 +430,15 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addContainerGap(75, Short.MAX_VALUE))
         );
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produção", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produção", 0, 0, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
         checkBoxHabilitaProducao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         checkBoxHabilitaProducao.setText("Habilita controle de produçao");
+        checkBoxHabilitaProducao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                checkBoxHabilitaProducaoKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -423,20 +457,20 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addContainerGap(75, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout paneEstoqueLayout = new javax.swing.GroupLayout(paneEstoque);
+        paneEstoque.setLayout(paneEstoqueLayout);
+        paneEstoqueLayout.setHorizontalGroup(
+            paneEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneEstoqueLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(paneEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        paneEstoqueLayout.setVerticalGroup(
+            paneEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneEstoqueLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -444,7 +478,7 @@ public class CadastroProdutosView extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Estoque", jPanel4);
+        paneRoot.addTab("Estoque", paneEstoque);
 
         btnPrincipal.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/add1.png"))); // NOI18N
@@ -470,17 +504,17 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(21, 21, 21)
                 .addComponent(btnEstoque)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(paneRoot, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
+                .addComponent(paneRoot)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -507,6 +541,57 @@ public class CadastroProdutosView extends javax.swing.JFrame {
         controleEstoque.setVisible(true); 
         
     }//GEN-LAST:event_btnEstoqueActionPerformed
+
+    private void txtDescricaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescricaoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //01
+            txtPreco.requestFocus();
+        }
+    }//GEN-LAST:event_txtDescricaoKeyPressed
+
+    private void txtPrecoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //02
+            comboBoxUnidade.requestFocus();
+        }
+    }//GEN-LAST:event_txtPrecoKeyPressed
+
+    private void comboBoxUnidadeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBoxUnidadeKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //03
+            checkBoxServico.requestFocus();
+        }
+    }//GEN-LAST:event_comboBoxUnidadeKeyPressed
+
+    private void checkBoxServicoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_checkBoxServicoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //04
+            checkBoxInativar.requestFocus();
+        }
+    }//GEN-LAST:event_checkBoxServicoKeyPressed
+
+    private void checkBoxInativarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_checkBoxInativarKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //05
+            //Troca para o painel de estoque
+            paneRoot.setSelectedIndex(1);
+            checkBoxHabilitaEstoque.requestFocus();
+        }
+    }//GEN-LAST:event_checkBoxInativarKeyPressed
+
+    private void checkBoxHabilitaEstoqueKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_checkBoxHabilitaEstoqueKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //06
+            checkBoxHabilitaProducao.requestFocus();
+        }
+    }//GEN-LAST:event_checkBoxHabilitaEstoqueKeyPressed
+
+    private void checkBoxHabilitaProducaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_checkBoxHabilitaProducaoKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){ //07
+            btnPrincipal.requestFocus();
+        }
+    }//GEN-LAST:event_checkBoxHabilitaProducaoKeyPressed
 
     /**
      * @param args the command line arguments
@@ -560,18 +645,18 @@ public class CadastroProdutosView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelDataCriacao;
     private javax.swing.JLabel labelDataModificacao;
     private javax.swing.JLabel labelId;
     private javax.swing.JLabel labelNomeUsuario;
     private javax.swing.JLabel labelPreco;
     private javax.swing.JPanel painelInformacoes;
+    private javax.swing.JPanel paneEstoque;
+    private javax.swing.JPanel paneGeral;
+    private javax.swing.JTabbedPane paneRoot;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JFormattedTextField txtPreco;
     // End of variables declaration//GEN-END:variables

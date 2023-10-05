@@ -3,11 +3,13 @@ package com.leonardovechieti.dev.project.repository;
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
 import com.leonardovechieti.dev.project.model.Estoque;
 import com.leonardovechieti.dev.project.model.LancamentoFinanceiro;
+import com.leonardovechieti.dev.project.model.dto.EstoqueDTO;
+import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
+import com.leonardovechieti.dev.project.model.dto.ReportDTO;
 import com.leonardovechieti.dev.project.util.Func;
 import com.leonardovechieti.dev.project.util.Message;
-import com.leonardovechieti.dev.project.views.MessageView;
-
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LancamentoFinanceiroRepository {
@@ -20,7 +22,7 @@ public class LancamentoFinanceiroRepository {
     }
 
     public String save(LancamentoFinanceiro lancamento) {
-        String sql = "insert into lancamentofinanceiro (centroDeCusto, operacao, valorTotal, data, descricao, usuario, idLancamentoAnexo) values (?,?,?,?,?,?,?)";
+        String sql = "insert into lancamentofinanceiro (centroDeCusto, operacao, valorTotal, data, descricao, usuario, idLancamentoAnexo, desconto, descontoTipo) values (?,?,?,?,?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, lancamento.getIdCentroDeCusto());
@@ -35,6 +37,8 @@ public class LancamentoFinanceiroRepository {
             } else {
                 pst.setInt(7, lancamento.getIdLancamentoAnexo());
             }
+            pst.setString(8, Func.formataPrecoBanco(lancamento.getDesconto()));
+            pst.setString(9, lancamento.getDescontoTipo());
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -42,9 +46,8 @@ public class LancamentoFinanceiroRepository {
             return "ERROR";
         }
     }
-
+    //TODO: Refatorar esse metodo para que ele seja mais generico, e possa ser usado em outros lugares
     public String novoLancamento(LancamentoFinanceiro lancamento, List<Estoque> listaEstoque, int idEstoqueDestino) {
-
         //Primeira etapa, salva o lancamento
         LancamentoFinanceiroRepository lancamentoFinanceiro = new LancamentoFinanceiroRepository();
         //Copia os dados do lancamento
@@ -98,34 +101,49 @@ public class LancamentoFinanceiroRepository {
                         lancamentoTransferencia.setIdOperacao(1); //Todo: O id está fixo, porem isso não é o mais correto, verificar outra alternativa
                         lancamentoTransferencia.setIdlancamentoanexo(idLancamento);
                         //Percorre a lista atualizando o id da operacao
-                        for (Estoque estoque : listaEstoqueTransferencia) {
-                            estoque.setIdOperacao(1);
-                            estoque.setIdCentroDeCusto(idEstoqueDestino);
+                        if (!listaEstoqueTransferencia.isEmpty()) {
+                            for (Estoque estoque : listaEstoqueTransferencia) {
+                                estoque.setIdOperacao(1);
+                                estoque.setIdCentroDeCusto(idEstoqueDestino);
+                            }
+                            //Chama o metodo de salvar a movimentação de transferencia
+                            this.novoLancamento(lancamentoTransferencia, listaEstoqueTransferencia, lancamento.getIdCentroDeCusto());
+                            //Atualiza o id do anexo no lancamento de transferencia
+                            int idAnexo = this.ultimoId();
+                            this.atualizaIdAnexo(idLancamento, idAnexo);
                         }
-                        //Chama o metodo de salvar a movimentação de transferencia
-                        this.novoLancamento(lancamentoTransferencia, listaEstoqueTransferencia, lancamento.getIdCentroDeCusto());
                     }
-                    int id = lancamentoFinanceiro.ultimoId();
-                    new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+                    //int id = lancamentoFinanceiro.ultimoId();
+                    //new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+                    return "CREATE";
                 } else {
                     //Caso erro cancela o lancamento
-                    this.cancelarLancamento(String.valueOf(idLancamento));
+                    this.excluirLancamento(String.valueOf(idLancamento));
                     return "ERROR";
                 }
-            }else{
-                return "ERROR";
+            } else {
+                //Caso a lista esteja vazia, apenas retorna sucesso
+                //int id = lancamentoFinanceiro.ultimoId();
+                //new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
+                return "CREATE";
             }
-        } else {
-            return "ERROR";
         }
+        return "ERROR";
+    }
 
-        int id = lancamentoFinanceiro.ultimoId();
-        //new MessageView("Sucesso!", "Movimentação financeira "+ (id) +" lançada com sucesso!", "success");
-        return "CREATE";
-     }
+    private void atualizaIdAnexo(int id, int idAnexo){
+        String sql = "update lancamentofinanceiro set idLancamentoAnexo = ? where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idAnexo);
+            pst.setInt(2, id);
+            pst.executeUpdate();
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao atualizar id do anexo!" + e, "error");
+        }
+    }
 
-
-    public String cancelarLancamento(String id) {
+    public String excluirLancamento(String id) {
         //Cancela o lancamento do estoque
         EstoqueRepository estoqueRepository = new EstoqueRepository();
         estoqueRepository.cancelarLancamentoEstoque(id);
@@ -137,43 +155,209 @@ public class LancamentoFinanceiroRepository {
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
-            Message message = new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
+            new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
             return "ERROR";
         }
     }
 
-    public ResultSet listarAll() {
-        String sql = "select id as ID, centrodecusto as CENTRODECUSTO, operacao as OPERACAO, valortotal as VALORTOTAL, data as DATA, descricao as DESCRICAO, usuario as USUARIO from lancamentofinanceiro order by id desc";
+    public void cancelarLancamento(int id) {
+        //Verifica se o lacamento possui anexo
+        int idAnexo = buscaIdLancamentoAnexo(id);
+        if (idAnexo != 0) {
+            cancelar(idAnexo);
+        }
+        cancelar(id);
+    }
+    private void cancelar(int id) {
+        EstoqueRepository estoqueRepository = new EstoqueRepository();
+        estoqueRepository.cancelarLancamentoEstoque(String.valueOf(id));
+        //Cancela o lancamento financeiro
+        String sql = "update lancamentofinanceiro set cancelado = 1 where id = ?";
         try {
             pst = conexao.prepareStatement(sql);
+            pst.setString(1, String.valueOf(id));
+            pst.executeUpdate();
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao cancelar lancamento!" + e, "error");
+        }
+    }
+     private int buscaIdLancamentoAnexo(int id) {
+        String sql = "select idLancamentoAnexo from lancamentofinanceiro where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, String.valueOf(id));
             rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao buscar lancamento anexo!" + e, "error");
+        }
+        return 0;
+    }
+
+    public List<LancamentoFinanceiroDTO> listarAll(Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                " from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.cancelado = ?\n" +
+                "order by l.id desc\n" +
+                "limit 100";
+
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setBoolean(1, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                ReportDTO reportDTO = new ReportDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return rs;
+        return lista;
     }
 
-    public LancamentoFinanceiro buscaId(String id) {
+    public List<LancamentoFinanceiroDTO> listarAll(String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                "from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.data between ? and ?\n" +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc\n" +
+                "limit 100";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, dataInicial);
+            pst.setString(2, dataFinal);
+            pst.setBoolean(3, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
+    }
+
+    public LancamentoFinanceiroDTO buscaLacamento(int id) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.descricao as DESCRICAO, l.desconto as DESCONTO, l.descontoTipo as TIPO, l.cancelado as CANCELADO," +
+                " l.idLancamentoAnexo as ANEXO from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, String.valueOf(id));
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setDescricao(rs.getString(7));
+                lancamentoFinanceiroDTO.setDesconto(Func.formataPrecoPadrao(rs.getString(8)));
+                lancamentoFinanceiroDTO.setDescontoTipo(rs.getString(9));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(10));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(11));
+                //Busca os itens do estoque
+                EstoqueRepository estoqueRepository = new EstoqueRepository();
+                List<EstoqueDTO> listaEstoqueDTO = estoqueRepository.listarPorLancamentoFinanceiro(id);
+                lancamentoFinanceiroDTO.addArrayEstoque((ArrayList<EstoqueDTO>) listaEstoqueDTO);
+                return lancamentoFinanceiroDTO;
+            }
+        } catch (Exception e) {
+            new Message("Erro!", "Erro ao buscar produto!" + e, "error");
+        }
+        return null;
+    }
+
+    public ResultSet buscaId(String id) {
         String sql = "select * from lancamentofinanceiro where id = ?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, id);
             rs = pst.executeQuery();
-            if (rs.next()) {
-                LancamentoFinanceiro lancamentoFinanceiro = new LancamentoFinanceiro();
-                lancamentoFinanceiro.setId(rs.getInt(1));
-                lancamentoFinanceiro.setIdCentroDeCusto(rs.getInt(2));
-                lancamentoFinanceiro.setIdOperacao(rs.getInt(3));
-                lancamentoFinanceiro.setValorTotal(Func.formataPrecoPadrao(rs.getString(4)));
-                lancamentoFinanceiro.setData(rs.getString(5));
-                lancamentoFinanceiro.setDescricao(rs.getString(6));
-                lancamentoFinanceiro.setUsuario(rs.getInt(7));
-                return lancamentoFinanceiro;
-            }
         } catch (Exception e) {
-            Message message = new Message("Erro!", "Erro ao buscar produto!" + e, "error");
+            new Message("Erro!", "Erro ao buscar produto!" + e, "error");
         }
-        return null;
+        return rs;
     }
 
     //Retorna o ultimo id cadastrado
@@ -191,10 +375,343 @@ public class LancamentoFinanceiroRepository {
         return 0;
     }
 
-    public void fecharConexao() throws SQLException {
-         conexao.close();
-        System.out.println("Conexao fechada!");
+    public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, Boolean cancelado) {
+         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                 " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                 "from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.operacao = ? " +
+                "and l.cancelado = ?\n" + "order by l.id desc";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idOperacao);
+            pst.setBoolean(2, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
     }
 
+    public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                "from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.operacao = ?" +
+                " and l.data between ? and ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idOperacao);
+            pst.setString(2, dataInicial);
+            pst.setString(3, dataFinal);
+            pst.setBoolean(4, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
+    }
+
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.centrodecusto = ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idCentroDeCusto);
+            pst.setBoolean(2, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
+    }
+
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.centrodecusto = ? and l.data between ? and ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idCentroDeCusto);
+            pst.setString(2, dataInicial);
+            pst.setString(3, dataFinal);
+            pst.setBoolean(4, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
+    }
+
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.centrodecusto = ? and l.operacao = ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idCentroDeCusto);
+            pst.setInt(2, idOperacao);
+            pst.setBoolean(3, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
+    }
+
+    public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, String dataInicial, String dataFinal, Boolean cancelado) {
+        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+                " l.valorTotal as VALOR, l.descricao as DESCRICAO, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " from lancamentofinanceiro l\n" +
+                "join usuario u\n" +
+                "on l.usuario = u.id\n" +
+                "join centrodecusto c\n" +
+                "on l.centroDeCusto = c.id\n" +
+                "join operacao o\n" +
+                "on l.operacao = o.id\n" +
+                "where l.centrodecusto = ? and l.operacao = ? and l.data between ? and ? " +
+                "and l.cancelado = ?\n" +
+                "order by l.id desc";
+        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idCentroDeCusto);
+            pst.setInt(2, idOperacao);
+            pst.setString(3, dataInicial);
+            pst.setString(4, dataFinal);
+            pst.setBoolean(5, cancelado);
+            rs = pst.executeQuery();
+            double totalEntrada = 0.0;
+            double totalSaida = 0.0;
+            double totalFinal = 0.0;
+            while (rs.next()) {
+                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+                lancamentoFinanceiroDTO.setData(rs.getString(5));
+                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+                lancamentoFinanceiroDTO.setDescricao(rs.getString(7));
+                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(8));
+                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+
+                if(rs.getString(8).equals("ENTRADA")) {
+                    totalEntrada = totalEntrada + rs.getDouble(6);
+                }
+                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                    totalSaida = totalSaida + rs.getDouble(6);
+                }
+                totalFinal = totalEntrada - totalSaida;
+                reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+                reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+                reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+
+                lancamentoFinanceiroDTO.setReport(reportDTO);
+                lista.add(lancamentoFinanceiroDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
+    }
 }
 

@@ -89,7 +89,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/integracao.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Oper&#xe7;oes"/>
+                <Property name="text" type="java.lang.String" value="Opera&#xe7;&#xf5;es"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuCadastrarOpercaoesActionPerformed"/>
@@ -195,14 +195,14 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jToolBar1" max="32767" attributes="0"/>
-          <Component id="jToolBar3" pref="907" max="32767" attributes="0"/>
+          <Component id="jToolBar3" pref="1213" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="jToolBar1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="518" max="32767" attributes="0"/>
+              <EmptySpace pref="652" max="32767" attributes="0"/>
               <Component id="jToolBar3" min="-2" pref="25" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -221,7 +221,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/produto1.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" value="Cadastrar Produtos e Servi&#xe7;os "/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -237,6 +237,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/produtoList1.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Listar Produtos e Servi&#xe7;os "/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -245,13 +246,46 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barraListarProdutosActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator3">
+        </Component>
+        <Component class="javax.swing.JButton" name="barraCadastroCentroCusto">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/statistics.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Cadastro de Centro de Custo"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barraCadastroCentroCustoActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
+        </Component>
+        <Component class="javax.swing.JButton" name="barraListLancamento">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/garficoelupa.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Listar Lan&#xe7;amento Financeiro"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barraListLancamentoActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator4">
         </Component>
         <Component class="javax.swing.JButton" name="barraNovoLancamento">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/graficobarras.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Novo Lan&#xe7;amento Financeiro"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -264,7 +298,6 @@
     </Container>
     <Container class="javax.swing.JToolBar" name="jToolBar3">
       <Properties>
-        <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
       </Properties>
 
@@ -275,7 +308,7 @@
         <Component class="javax.swing.JLabel" name="labelVersao">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="15" style="0"/>
+              <Font name="Arial" size="15" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Vers&#xe3;o: 1.0"/>
           </Properties>
@@ -285,7 +318,7 @@
         <Component class="javax.swing.JLabel" name="labelIdEmpresa">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="14" style="0"/>
+              <Font name="Arial" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="ID"/>
           </Properties>
@@ -301,7 +334,7 @@
         <Component class="javax.swing.JLabel" name="labelNomeEmpresa">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="15" style="0"/>
+              <Font name="Arial" size="15" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Nome da Empresa"/>
           </Properties>
@@ -314,7 +347,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="15" style="0"/>
+              <Font name="Arial" size="15" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Usu&#xe1;rio: "/>
           </Properties>
@@ -322,7 +355,7 @@
         <Component class="javax.swing.JLabel" name="labelIdUsuario">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="14" style="0"/>
+              <Font name="Arial" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="ID"/>
           </Properties>
@@ -338,7 +371,7 @@
         <Component class="javax.swing.JLabel" name="labelNomeUsuario">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="15" style="0"/>
+              <Font name="Arial" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Nome do Usu&#xe1;rio"/>
           </Properties>
@@ -351,7 +384,7 @@
         <Component class="javax.swing.JLabel" name="lblData1">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="15" style="0"/>
+              <Font name="Arial" size="15" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Data Atual:  "/>
           </Properties>

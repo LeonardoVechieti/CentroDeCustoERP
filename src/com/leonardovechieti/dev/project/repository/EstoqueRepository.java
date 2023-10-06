@@ -61,7 +61,6 @@ public class EstoqueRepository {
             System.out.println(e);
             return "ERROR";
         }
-
     }
 
     public ResultSet listarAll() {
@@ -155,14 +154,9 @@ public class EstoqueRepository {
                 estoqueDTO.setValorTotal(rs.getString("VALOR_TOTAL"));
                 listaEstoqueDTO.add(estoqueDTO);
             }
-
         } catch (Exception e) {
             System.out.println(e);
         }
-        //Printa a lista
-//        for (EstoqueDTO estoqueDTO : listaEstoqueDTO) {
-//            System.out.println(estoqueDTO.getProduto());
-//        }
         return listaEstoqueDTO;
     }
 
@@ -174,7 +168,10 @@ public class EstoqueRepository {
                 "on e.idCentroDeCusto = c.id\n" +
                 "join operacao o\n" +
                 "on e.idOperacao = o.id\n" +
-                "where e.idProduto = ? and e.cancelado = 0 order by e.id desc";
+                "where e.idProduto = ?\n" +
+                "and e.cancelado = 0\n" +
+                "and o.movimentaEstoque = 1\n" +
+                "order by e.id desc";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, produto.getId());
@@ -187,7 +184,13 @@ public class EstoqueRepository {
     }
 
     public Double retornaTotalEstoque(Produto produto) {
-        String sql = "select sum(quantidade) from estoque where idProduto = ? and cancelado = 0";
+        //String sql = "select sum(quantidade) from estoque where idProduto = ? and cancelado = 0";
+        String sql ="select sum(e.quantidade) from estoque e\n" +
+                "join operacao o\n" +
+                "on e.idOperacao = o.id \n" +
+                "where e.idProduto = ? \n" +
+                "and e.cancelado = 0 \n" +
+                "and o.movimentaEstoque = 1";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setInt(1, produto.getId());
@@ -202,7 +205,6 @@ public class EstoqueRepository {
         }
         return 0.0;
     }
-
 
     public String lancarListaEstoque(List<Estoque> listaEstoque) {
         if (listaEstoque.isEmpty()) {

@@ -7,17 +7,12 @@ public class Estoque {
     private int idProduto;
     private int idLancamentoFinanceiro;
     private int idCentroDeCusto;
-
     private int idOperacao;
     private Number quantidade;
-
     private Number valorUnitario;
-
     private Number valorTotal;
     private String data;
-
     private String descricao;
-
     //Campos abaixo não são persistidos no banco de dados
     private String descricaoProduto;
 

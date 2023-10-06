@@ -6,6 +6,8 @@ public class LancamentoFinanceiroDTO {
     private int id;
     private String operacao;
     private String tipoOperacao;
+
+    private String receita;
     private String centro;
     private String usuario;
     private String valor;
@@ -127,4 +129,8 @@ public class LancamentoFinanceiroDTO {
     public String getTipoOperacao() { return tipoOperacao; }
 
     public void setTipoOperacao(String tipoOperacao) { this.tipoOperacao = tipoOperacao; }
+
+    public String getReceita() { return receita; }
+
+    public void setReceita(String receita) { this.receita = receita; }
 }

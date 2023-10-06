@@ -82,6 +82,8 @@ public class PrincipalView extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         barraListarProdutos = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
+        barraCadastrarOpercaoes = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         barraCadastroCentroCusto = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         barraListLancamento = new javax.swing.JButton();
@@ -149,6 +151,19 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jToolBar1.add(barraListarProdutos);
         jToolBar1.add(jSeparator3);
+
+        barraCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/integracao.png"))); // NOI18N
+        barraCadastrarOpercaoes.setToolTipText("Cadastrar Opercaoes");
+        barraCadastrarOpercaoes.setFocusable(false);
+        barraCadastrarOpercaoes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        barraCadastrarOpercaoes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        barraCadastrarOpercaoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraCadastrarOpercaoesActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(barraCadastrarOpercaoes);
+        jToolBar1.add(jSeparator5);
 
         barraCadastroCentroCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
         barraCadastroCentroCusto.setToolTipText("Cadastro de Centro de Custo");
@@ -422,6 +437,12 @@ public class PrincipalView extends javax.swing.JFrame {
         lancamento.setVisible(true);
     }//GEN-LAST:event_barraListLancamentoActionPerformed
 
+    private void barraCadastrarOpercaoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraCadastrarOpercaoesActionPerformed
+        // TODO add your handling code here:
+        CadastroOperacoes opercao = new CadastroOperacoes();
+        opercao.setVisible(true);
+    }//GEN-LAST:event_barraCadastrarOpercaoesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -458,6 +479,7 @@ public class PrincipalView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton barraCadastrarOpercaoes;
     private javax.swing.JButton barraCadastrarProdutos;
     private javax.swing.JButton barraCadastroCentroCusto;
     private javax.swing.JButton barraListLancamento;
@@ -480,6 +502,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar3;

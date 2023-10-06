@@ -168,7 +168,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="checkBoxInativar2" min="-2" max="-2" attributes="0"/>
+                                          <Component id="checkBoxMovimentaEstoque" min="-2" max="-2" attributes="0"/>
                                           <Component id="checkBoxInativar" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
@@ -188,7 +188,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="LabelDescricao" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="txtDescricao" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="checkBoxInativar2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checkBoxMovimentaEstoque" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
@@ -284,14 +284,13 @@
                         <Property name="text" type="java.lang.String" value="Opera&#xe7;&#xe3;o Produto:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JCheckBox" name="checkBoxInativar2">
+                    <Component class="javax.swing.JCheckBox" name="checkBoxMovimentaEstoque">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Arial" size="14" style="0"/>
                         </Property>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Movimenta Estoque"/>
-                        <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelOperacao1">

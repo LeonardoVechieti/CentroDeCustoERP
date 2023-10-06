@@ -10,20 +10,23 @@ public class Operacao {
     private Enum<TipoOperacao> operacao;
     private Enum<TipoReceita> receita;
     private Boolean inativo;
+    private Boolean movimentaEstoque;
 
-    public Operacao(int id, String descricao, String operacao, String receita, boolean inativo) {
+    public Operacao(int id, String descricao, String operacao, String receita, boolean inativo, boolean movimentaEstoque) {
         this.id = id;
         this.descricao = descricao;
         this.operacao = TipoOperacao.valueOf(operacao);
         this.receita = TipoReceita.valueOf(receita);
         this.inativo = inativo;
+        this.movimentaEstoque = movimentaEstoque;
     }
 
-    public Operacao(String descricao, String operacao, String receita, boolean inativo) {
+    public Operacao(String descricao, String operacao, String receita, boolean inativo, boolean movimentaEstoque) {
         this.descricao = descricao;
         this.operacao = TipoOperacao.valueOf(operacao);
         this.receita = TipoReceita.valueOf(receita);
         this.inativo = inativo;
+        this.movimentaEstoque = movimentaEstoque;
 
     }
 
@@ -67,4 +70,10 @@ public class Operacao {
         this.receita = receita;
     }
 
+    public Boolean getMovimentaEstoque() {
+        return movimentaEstoque;
+    }
+    public void setMovimentaEstoque(Boolean movimentaEstoque) {
+        this.movimentaEstoque = movimentaEstoque;
+    }
 }

@@ -104,6 +104,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         comboBoxOperacao.setSelectedItem(operacao.getOperacao().toString());
         checkBoxInativar.setSelected(operacao.getInativo());
         comboBoxReceita.setSelectedItem(operacao.getReceita().toString());
+        checkBoxMovimentaEstoque.setSelected(operacao.getMovimentaEstoque());
         //Altera o botao de cadastrar para editar
         btnPrincipal.setText("Editar");
     }
@@ -114,7 +115,8 @@ public class CadastroOperacoes extends javax.swing.JFrame {
                     txtDescricao.getText(),
                     comboBoxOperacao.getSelectedItem().toString(),
                     comboBoxReceita.getSelectedItem().toString(),
-                    checkBoxInativar.isSelected()
+                    checkBoxInativar.isSelected(),
+                    checkBoxMovimentaEstoque.isSelected()
             );
             String resposta = operacaoRepository.salvar(operacao);
             if (resposta.equals("SUCCESS")) {
@@ -135,7 +137,8 @@ public class CadastroOperacoes extends javax.swing.JFrame {
                     txtDescricao.getText(),
                     comboBoxOperacao.getSelectedItem().toString(),
                     comboBoxReceita.getSelectedItem().toString(),
-                    checkBoxInativar.isSelected()
+                    checkBoxInativar.isSelected(),
+                    checkBoxMovimentaEstoque.isSelected()
             );
             String resposta = operacaoRepository.editar(operacao);
             if (resposta.equals("SUCCESS")) {
@@ -189,6 +192,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         labelId.setText("");
         comboBoxOperacao.setSelectedIndex(0);
         comboBoxReceita.setSelectedIndex(0);
+        checkBoxMovimentaEstoque.setSelected(true);
         buscar();
     }
     private void pegaId(){
@@ -236,7 +240,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         labelId = new javax.swing.JLabel();
         comboBoxOperacao = new javax.swing.JComboBox<>();
         labelOperacao = new javax.swing.JLabel();
-        checkBoxInativar2 = new javax.swing.JCheckBox();
+        checkBoxMovimentaEstoque = new javax.swing.JCheckBox();
         labelOperacao1 = new javax.swing.JLabel();
         comboBoxReceita = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -284,10 +288,9 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         labelOperacao.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         labelOperacao.setText("Operação Produto:");
 
-        checkBoxInativar2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkBoxInativar2.setSelected(true);
-        checkBoxInativar2.setText("Movimenta Estoque");
-        checkBoxInativar2.setEnabled(false);
+        checkBoxMovimentaEstoque.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkBoxMovimentaEstoque.setSelected(true);
+        checkBoxMovimentaEstoque.setText("Movimenta Estoque");
 
         labelOperacao1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         labelOperacao1.setText("Tipo de Receita:");
@@ -331,7 +334,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBoxInativar2)
+                            .addComponent(checkBoxMovimentaEstoque)
                             .addComponent(checkBoxInativar))
                         .addGap(17, 17, 17))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
@@ -345,7 +348,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LabelDescricao)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkBoxInativar2))
+                    .addComponent(checkBoxMovimentaEstoque))
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -617,7 +620,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JCheckBox checkBoxInativar;
     private javax.swing.JCheckBox checkBoxInativar1;
-    private javax.swing.JCheckBox checkBoxInativar2;
+    private javax.swing.JCheckBox checkBoxMovimentaEstoque;
     private javax.swing.JComboBox<String> comboBoxOperacao;
     private javax.swing.JComboBox<String> comboBoxReceita;
     private javax.swing.JPanel jPanel2;

@@ -16,13 +16,14 @@ public class OperacaoRepository {
     }
 
     public String salvar(Operacao operacao) {
-        String sql = "insert into operacao (descricao, operacao, receita, inativo) values (?,?,?,?)";
+        String sql = "insert into operacao (descricao, operacao, receita, inativo, movimentaEstoque) values (?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, operacao.getDescricao());
             pst.setString(2, operacao.getOperacao().toString());
             pst.setString(3, operacao.getReceita().toString());
             pst.setBoolean(4, operacao.getInativo());
+            pst.setBoolean(5, operacao.getMovimentaEstoque());
             pst.executeUpdate();
 
             return "SUCCESS";
@@ -33,14 +34,15 @@ public class OperacaoRepository {
     }
 
     public String editar(Operacao operacao) {
-        String sql = "update operacao set descricao=?, operacao=?, receita=?, inativo=? where id=?";
+        String sql = "update operacao set descricao=?, operacao=?, receita=?, inativo=?, movimentaEstoque=? where id=?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, operacao.getDescricao());
             pst.setString(2, operacao.getOperacao().toString());
             pst.setString(3, operacao.getReceita().toString());
             pst.setBoolean(4, operacao.getInativo());
-            pst.setInt(5, operacao.getId());
+            pst.setBoolean(5, operacao.getMovimentaEstoque());
+            pst.setInt(6, operacao.getId());
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -98,7 +100,9 @@ public class OperacaoRepository {
                         rs.getString("descricao"),
                         rs.getString("operacao"),
                         rs.getString("receita"),
-                        rs.getBoolean("inativo"));
+                        rs.getBoolean("inativo"),
+                        rs.getBoolean("movimentaEstoque")
+                );
             } else {
                 return null;
             }
@@ -127,7 +131,6 @@ public class OperacaoRepository {
     //Retorna todos os nome do centro de custo em uma string
     public String todasDescricao() {
         String sql = "select descricao from operacao where inativo = false";
-        //String sql = "select descricao from operacao";
         String descricao = "";
         try {
             pst = conexao.prepareStatement(sql);
@@ -171,7 +174,9 @@ public class OperacaoRepository {
                         rs.getString("descricao"),
                         rs.getString("operacao"),
                         rs.getString("receita"),
-                        rs.getBoolean("inativo"));
+                        rs.getBoolean("inativo"),
+                        rs.getBoolean("movimentaEstoque")
+                );
             } else {
                 return null;
             }

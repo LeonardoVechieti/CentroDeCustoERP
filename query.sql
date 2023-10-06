@@ -55,9 +55,11 @@ id int primary key auto_increment,
 descricao varchar(200) not null,
 operacao varchar(200) not null,
 receita varchar(200) not null,
-inativo boolean
+inativo boolean not null,
+movimentaEstoque boolean not null
 );
-
+-- alter table operacao add movimentaEstoque boolean not null after inativo;
+-- update operacao set movimentaEstoque = true;
 -- alter table operacao add receita varchar(200) not null after operacao;
 -- update operacao set receita = 'ENTRADA' where id=7;
 

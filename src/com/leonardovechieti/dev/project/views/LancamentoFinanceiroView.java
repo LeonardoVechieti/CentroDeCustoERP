@@ -9,6 +9,7 @@ import com.leonardovechieti.dev.project.model.*;
 import com.leonardovechieti.dev.project.model.dto.EstoqueDTO;
 import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
+import com.leonardovechieti.dev.project.model.enums.TipoReceita;
 import com.leonardovechieti.dev.project.reports.LancamentoFinanceiroReport;
 import com.leonardovechieti.dev.project.repository.*;
 import com.leonardovechieti.dev.project.util.Func;
@@ -35,6 +36,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     ResultSet rs = null;
     //Seta com esntrada
     public String enumOperacao = "ENTRADA";
+
+    private Operacao operacao = new Operacao();
     private java.util.List<Estoque> listaEstoque = new java.util.ArrayList<Estoque>();
 
     private java.util.List<EstoqueDTO> listaEstoqueDTO = new java.util.ArrayList<EstoqueDTO>();
@@ -62,9 +65,8 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED){
-                    //System.out.println(comboBoxOperacao.getSelectedItem().toString());
                     OperacaoRepository operacaoRepository = new OperacaoRepository();
-                    Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
+                    operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
                     verificaTipoDeOperacao(operacao);
                 }
             }
@@ -93,6 +95,37 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             }
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 atualizaValorTotal();
+            }
+        });
+
+        //Verifica se existe objetos no array, se existir desabilita a edição do valor total, se não habilita
+        txtValorTotalMovimentacao.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                if(listaEstoque.size() > 0){
+                    txtValorTotalMovimentacao.setEditable(false);
+                    comboBoxOperacao.setEnabled(false);
+                } else {
+                    txtValorTotalMovimentacao.setEditable(true);
+                    comboBoxOperacao.setEnabled(true);
+                }
+            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                if(listaEstoque.size() > 0){
+                    txtValorTotalMovimentacao.setEditable(false);
+                    comboBoxOperacao.setEnabled(false);
+                } else {
+                    txtValorTotalMovimentacao.setEditable(true);
+                    comboBoxOperacao.setEnabled(true);
+                }
+            }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                if(listaEstoque.size() > 0){
+                    txtValorTotalMovimentacao.setEditable(false);
+                    comboBoxOperacao.setEnabled(false);
+                } else {
+                    txtValorTotalMovimentacao.setEditable(true);
+                    comboBoxOperacao.setEnabled(true);
+                }
             }
         });
         // Fim dos gatilhos para os campos
@@ -381,7 +414,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         try {
             listaEstoque.add(lancamento);
             listaLancamentos();
-            //new MessageView("Sucesso!", "Movimentação do produto lançada com sucesso!", "success");
         } catch (Exception e) {
             new MessageView("Erro!", "Erro ao lançar produto na movimentação!", "error");
         }
@@ -389,11 +421,17 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     private void atualizaValorTotal() {
+        //Verifica se o tipo de operacao selecionado esta habilitado receita de entrada ou saida, se for nehum o valor total é zerado
+        if (operacao.getReceita() == TipoReceita.NENHUM) {
+            txtValorTotalMovimentacao.setText("0,00");
+            return;
+        }
         //Atualiza o valor total
         double valorTotal = 0;
         for (Estoque estoque : listaEstoque) {
             valorTotal += estoque.getValorTotal().doubleValue();
         }
+
         if (txtDesconto.getText().equals("")) {
             txtValorTotalMovimentacao.setText(Func.formataPrecoPadrao(String.valueOf(valorTotal)));
             return;
@@ -416,7 +454,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             //txtValorDesconto.setText(Func.formataPrecoPadrao(String.valueOf(valorDesconto)));
         }
         txtValorTotalMovimentacao.setText(Func.formataPrecoPadrao(String.valueOf(valorTotal)));
-
     }
 
     //TODO: Essa função deve ser melhorada
@@ -479,7 +516,15 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
             return false;
         }
         if (txtValorTotalMovimentacao.getText().equals("0,00")) {
-            new MessageView("Alerta!", "Valor total não pode ser igual a zero!", "alert");
+            MessageView confirmationDialog = new MessageView(this,"Confirmação", "Deseja realmente lançar uma movimentação com valor zerado?", "confirm");
+            boolean confirmed = confirmationDialog.showConfirmationDialog();
+            if (confirmed) {
+                return true;
+            }
+            return false;
+        }
+        if (Double.parseDouble(Func.formataPrecoBanco(txtValorTotalMovimentacao.getText())) < 0) {
+            new MessageView("Alerta!", "Valor total não pode ser negativo!", "alert");
             return false;
         }
         //Se for uma transferência centro de custo destino não pode ser igual ao centro de custo origem
@@ -582,7 +627,7 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaEstoque);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentação", 0, 0, new java.awt.Font("Arial", 0, 14))); // NOI18N
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentação", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14))); // NOI18N
         jPanel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         comboBoxCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -760,7 +805,6 @@ public class LancamentoFinanceiroView extends javax.swing.JFrame {
         labelValorTotalMovimentacao2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         labelValorTotalMovimentacao2.setText("Valor Total:");
 
-        txtValorTotalMovimentacao.setEditable(false);
         txtValorTotalMovimentacao.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtValorTotalMovimentacao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
 

@@ -29,6 +29,7 @@ public class Operacao {
         this.movimentaEstoque = movimentaEstoque;
 
     }
+    public Operacao() { }
 
     public Boolean getInativo() {
         return inativo;

@@ -198,7 +198,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarAll(Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA " +
                 " from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -230,12 +230,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -253,7 +257,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarAll(String dataInicial, String dataFinal, Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA " +
                 "from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -287,12 +291,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -307,6 +315,70 @@ public class LancamentoFinanceiroRepository {
         }
         return lista;
     }
+    //todo: Tentativa de correcao do bug de lancamento financeiro quando existe apenas um resultado
+//
+//    public List<LancamentoFinanceiroDTO> listarAll(String dataInicial, String dataFinal, Boolean cancelado) {
+//        String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
+//                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA " +
+//                "from lancamentofinanceiro l\n" +
+//                "join usuario u\n" +
+//                "on l.usuario = u.id\n" +
+//                "join centrodecusto c\n" +
+//                "on l.centroDeCusto = c.id\n" +
+//                "join operacao o\n" +
+//                "on l.operacao = o.id\n" +
+//                "where l.data between ? and ?\n" +
+//                "and l.cancelado = ?\n" +
+//                "order by l.id desc\n" +
+//                "limit 100";
+//
+//        List<LancamentoFinanceiroDTO> lista = new ArrayList<>();
+//        ReportDTO reportDTO = new ReportDTO();
+//        double totalEntrada = 0.0;
+//        double totalSaida = 0.0;
+//
+//        try {
+//            pst = conexao.prepareStatement(sql);
+//            pst.setString(1, dataInicial);
+//            pst.setString(2, dataFinal);
+//            pst.setBoolean(3, cancelado);
+//            rs = pst.executeQuery();
+//
+//            while (rs.next()) {
+//                LancamentoFinanceiroDTO lancamentoFinanceiroDTO = new LancamentoFinanceiroDTO();
+//                lancamentoFinanceiroDTO.setId(rs.getInt(1));
+//                lancamentoFinanceiroDTO.setOperacao(rs.getString(2));
+//                lancamentoFinanceiroDTO.setCentro(rs.getString(3));
+//                lancamentoFinanceiroDTO.setUsuario(rs.getString(4));
+//                lancamentoFinanceiroDTO.setData(rs.getString(5));
+//                lancamentoFinanceiroDTO.setValor(Func.formataPrecoPadrao(rs.getString(6)));
+//                lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
+//                lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
+//                lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+//                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
+//
+//                if (rs.getString(10).equals("ENTRADA")) {
+//                    totalEntrada += rs.getDouble(6);
+//                } else if (rs.getString(10).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+//                    totalSaida += rs.getDouble(6);
+//                }
+//
+//                lancamentoFinanceiroDTO.setReport(reportDTO);
+//                lista.add(lancamentoFinanceiroDTO);
+//            }
+//
+//            // Após o loop, calcule os totais
+//            double totalFinal = totalEntrada - totalSaida;
+//            reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
+//            reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));
+//            reportDTO.setTotalFinal(Func.formataPrecoPadrao(String.valueOf(totalFinal)));
+//
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//
+//        return lista;
+//    }
 
     public LancamentoFinanceiroDTO buscaLacamento(int id) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
@@ -377,7 +449,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, Boolean cancelado) {
          String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                 " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                 " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA " +
                  "from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -408,12 +480,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -431,7 +507,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarPorOperacao(int idOperacao, String dataInicial, String dataFinal, Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO " +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA" +
                 "from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -466,12 +542,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -489,7 +569,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA" +
                 " from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -521,12 +601,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -544,7 +628,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarPorCentroDeCusto(int idCentroDeCusto, String dataInicial, String dataFinal, Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA" +
                 " from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -578,12 +662,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -601,7 +689,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " l.valorTotal as VALOR, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA" +
                 " from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -634,12 +722,16 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(7));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
+                }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
                 }
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
@@ -657,7 +749,7 @@ public class LancamentoFinanceiroRepository {
 
     public List<LancamentoFinanceiroDTO> listarPorCentroDeCustoOperacao(int idCentroDeCusto, int idOperacao, String dataInicial, String dataFinal, Boolean cancelado) {
         String sql = "select l.id as ID, o.descricao as OPERACAO, c.nome as CENTRO, u.nome as USUARIO, DATE_FORMAT(l.data,'%d/%m/%Y') as DATA," +
-                " l.valorTotal as VALOR, l.descricao as DESCRICAO, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO" +
+                " l.valorTotal as VALOR, l.descricao as DESCRICAO, l.cancelado as CANCELADO, o.operacao as TIPOP, l.idLancamentoAnexo as ANEXO, o.receita as RECEITA" +
                 " from lancamentofinanceiro l\n" +
                 "join usuario u\n" +
                 "on l.usuario = u.id\n" +
@@ -693,13 +785,18 @@ public class LancamentoFinanceiroRepository {
                 lancamentoFinanceiroDTO.setCancelado(rs.getBoolean(8));
                 lancamentoFinanceiroDTO.setTipoOperacao(rs.getString(8));
                 lancamentoFinanceiroDTO.setIdLancamentoAnexo(rs.getInt(9));
+                lancamentoFinanceiroDTO.setReceita(rs.getString(10));
 
-                if(rs.getString(8).equals("ENTRADA")) {
+                if(rs.getString(10).equals("ENTRADA")) {
                     totalEntrada = totalEntrada + rs.getDouble(6);
                 }
-                if(rs.getString(8).equals("SAIDA") || rs.getString(8).equals("TRANSFERENCIA")) {
+                if(rs.getString(10).equals("SAIDA")) {
                     totalSaida = totalSaida + rs.getDouble(6);
                 }
+                if(rs.getString(10).equals("NENHUM")) {
+                    lancamentoFinanceiroDTO.setValor("0.00");
+                }
+
                 totalFinal = totalEntrada - totalSaida;
                 reportDTO.setTotalEntrada(Func.formataPrecoPadrao(String.valueOf(totalEntrada)));
                 reportDTO.setTotalSaida(Func.formataPrecoPadrao(String.valueOf(totalSaida)));

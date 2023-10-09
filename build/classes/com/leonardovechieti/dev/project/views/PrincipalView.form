@@ -248,6 +248,22 @@
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator3">
         </Component>
+        <Component class="javax.swing.JButton" name="barraCadastrarOpercaoes">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/leonardovechieti/dev/project/icon/integracao.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Cadastrar Opercaoes"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barraCadastrarOpercaoesActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator5">
+        </Component>
         <Component class="javax.swing.JButton" name="barraCadastroCentroCusto">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">

@@ -54,8 +54,15 @@ create table operacao(
 id int primary key auto_increment,
 descricao varchar(200) not null,
 operacao varchar(200) not null,
-inativo boolean
+receita varchar(200) not null,
+inativo boolean not null,
+movimentaEstoque boolean not null
 );
+-- alter table operacao add movimentaEstoque boolean not null after inativo;
+-- update operacao set movimentaEstoque = true;
+-- alter table operacao add receita varchar(200) not null after operacao;
+-- update operacao set receita = 'ENTRADA' where id=7;
+
 -- use dev;
 -- drop table estoque;
 -- drop table lancamentofinanceiro;
@@ -63,11 +70,14 @@ CREATE TABLE lancamentofinanceiro (
     id INT PRIMARY KEY AUTO_INCREMENT,
     centroDeCusto INT NOT NULL,
     operacao INT NOT NULL,
+    desconto DECIMAL(10, 2),
+    descontoTipo VARCHAR(15),
     valorTotal DECIMAL(10, 2),
     data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     descricao VARCHAR(200),
     usuario INT NOT NULL,
     idLancamentoAnexo INT,
+    cancelado BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (centroDeCusto) REFERENCES centroDeCusto (id),
     FOREIGN KEY (operacao) REFERENCES operacao (id),
     FOREIGN KEY (usuario) REFERENCES usuario (id),
@@ -85,6 +95,7 @@ valorUnitario decimal(10,2),
 valorTotal decimal(10,2),
 data timestamp default current_timestamp,
 descricao varchar(200),
+cancelado BOOLEAN DEFAULT FALSE,
 foreign key(idProduto) references produto(id),
 foreign key(idLancamentoFinanceiro) references lancamentofinanceiro(id),
 foreign key(idCentroDeCusto) references centrodecusto(id),
@@ -116,4 +127,20 @@ select * from estoque;
 select * from lancamentofinanceiro;
 
 
-
+---- Adapte a sql abaixo para o seu banco de dados
+--SUM(CASE WHEN operacao = 'ENTRADA' THEN valorTotal ELSE 0 END) AS total_entradas,
+--    SUM(CASE WHEN operacao = 'SAIDA' THEN valorTotal ELSE 0 END) AS total_saidas,
+--    SUM(CASE WHEN operacao = 'ENTRADA' THEN valorTotal ELSE -valorTotal END) AS saldo_total
+--
+--
+--
+--select
+--    SUM(CASE WHEN o.operacao = 'ENTRADA' THEN l.valorTotal ELSE 0 END) AS entradas,
+--    SUM(CASE WHEN o.operacao = 'SAIDA' THEN l.valorTotal ELSE 0 END) AS saidas,
+--    SUM(CASE WHEN o.operacao = 'ENTRADA' THEN l.valorTotal ELSE -l.valorTotal END) AS saldo
+--    from lancamentofinanceiro l
+--        join operacao o
+--        on l.operacao = o.id
+--        where l.cancelado = false
+--        order by l.id desc
+--        limit 100;

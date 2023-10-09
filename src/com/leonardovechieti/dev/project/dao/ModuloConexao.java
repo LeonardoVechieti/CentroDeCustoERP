@@ -15,7 +15,7 @@ public class ModuloConexao {
     public static Connection conector() {
         
          ConfigDao config = new ConfigDao();
-         System.out.println("Conexao aberta!");
+         //System.out.println("Conexao aberta!");
         try {
             config.lerarquivo();
         } catch (IOException ex) {

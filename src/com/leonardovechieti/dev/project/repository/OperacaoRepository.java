@@ -16,12 +16,14 @@ public class OperacaoRepository {
     }
 
     public String salvar(Operacao operacao) {
-        String sql = "insert into operacao (descricao, operacao, inativo) values (?,?,?)";
+        String sql = "insert into operacao (descricao, operacao, receita, inativo, movimentaEstoque) values (?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, operacao.getDescricao());
             pst.setString(2, operacao.getOperacao().toString());
-            pst.setBoolean(3, operacao.getInativo());
+            pst.setString(3, operacao.getReceita().toString());
+            pst.setBoolean(4, operacao.getInativo());
+            pst.setBoolean(5, operacao.getMovimentaEstoque());
             pst.executeUpdate();
 
             return "SUCCESS";
@@ -32,13 +34,15 @@ public class OperacaoRepository {
     }
 
     public String editar(Operacao operacao) {
-        String sql = "update operacao set descricao=?, operacao=?, inativo=? where id=?";
+        String sql = "update operacao set descricao=?, operacao=?, receita=?, inativo=?, movimentaEstoque=? where id=?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, operacao.getDescricao());
             pst.setString(2, operacao.getOperacao().toString());
-            pst.setBoolean(3, operacao.getInativo());
-            pst.setInt(4, operacao.getId());
+            pst.setString(3, operacao.getReceita().toString());
+            pst.setBoolean(4, operacao.getInativo());
+            pst.setBoolean(5, operacao.getMovimentaEstoque());
+            pst.setInt(6, operacao.getId());
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -62,7 +66,7 @@ public class OperacaoRepository {
     }
 
     public ResultSet listarAll() {
-        String sql = "select id as ID, descricao as DESCRICAO, operacao as OPERACAO from operacao";
+        String sql = "select id as ID, descricao as DESCRICAO, operacao as OPERACAO, receita as RECEITA from operacao";
         try {
             pst = conexao.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -91,7 +95,14 @@ public class OperacaoRepository {
             pst.setInt(1, Integer.parseInt(id));
             rs = pst.executeQuery();
             if (rs.next()) {
-                return new Operacao(rs.getInt("id"), rs.getString("descricao"), rs.getString("operacao"), rs.getBoolean("inativo"));
+                return new Operacao(
+                        rs.getInt("id"),
+                        rs.getString("descricao"),
+                        rs.getString("operacao"),
+                        rs.getString("receita"),
+                        rs.getBoolean("inativo"),
+                        rs.getBoolean("movimentaEstoque")
+                );
             } else {
                 return null;
             }
@@ -120,7 +131,6 @@ public class OperacaoRepository {
     //Retorna todos os nome do centro de custo em uma string
     public String todasDescricao() {
         String sql = "select descricao from operacao where inativo = false";
-        //String sql = "select descricao from operacao";
         String descricao = "";
         try {
             pst = conexao.prepareStatement(sql);
@@ -159,7 +169,14 @@ public class OperacaoRepository {
             pst.setString(1, descricao);
             rs = pst.executeQuery();
             if (rs.next()) {
-                return new Operacao(rs.getInt("id"), rs.getString("descricao"), rs.getString("operacao"), rs.getBoolean("inativo"));
+                return new Operacao(
+                        rs.getInt("id"),
+                        rs.getString("descricao"),
+                        rs.getString("operacao"),
+                        rs.getString("receita"),
+                        rs.getBoolean("inativo"),
+                        rs.getBoolean("movimentaEstoque")
+                );
             } else {
                 return null;
             }
@@ -178,6 +195,24 @@ public class OperacaoRepository {
             rs = pst.executeQuery();
             if (rs.next()) {
                 return rs.getString("operacao");
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    //Retorna a receita atraves do id
+    public String buscaReceitaId(String id) {
+        String sql = "select receita from operacao where id = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(id));
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getString("receita");
             } else {
                 return null;
             }

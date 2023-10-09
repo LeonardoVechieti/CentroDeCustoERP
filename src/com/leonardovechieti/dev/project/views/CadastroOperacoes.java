@@ -8,6 +8,7 @@ package com.leonardovechieti.dev.project.views;
 import com.leonardovechieti.dev.project.model.Operacao;
 import com.leonardovechieti.dev.project.model.Usuario;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
+import com.leonardovechieti.dev.project.model.enums.TipoReceita;
 import com.leonardovechieti.dev.project.repository.OperacaoRepository;
 import com.leonardovechieti.dev.project.repository.UsuarioRepository;
 import com.leonardovechieti.dev.project.util.Func;
@@ -49,7 +50,11 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         for (TipoOperacao operacao : TipoOperacao.values()) {
             comboBoxOperacao.addItem(String.valueOf(operacao));
         }
-
+        comboBoxReceita.removeAllItems();
+        //Passa os valore do Enum TipoReceita para o select box
+        for (TipoReceita tipoReceita : TipoReceita.values()) {
+            comboBoxReceita.addItem(String.valueOf(tipoReceita));
+        }
     }
 
     private void formataBotoes() {
@@ -98,6 +103,8 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         txtDescricao.setText(operacao.getDescricao());
         comboBoxOperacao.setSelectedItem(operacao.getOperacao().toString());
         checkBoxInativar.setSelected(operacao.getInativo());
+        comboBoxReceita.setSelectedItem(operacao.getReceita().toString());
+        checkBoxMovimentaEstoque.setSelected(operacao.getMovimentaEstoque());
         //Altera o botao de cadastrar para editar
         btnPrincipal.setText("Editar");
     }
@@ -107,7 +114,9 @@ public class CadastroOperacoes extends javax.swing.JFrame {
             Operacao operacao = new Operacao(
                     txtDescricao.getText(),
                     comboBoxOperacao.getSelectedItem().toString(),
-                    checkBoxInativar.isSelected()
+                    comboBoxReceita.getSelectedItem().toString(),
+                    checkBoxInativar.isSelected(),
+                    checkBoxMovimentaEstoque.isSelected()
             );
             String resposta = operacaoRepository.salvar(operacao);
             if (resposta.equals("SUCCESS")) {
@@ -127,7 +136,9 @@ public class CadastroOperacoes extends javax.swing.JFrame {
                     Integer.parseInt(labelId.getText()),
                     txtDescricao.getText(),
                     comboBoxOperacao.getSelectedItem().toString(),
-                    checkBoxInativar.isSelected()
+                    comboBoxReceita.getSelectedItem().toString(),
+                    checkBoxInativar.isSelected(),
+                    checkBoxMovimentaEstoque.isSelected()
             );
             String resposta = operacaoRepository.editar(operacao);
             if (resposta.equals("SUCCESS")) {
@@ -144,9 +155,10 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         tabela.setModel(DbUtils.resultSetToTableModel(rs));
 
         //Seta o tamanho das colunas
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(30);
         tabela.getColumnModel().getColumn(1).setPreferredWidth(230);
         tabela.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(80);
 
         //Reseta o id do produto selecionado
         id=null;
@@ -177,6 +189,10 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         btnDeletar.setVisible(false);
         btnCancelar.setVisible(false);
         btnPrincipal.setText("Novo cadastro");
+        labelId.setText("");
+        comboBoxOperacao.setSelectedIndex(0);
+        comboBoxReceita.setSelectedIndex(0);
+        checkBoxMovimentaEstoque.setSelected(true);
         buscar();
     }
     private void pegaId(){
@@ -224,7 +240,9 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         labelId = new javax.swing.JLabel();
         comboBoxOperacao = new javax.swing.JComboBox<>();
         labelOperacao = new javax.swing.JLabel();
-        checkBoxInativar2 = new javax.swing.JCheckBox();
+        checkBoxMovimentaEstoque = new javax.swing.JCheckBox();
+        labelOperacao1 = new javax.swing.JLabel();
+        comboBoxReceita = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
         btnPrincipal = new javax.swing.JButton();
@@ -268,12 +286,30 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         });
 
         labelOperacao.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        labelOperacao.setText("Tipo de operação:");
+        labelOperacao.setText("Operação Produto:");
 
-        checkBoxInativar2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkBoxInativar2.setSelected(true);
-        checkBoxInativar2.setText("Movimenta Estoque");
-        checkBoxInativar2.setEnabled(false);
+        checkBoxMovimentaEstoque.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkBoxMovimentaEstoque.setSelected(true);
+        checkBoxMovimentaEstoque.setText("Movimenta Estoque");
+
+        labelOperacao1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        labelOperacao1.setText("Tipo de Receita:");
+
+        comboBoxReceita.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        comboBoxReceita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxReceita.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboBoxReceitaMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                comboBoxReceitaMouseExited(evt);
+            }
+        });
+        comboBoxReceita.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxReceitaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -281,26 +317,29 @@ public class CadastroOperacoes extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(labelOperacao1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboBoxReceita, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(LabelDescricao)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(labelOperacao)
+                        .addGap(18, 18, 18)
+                        .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(labelId)
-                        .addGap(99, 99, 99))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                                .addComponent(LabelDescricao)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(labelOperacao)
-                                .addGap(18, 18, 18)
-                                .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBoxInativar2)
+                            .addComponent(checkBoxMovimentaEstoque)
                             .addComponent(checkBoxInativar))
-                        .addGap(17, 17, 17))))
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(labelId)
+                        .addGap(99, 99, 99))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,18 +348,26 @@ public class CadastroOperacoes extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LabelDescricao)
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkBoxInativar2))
+                    .addComponent(checkBoxMovimentaEstoque))
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(labelOperacao)
                             .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(4, 4, 4)
                         .addComponent(checkBoxInativar)))
-                .addGap(20, 20, 20)
-                .addComponent(labelId))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(labelId))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelOperacao1)
+                            .addComponent(comboBoxReceita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
 
         tabela.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
@@ -358,20 +405,20 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -380,8 +427,8 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 583, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -504,6 +551,18 @@ public class CadastroOperacoes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxOperacaoActionPerformed
 
+    private void comboBoxReceitaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxReceitaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxReceitaMouseClicked
+
+    private void comboBoxReceitaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxReceitaMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxReceitaMouseExited
+
+    private void comboBoxReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReceitaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxReceitaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -561,8 +620,9 @@ public class CadastroOperacoes extends javax.swing.JFrame {
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JCheckBox checkBoxInativar;
     private javax.swing.JCheckBox checkBoxInativar1;
-    private javax.swing.JCheckBox checkBoxInativar2;
+    private javax.swing.JCheckBox checkBoxMovimentaEstoque;
     private javax.swing.JComboBox<String> comboBoxOperacao;
+    private javax.swing.JComboBox<String> comboBoxReceita;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
@@ -570,6 +630,7 @@ public class CadastroOperacoes extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelId;
     private javax.swing.JLabel labelOperacao;
+    private javax.swing.JLabel labelOperacao1;
     private javax.swing.JTable tabela;
     private javax.swing.JTextField txtDescricao;
     // End of variables declaration//GEN-END:variables

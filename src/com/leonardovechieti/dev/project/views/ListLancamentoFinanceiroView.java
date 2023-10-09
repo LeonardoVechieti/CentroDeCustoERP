@@ -7,7 +7,9 @@ package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.*;
 import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
+import com.leonardovechieti.dev.project.model.dto.ReportDTO;
 import com.leonardovechieti.dev.project.model.enums.TipoOperacao;
+import com.leonardovechieti.dev.project.reports.LancamentoFinanceiroReport;
 import com.leonardovechieti.dev.project.repository.*;
 import com.leonardovechieti.dev.project.util.Func;
 import net.proteanit.sql.DbUtils;
@@ -21,7 +23,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
-
+import java.util.ArrayList;
 
 
 /**
@@ -30,8 +32,11 @@ import java.sql.ResultSet;
  */
 public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
     private String id = null;
+    java.util.List<LancamentoFinanceiroDTO> listaLancamentoFinanceiro = new java.util.ArrayList<>();
+    ReportDTO reportDTO = new ReportDTO();
 
     public ListLancamentoFinanceiroView() {
+        ArrayList<LancamentoFinanceiroDTO> listaLancamentoFinanceiro = new ArrayList<>();
         initialize();
         pesquisarLancamentos();
         this.setVisible(true);
@@ -56,52 +61,94 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
     }
 
     private void pesquisarLancamentos() {
+        //Reseta a lista de lancamentos
+        listaLancamentoFinanceiro = new java.util.ArrayList<>();
         //Verifica se o campo data inicial e valido e o campo data final está vazio, se sim, seta a data final como a data inicial
+        boolean campoData = (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    "));
         if (!txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
             txtDataFinal.setText(txtDataInicial.getText());
         }
         LancamentoFinanceiroRepository lancamentoFinanceiroRepository = new LancamentoFinanceiroRepository();
-        java.util.List<LancamentoFinanceiroDTO> listaLancamentoFinanceiro = new java.util.ArrayList<>();
         if (comboBoxCentroDeCusto.getSelectedItem().toString().equals("TODOS")) {
             if (comboBoxOperacao.getSelectedItem().toString().equals("TODAS")) {
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll();
+                if (campoData) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll(
+                            boxCancelado.isSelected()
+                    );
                 } else {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll(Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarAll(
+                            Func.formataDataBanco(txtDataInicial.getText()),
+                            Func.formataDataBanco(txtDataFinal.getText()),
+                            boxCancelado.isSelected()
+                    );
                 }
             } else {
                 OperacaoRepository operacaoRepository = new OperacaoRepository();
                 Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(operacao.getId());
+                if (campoData) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(
+                            operacao.getId(),
+                            boxCancelado.isSelected());
                 } else {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(operacao.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorOperacao(
+                            operacao.getId(),
+                            Func.formataDataBanco(txtDataInicial.getText()),
+                            Func.formataDataBanco(txtDataFinal.getText()),
+                            boxCancelado.isSelected()
+                    );
                 }
             }
         } else {
             CentroDeCustoRepository centroDeCustoRepository = new CentroDeCustoRepository();
             CentroDeCusto centroDeCusto = centroDeCustoRepository.buscaCentroDeCustoNome(comboBoxCentroDeCusto.getSelectedItem().toString());
             if (comboBoxOperacao.getSelectedItem().toString().equals("TODAS")) {
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(centroDeCusto.getId());
+                if (campoData) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(
+                            centroDeCusto.getId(),
+                            boxCancelado.isSelected()
+                    );
                 } else {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(centroDeCusto.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCusto(
+                            centroDeCusto.getId(),
+                            Func.formataDataBanco(txtDataInicial.getText()),
+                            Func.formataDataBanco(txtDataFinal.getText()),
+                            boxCancelado.isSelected()
+                    );
                 }
             } else {
                 OperacaoRepository operacaoRepository = new OperacaoRepository();
                 Operacao operacao = operacaoRepository.buscaOperacaoDescricao(comboBoxOperacao.getSelectedItem().toString());
-                if (txtDataInicial.getText().equals("  /  /    ") && txtDataFinal.getText().equals("  /  /    ")) {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(centroDeCusto.getId(), operacao.getId());
+                if (campoData) {
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(
+                            centroDeCusto.getId(),
+                            operacao.getId(),
+                            boxCancelado.isSelected()
+                    );
                 } else {
-                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(centroDeCusto.getId(), operacao.getId(), Func.formataDataBanco(txtDataInicial.getText()), Func.formataDataBanco(txtDataFinal.getText()));
+                    listaLancamentoFinanceiro = lancamentoFinanceiroRepository.listarPorCentroDeCustoOperacao(
+                            centroDeCusto.getId(),
+                            operacao.getId(),
+                            Func.formataDataBanco(txtDataInicial.getText()),
+                            Func.formataDataBanco(txtDataFinal.getText()),
+                            boxCancelado.isSelected()
+                    );
                 }
             }
         }
         //Seta a tabela com os dados do ArrayList
         DefaultTableModel model = (DefaultTableModel) tabelaLancamentos.getModel();
         model.setRowCount(0);
-        for (LancamentoFinanceiroDTO lancamentoFinanceiroDTO : listaLancamentoFinanceiro) {
-            model.addRow(new Object[]{lancamentoFinanceiroDTO.getId(), lancamentoFinanceiroDTO.getOperacao(), lancamentoFinanceiroDTO.getCentro(), lancamentoFinanceiroDTO.getUsuario(), lancamentoFinanceiroDTO.getData(), lancamentoFinanceiroDTO.getValor()});
+        if (listaLancamentoFinanceiro.size() > 0) {
+            for (LancamentoFinanceiroDTO lancamentoFinanceiroDTO : listaLancamentoFinanceiro) {
+                model.addRow(new Object[]{
+                        lancamentoFinanceiroDTO.getId(),
+                        lancamentoFinanceiroDTO.getOperacao(),
+                        lancamentoFinanceiroDTO.getCentro(),
+                        lancamentoFinanceiroDTO.getUsuario(),
+                        lancamentoFinanceiroDTO.getData(),
+                        lancamentoFinanceiroDTO.getValor()
+                });
+            }
         }
         formataTabela();
     }
@@ -134,7 +181,6 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         for (String operacao : operacoes) {
             comboBoxOperacao.addItem(operacao);
         }
-
     }
     private void formataBotoes() {
         btnPrincipal.setBackground(new Color(0, 0, 0, 0));
@@ -158,6 +204,12 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         btnPesquisar.setOpaque(false);
         btnPesquisar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        btnImprimir.setBackground(new Color(0, 0, 0, 0));
+        btnImprimir.setBorderPainted(false);
+        btnImprimir.setFocusPainted(false);
+        btnImprimir.setContentAreaFilled(false);
+        btnImprimir.setOpaque(false);
+        btnImprimir.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
     }
 
@@ -189,6 +241,36 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private boolean validaCampos() {
         return true;
+    }
+
+    private void configuraReport(){
+        //Passa os dados do filtro para o reportDTO para serem usados no relatorio
+        reportDTO.setNomeReport("LancamentoFinanceiroReport");
+        reportDTO.setFiltroOperacao(comboBoxOperacao.getSelectedItem().toString());
+        reportDTO.setFiltroCentro(comboBoxCentroDeCusto.getSelectedItem().toString());
+        reportDTO.setFiltroDataInicial(txtDataInicial.getText());
+        reportDTO.setFiltroDataFinal(txtDataFinal.getText());
+        reportDTO.setFiltroCancelado(boxCancelado.isSelected() ? "SIM" : "NÃO");
+    }
+    private void imprimir(){
+        configuraReport();
+        if (listaLancamentoFinanceiro.size() > 0) {
+            listaLancamentoFinanceiro.get(0).setReport(reportDTO);
+        }
+        LancamentoFinanceiroReport report = new LancamentoFinanceiroReport();
+        report.listarLancamentosFinanceiros(listaLancamentoFinanceiro);
+    }
+
+    private void pegaId() {
+        int linha = tabelaLancamentos.getSelectedRow();
+        this.id = tabelaLancamentos.getValueAt(linha, 0).toString();
+    }
+
+    private void abreLancamento() {
+        pegaId();
+        //Abre a tela do lancamento
+        LancamentoFinanceiroView lancamentoFinanceiroView = new LancamentoFinanceiroView(this.id);
+
     }
 
     private void limparCampos() {
@@ -226,8 +308,10 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
         labelOperacao4 = new javax.swing.JLabel();
         txtDataInicial = new javax.swing.JFormattedTextField();
         txtDataFinal = new javax.swing.JFormattedTextField();
+        boxCancelado = new javax.swing.JCheckBox();
         btnPrincipal = new javax.swing.JButton();
         btnCancelarLancamento = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Lançamento de Movimenteções");
@@ -359,6 +443,8 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             }
         });
 
+        boxCancelado.setText("Cancelado");
+
         javax.swing.GroupLayout FiltrarLayout = new javax.swing.GroupLayout(Filtrar);
         Filtrar.setLayout(FiltrarLayout);
         FiltrarLayout.setHorizontalGroup(
@@ -382,8 +468,10 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelOperacao4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtDataFinal, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                .addGap(109, 109, 109)
+                .addComponent(txtDataFinal, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(boxCancelado)
+                .addGap(22, 22, 22)
                 .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -403,7 +491,8 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
                             .addComponent(comboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelOperacao4)
                             .addComponent(txtDataInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDataFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtDataFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boxCancelado))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -460,12 +549,23 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             }
         });
 
+        btnImprimir.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCancelarLancamento, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -476,10 +576,15 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(painelProdutos)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelarLancamento, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancelarLancamento, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(20, 20, 20))
         );
 
@@ -489,6 +594,9 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void btnPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrincipalActionPerformed
         // TODO add your handling code here
+        LancamentoFinanceiroView novoLancamentoView = new LancamentoFinanceiroView();
+        novoLancamentoView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnPrincipalActionPerformed
 
     private void btnCancelarLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarLancamentoActionPerformed
@@ -497,6 +605,7 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     private void tabelaLancamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaLancamentosMouseClicked
         // TODO add your handling code here:
+        abreLancamento();
     }//GEN-LAST:event_tabelaLancamentosMouseClicked
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
@@ -578,6 +687,11 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_txtDataFinalKeyPressed
 
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        // TODO add your handling code here:
+        imprimir();
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -614,7 +728,9 @@ public class ListLancamentoFinanceiroView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Filtrar;
+    private javax.swing.JCheckBox boxCancelado;
     private javax.swing.JButton btnCancelarLancamento;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JComboBox<String> comboBoxCentroDeCusto;

@@ -9,6 +9,10 @@ public class LancamentoFinanceiro {
     private int idOperacao;
 
     private String valorTotal;
+
+    private String desconto;
+
+    private String descontoTipo;
     private String data;
     private String descricao;
     private int usuario;
@@ -94,6 +98,14 @@ public class LancamentoFinanceiro {
     public void setIdlancamentoanexo(int idLancamentoAnexo) {
         this.idLancamentoAnexo = idLancamentoAnexo;
     }
+
+    public String getDesconto() { return desconto; }
+
+    public void setDesconto(String desconto) { this.desconto = desconto; }
+
+    public String getDescontoTipo() { return descontoTipo; }
+
+    public void setDescontoTipo(String descontoTipo) { this.descontoTipo = descontoTipo; }
 }
 
 

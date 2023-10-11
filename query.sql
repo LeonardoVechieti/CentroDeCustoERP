@@ -14,9 +14,9 @@ regras varchar(350) not null
 -- Adiciona campo regras no usuario
 -- alter table usuario add regras varchar(350) not null;
 
-insert into usuario( nome, login, senha, ativo, perfil)
+insert into usuario( nome, login, senha, ativo, perfil, regras)
 values ('LEONARDO VECHEIT', 'LEONARDO', '1234', false, "ADMIN, USER",
-"CAD_PRODUTO, CAD_CENTRO_DE_CUSTO, CAD_OPERACAO, CAD_LANCAMENTO_FINANCEIRO, CAD_USUARIO, LIS_PRODUTO,  LIS_LANCAMENTO_FINANCEIRO, REL_PRODUTO, REL_LANCAMENTO_FINANCEIRO");
+"CAD_PRODUTO, CAD_CENTRO_DE_CUSTO, CAD_OPERACAO, CAD_EMPRESA, CAD_LANCAMENTO_FINANCEIRO, CAD_USUARIO, LIS_PRODUTO, LIS_LANCAMENTO_FINANCEIRO, REL_PRODUTO_ESTOQUE, REL_LANCAMENTO_FINANCEIRO" );
 
 
 create table produto(

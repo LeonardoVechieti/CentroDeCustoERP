@@ -249,7 +249,17 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         tabelaUsuarios = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
+        checkProdutosServicos = new javax.swing.JCheckBox();
+        checkCentroCusto = new javax.swing.JCheckBox();
+        checkOperacoes = new javax.swing.JCheckBox();
+        checkListarProdutos = new javax.swing.JCheckBox();
+        checkEmpresas = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
+        checkNovoLancamento = new javax.swing.JCheckBox();
+        checkListarLancamentos = new javax.swing.JCheckBox();
+        jPanel8 = new javax.swing.JPanel();
+        checkReportLancamentoFinanceiro = new javax.swing.JCheckBox();
+        checkReportEstoqueProdutos = new javax.swing.JCheckBox();
         btnPrincipal = new javax.swing.JButton();
         btnDeletar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -416,28 +426,144 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
+        checkProdutosServicos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkProdutosServicos.setText("Produtos e Serviços");
+        checkProdutosServicos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkProdutosServicosActionPerformed(evt);
+            }
+        });
+
+        checkCentroCusto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkCentroCusto.setText("Centro de Custo");
+        checkCentroCusto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkCentroCustoActionPerformed(evt);
+            }
+        });
+
+        checkOperacoes.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkOperacoes.setText("Operações");
+        checkOperacoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkOperacoesActionPerformed(evt);
+            }
+        });
+
+        checkListarProdutos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkListarProdutos.setText("Listar Produtos");
+        checkListarProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkListarProdutosActionPerformed(evt);
+            }
+        });
+
+        checkEmpresas.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkEmpresas.setText("Empresas");
+        checkEmpresas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkEmpresasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkOperacoes)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkProdutosServicos)
+                            .addComponent(checkCentroCusto))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkEmpresas)
+                            .addComponent(checkListarProdutos))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 107, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkProdutosServicos)
+                    .addComponent(checkListarProdutos))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(checkCentroCusto)
+                    .addComponent(checkEmpresas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(checkOperacoes)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentações", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
+
+        checkNovoLancamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkNovoLancamento.setText("Novo Lançamento");
+        checkNovoLancamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkNovoLancamentoActionPerformed(evt);
+            }
+        });
+
+        checkListarLancamentos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkListarLancamentos.setText("Listar Lançamentos");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkListarLancamentos)
+                    .addComponent(checkNovoLancamento))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 107, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(checkNovoLancamento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkListarLancamentos))
+        );
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Relatórios", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
+
+        checkReportLancamentoFinanceiro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkReportLancamentoFinanceiro.setText("Lançamento Financeiro");
+        checkReportLancamentoFinanceiro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkReportLancamentoFinanceiroActionPerformed(evt);
+            }
+        });
+
+        checkReportEstoqueProdutos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        checkReportEstoqueProdutos.setText("Estoque Produtos");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkReportEstoqueProdutos)
+                    .addComponent(checkReportLancamentoFinanceiro))
+                .addContainerGap(348, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(checkReportLancamentoFinanceiro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkReportEstoqueProdutos))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -448,7 +574,8 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -458,8 +585,11 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        jPanel8.getAccessibleContext().setAccessibleName("Relatórios");
 
         jTabbedPane1.addTab("Permissões", jPanel4);
 
@@ -559,6 +689,34 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         buscarUsuarios();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void checkProdutosServicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkProdutosServicosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkProdutosServicosActionPerformed
+
+    private void checkCentroCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkCentroCustoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkCentroCustoActionPerformed
+
+    private void checkOperacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOperacoesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkOperacoesActionPerformed
+
+    private void checkNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkNovoLancamentoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkNovoLancamentoActionPerformed
+
+    private void checkReportLancamentoFinanceiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkReportLancamentoFinanceiroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkReportLancamentoFinanceiroActionPerformed
+
+    private void checkListarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkListarProdutosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkListarProdutosActionPerformed
+
+    private void checkEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkEmpresasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkEmpresasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -610,12 +768,22 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JCheckBox checkBoxAdmin;
     private javax.swing.JCheckBox checkBoxInativar;
+    private javax.swing.JCheckBox checkCentroCusto;
+    private javax.swing.JCheckBox checkEmpresas;
+    private javax.swing.JCheckBox checkListarLancamentos;
+    private javax.swing.JCheckBox checkListarProdutos;
+    private javax.swing.JCheckBox checkNovoLancamento;
+    private javax.swing.JCheckBox checkOperacoes;
+    private javax.swing.JCheckBox checkProdutosServicos;
+    private javax.swing.JCheckBox checkReportEstoqueProdutos;
+    private javax.swing.JCheckBox checkReportLancamentoFinanceiro;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelId;

@@ -7,11 +7,17 @@ nome varchar(50) not null,
 login varchar(25) not null unique,
 senha varchar(25) not null,
 inativo boolean,
-perfil varchar(250)
+perfil varchar(250) not null,
+regras varchar(350) not null
 );
 
+-- Adiciona campo regras no usuario
+-- alter table usuario add regras varchar(350) not null;
+
 insert into usuario( nome, login, senha, ativo, perfil)
-values ('LEONARDO VECHEIT', 'LEONARDO', '1234', false, "ADMIN, USER");
+values ('LEONARDO VECHEIT', 'LEONARDO', '1234', false, "ADMIN, USER",
+"CAD_PRODUTO, CAD_CENTRO_DE_CUSTO, CAD_OPERACAO, CAD_LANCAMENTO_FINANCEIRO, CAD_USUARIO, LIS_PRODUTO,  LIS_LANCAMENTO_FINANCEIRO, REL_PRODUTO, REL_LANCAMENTO_FINANCEIRO");
+
 
 create table produto(
 id int primary key auto_increment,

@@ -28,12 +28,19 @@ public class UsuarioRepository {
 
             if (rs.next()) {
                 System.out.println("Usuario logado: " + rs.getString("nome"));
-                return new Usuario(rs.getInt("id"), rs.getString("nome"), rs.getString("login"), rs.getString("senha"), rs.getBoolean("inativo"), rs.getString("perfil"));
+                return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getBoolean("inativo"),
+                        rs.getString("perfil"),
+                        rs.getString("regras")
+                );
 
             }else {
                 return null;
             }
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -55,7 +62,9 @@ public class UsuarioRepository {
                         rs.getString("login"),
                         rs.getString("senha"),
                         rs.getBoolean("inativo"),
-                        rs.getString("perfil"));
+                        rs.getString("perfil"),
+                        rs.getString("regras")
+                );
             }else {
                 return null;
             }
@@ -66,8 +75,8 @@ public class UsuarioRepository {
         return null;
     }
 
-    public String cadastrar(String nome, String login, String senha, Boolean inativo, String perfil) {
-        String sql = "insert into usuario (nome, login, senha, inativo, perfil) values (?, ?, ?, ?, ?)";
+    public String cadastrar(String nome, String login, String senha, Boolean inativo, String perfil, String regras) {
+        String sql = "insert into usuario (nome, login, senha, inativo, perfil) values (?, ?, ?, ?, ?, ?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, nome);
@@ -75,6 +84,8 @@ public class UsuarioRepository {
             pst.setString(3, senha);
             pst.setBoolean(4, inativo);
             pst.setString(5, perfil);
+            pst.setString(6, regras);
+
             pst.executeUpdate();
             return "CREATE";
         } catch (Exception e) {
@@ -97,8 +108,8 @@ public class UsuarioRepository {
         return 0;
     }
 
-    public String alterar(int id, String nome, String login, String senha, Boolean inativo, String perfil) {
-        String sql = "update usuario set nome = ?, login = ?, senha = ?, inativo = ?, perfil = ? where id = ?";
+    public String alterar(int id, String nome, String login, String senha, Boolean inativo, String perfil, String regras) {
+        String sql = "update usuario set nome = ?, login = ?, senha = ?, inativo = ?, perfil = ?, regras = ? where id = ?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, nome);
@@ -106,7 +117,8 @@ public class UsuarioRepository {
             pst.setString(3, senha);
             pst.setBoolean(4, inativo);
             pst.setString(5, perfil);
-            pst.setInt(6, id);
+            pst.setString(6, regras);
+            pst.setInt(7, id);
             pst.executeUpdate();
             return "SUCCESS";
         } catch (Exception e) {
@@ -139,7 +151,9 @@ public class UsuarioRepository {
                         rs.getString("login"),
                         rs.getString("senha"),
                         rs.getBoolean("inativo"),
-                        rs.getString("perfil"));
+                        rs.getString("perfil"),
+                        rs.getString("regras")
+                );
             }else {
                 return null;
             }

@@ -90,22 +90,56 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         txtLogin.setText(usuario.getLogin());
         txtSenha.setText(usuario.getSenha());
         checkBoxInativar.setSelected(usuario.getInativo());
-        checkBoxAdmin.setSelected(usuario.getPerfil().equals("ADMIN"));
+        setRegras(usuario.getPerfil(), usuario.getRegras());
         //Altera o botao de cadastrar para editar
         btnPrincipal.setText("Editar");
+
+    }
+    private void setRegras(String perfil, String regras){
+        if(perfil.equals("ADMIN")){
+            checkBoxAdmin.setSelected(true);
+        }
+        if(regras.contains("CAD_PRODUTO")){
+            boxCadProduto.setSelected(true);
+        }
+        if(regras.contains("CAD_CENTRO_DE_CUSTO")){
+            boxCadCentro.setSelected(true);
+        }
+        if(regras.contains("CAD_OPERACAO")){
+            boxCadOperacao.setSelected(true);
+        }
+        if(regras.contains("LIS_PRODUTO")){
+            boxLisProduto.setSelected(true);
+        }
+        if(regras.contains("CAD_EMPRESA")){
+            boxCadEmpresa.setSelected(true);
+        }
+        if(regras.contains("CAD_LANCAMENTO_FINANCEIRO")){
+            boxNovoLancamento.setSelected(true);
+        }
+        if(regras.contains("LIS_LANCAMENTO_FINANCEIRO")){
+            boxLisLancamento.setSelected(true);
+        }
+        if(regras.contains("REL_PRODUTO_ESTOQUE")){
+            boxRelEstoque.setSelected(true);
+        }
+        if(regras.contains("REL_LANCAMENTO_FINANCEIRO")){
+            boxRelLancamento.setSelected(true);
+        }
 
     }
     private void cadastrarUsuario() {
         // TODO add your handling code here:
         if (validarCampos()) {
             UsuarioRepository usuarioRepository = new UsuarioRepository();
-            String permissoes = permissoes();
             String resposta = usuarioRepository.cadastrar(
                     txtNome.getText(),
                     txtLogin.getText(),
                     txtSenha.getText(),
                     checkBoxInativar.isSelected(),
-                    this.permissoes());
+                    this.perfil(),
+                    this.regras()
+            );
             if (resposta.equals("CREATE")) {
                 Integer id = usuarioRepository.ultimoId();
                 new MessageView("Sucesso!", "Usuário cadastrado com sucesso, ID: " + id, "success" );
@@ -116,11 +150,44 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
             }
         }
 
-    private String permissoes() { //Essa função retorna as permissões do usuário de acordo com o que foi selecionado, concatenando as permissões em uma string
+    private String perfil() {
         if(checkBoxAdmin.isSelected()){
             return "ADMIN";
     }
         return "USER";
+    }
+
+    private String regras() {
+        String regras = "";
+        if(boxCadProduto.isSelected()){
+            regras += "CAD_PRODUTO,";
+        }
+        if(boxCadCentro.isSelected()){
+            regras += "CAD_CENTRO_DE_CUSTO,";
+        }
+        if(boxCadOperacao.isSelected()){
+            regras += "CAD_OPERACAO,";
+        }
+        if(boxLisProduto.isSelected()){
+            regras += "LIS_PRODUTO,";
+        }
+        if(boxCadEmpresa.isSelected()){
+            regras += "CAD_EMPRESA,";
+        }
+        if(boxNovoLancamento.isSelected()){
+            regras += "CAD_LANCAMENTO_FINANCEIRO,";
+        }
+        if(boxLisLancamento.isSelected()){
+            regras += "LIS_LANCAMENTO_FINANCEIRO,";
+        }
+        if(boxRelEstoque.isSelected()){
+            regras += "REL_PRODUTO_ESTOQUE,";
+        }
+        if(boxRelLancamento.isSelected()){
+            regras += "REL_LANCAMENTO_FINANCEIRO,";
+        }
+        return regras;
+
     }
 
     private void alterarUsuario() {
@@ -133,7 +200,8 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                     txtLogin.getText(),
                     txtSenha.getText(),
                     checkBoxInativar.isSelected(),
-                    this.permissoes()
+                    this.perfil(),
+                    this.regras()
             );
             if (resposta.equals("SUCCESS")) {
                 new MessageView("Sucesso!", "Usuário alterado com sucesso!", "success" );
@@ -172,8 +240,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
             limparCampos();
             buscarUsuarios();
         } else {
-            new MessageView("Erro!", "Erro ao deletar usuário, o mesmo " +
-                    "já está relacionado em funcionalidades do sistema!", "error");
+            new MessageView("Erro!", "Erro ao deletar, usuário já está sendo utilizado!", "error");
         }
     }
     private void limparCampos() {
@@ -185,6 +252,16 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         btnDeletar.setVisible(false);
         btnCancelar.setVisible(false);
         btnPrincipal.setText("Novo cadastro");
+        //labelId.setText("");
+        boxCadProduto.setSelected(false);
+        boxCadCentro.setSelected(false);
+        boxCadOperacao.setSelected(false);
+        boxLisProduto.setSelected(false);
+        boxCadEmpresa.setSelected(false);
+        boxNovoLancamento.setSelected(false);
+        boxLisLancamento.setSelected(false);
+        boxRelEstoque.setSelected(false);
+        boxRelLancamento.setSelected(false);
         buscarUsuarios();
     }
     private void PegaId(){
@@ -249,17 +326,17 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         tabelaUsuarios = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        checkProdutosServicos = new javax.swing.JCheckBox();
-        checkCentroCusto = new javax.swing.JCheckBox();
-        checkOperacoes = new javax.swing.JCheckBox();
-        checkListarProdutos = new javax.swing.JCheckBox();
-        checkEmpresas = new javax.swing.JCheckBox();
+        boxCadProduto = new javax.swing.JCheckBox();
+        boxCadCentro = new javax.swing.JCheckBox();
+        boxCadOperacao = new javax.swing.JCheckBox();
+        boxLisProduto = new javax.swing.JCheckBox();
+        boxCadEmpresa = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
-        checkNovoLancamento = new javax.swing.JCheckBox();
-        checkListarLancamentos = new javax.swing.JCheckBox();
+        boxNovoLancamento = new javax.swing.JCheckBox();
+        boxLisLancamento = new javax.swing.JCheckBox();
         jPanel8 = new javax.swing.JPanel();
-        checkReportLancamentoFinanceiro = new javax.swing.JCheckBox();
-        checkReportEstoqueProdutos = new javax.swing.JCheckBox();
+        boxRelLancamento = new javax.swing.JCheckBox();
+        boxRelEstoque = new javax.swing.JCheckBox();
         btnPrincipal = new javax.swing.JButton();
         btnDeletar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -426,43 +503,43 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
-        checkProdutosServicos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkProdutosServicos.setText("Produtos e Serviços");
-        checkProdutosServicos.addActionListener(new java.awt.event.ActionListener() {
+        boxCadProduto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxCadProduto.setText("Produtos e Serviços");
+        boxCadProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkProdutosServicosActionPerformed(evt);
+                boxCadProdutoActionPerformed(evt);
             }
         });
 
-        checkCentroCusto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkCentroCusto.setText("Centro de Custo");
-        checkCentroCusto.addActionListener(new java.awt.event.ActionListener() {
+        boxCadCentro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxCadCentro.setText("Centro de Custo");
+        boxCadCentro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkCentroCustoActionPerformed(evt);
+                boxCadCentroActionPerformed(evt);
             }
         });
 
-        checkOperacoes.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkOperacoes.setText("Operações");
-        checkOperacoes.addActionListener(new java.awt.event.ActionListener() {
+        boxCadOperacao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxCadOperacao.setText("Operações");
+        boxCadOperacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkOperacoesActionPerformed(evt);
+                boxCadOperacaoActionPerformed(evt);
             }
         });
 
-        checkListarProdutos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkListarProdutos.setText("Listar Produtos");
-        checkListarProdutos.addActionListener(new java.awt.event.ActionListener() {
+        boxLisProduto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxLisProduto.setText("Listar Produtos");
+        boxLisProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkListarProdutosActionPerformed(evt);
+                boxLisProdutoActionPerformed(evt);
             }
         });
 
-        checkEmpresas.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkEmpresas.setText("Empresas");
-        checkEmpresas.addActionListener(new java.awt.event.ActionListener() {
+        boxCadEmpresa.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxCadEmpresa.setText("Empresas");
+        boxCadEmpresa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkEmpresasActionPerformed(evt);
+                boxCadEmpresaActionPerformed(evt);
             }
         });
 
@@ -473,15 +550,15 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkOperacoes)
+                    .addComponent(boxCadOperacao)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkProdutosServicos)
-                            .addComponent(checkCentroCusto))
+                            .addComponent(boxCadProduto)
+                            .addComponent(boxCadCentro))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkEmpresas)
-                            .addComponent(checkListarProdutos))))
+                            .addComponent(boxCadEmpresa)
+                            .addComponent(boxLisProduto))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -489,29 +566,29 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkProdutosServicos)
-                    .addComponent(checkListarProdutos))
+                    .addComponent(boxCadProduto)
+                    .addComponent(boxLisProduto))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(checkCentroCusto)
-                    .addComponent(checkEmpresas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(boxCadCentro)
+                    .addComponent(boxCadEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(checkOperacoes)
+                .addComponent(boxCadOperacao)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentações", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
-        checkNovoLancamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkNovoLancamento.setText("Novo Lançamento");
-        checkNovoLancamento.addActionListener(new java.awt.event.ActionListener() {
+        boxNovoLancamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxNovoLancamento.setText("Novo Lançamento");
+        boxNovoLancamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkNovoLancamentoActionPerformed(evt);
+                boxNovoLancamentoActionPerformed(evt);
             }
         });
 
-        checkListarLancamentos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkListarLancamentos.setText("Listar Lançamentos");
+        boxLisLancamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxLisLancamento.setText("Listar Lançamentos");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -520,31 +597,31 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkListarLancamentos)
-                    .addComponent(checkNovoLancamento))
+                    .addComponent(boxLisLancamento)
+                    .addComponent(boxNovoLancamento))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(checkNovoLancamento)
+                .addComponent(boxNovoLancamento)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(checkListarLancamentos))
+                .addComponent(boxLisLancamento))
         );
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Relatórios", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
 
-        checkReportLancamentoFinanceiro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkReportLancamentoFinanceiro.setText("Lançamento Financeiro");
-        checkReportLancamentoFinanceiro.addActionListener(new java.awt.event.ActionListener() {
+        boxRelLancamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxRelLancamento.setText("Lançamento Financeiro");
+        boxRelLancamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkReportLancamentoFinanceiroActionPerformed(evt);
+                boxRelLancamentoActionPerformed(evt);
             }
         });
 
-        checkReportEstoqueProdutos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        checkReportEstoqueProdutos.setText("Estoque Produtos");
+        boxRelEstoque.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxRelEstoque.setText("Estoque Produtos");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -553,17 +630,17 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkReportEstoqueProdutos)
-                    .addComponent(checkReportLancamentoFinanceiro))
+                    .addComponent(boxRelEstoque)
+                    .addComponent(boxRelLancamento))
                 .addContainerGap(348, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(checkReportLancamentoFinanceiro)
+                .addComponent(boxRelLancamento)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(checkReportEstoqueProdutos))
+                .addComponent(boxRelEstoque))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -588,8 +665,6 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        jPanel8.getAccessibleContext().setAccessibleName("Relatórios");
 
         jTabbedPane1.addTab("Permissões", jPanel4);
 
@@ -689,33 +764,33 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         buscarUsuarios();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void checkProdutosServicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkProdutosServicosActionPerformed
+    private void boxCadProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxCadProdutoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkProdutosServicosActionPerformed
+    }//GEN-LAST:event_boxCadProdutoActionPerformed
 
-    private void checkCentroCustoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkCentroCustoActionPerformed
+    private void boxCadCentroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxCadCentroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkCentroCustoActionPerformed
+    }//GEN-LAST:event_boxCadCentroActionPerformed
 
-    private void checkOperacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOperacoesActionPerformed
+    private void boxCadOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxCadOperacaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkOperacoesActionPerformed
+    }//GEN-LAST:event_boxCadOperacaoActionPerformed
 
-    private void checkNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkNovoLancamentoActionPerformed
+    private void boxNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxNovoLancamentoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkNovoLancamentoActionPerformed
+    }//GEN-LAST:event_boxNovoLancamentoActionPerformed
 
-    private void checkReportLancamentoFinanceiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkReportLancamentoFinanceiroActionPerformed
+    private void boxRelLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxRelLancamentoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkReportLancamentoFinanceiroActionPerformed
+    }//GEN-LAST:event_boxRelLancamentoActionPerformed
 
-    private void checkListarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkListarProdutosActionPerformed
+    private void boxLisProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxLisProdutoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkListarProdutosActionPerformed
+    }//GEN-LAST:event_boxLisProdutoActionPerformed
 
-    private void checkEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkEmpresasActionPerformed
+    private void boxCadEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxCadEmpresaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkEmpresasActionPerformed
+    }//GEN-LAST:event_boxCadEmpresaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -763,20 +838,20 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
     private javax.swing.JLabel LabeNome;
     private javax.swing.JLabel LabeNome1;
     private javax.swing.JLabel LabeNome2;
+    private javax.swing.JCheckBox boxCadCentro;
+    private javax.swing.JCheckBox boxCadEmpresa;
+    private javax.swing.JCheckBox boxCadOperacao;
+    private javax.swing.JCheckBox boxCadProduto;
+    private javax.swing.JCheckBox boxLisLancamento;
+    private javax.swing.JCheckBox boxLisProduto;
+    private javax.swing.JCheckBox boxNovoLancamento;
+    private javax.swing.JCheckBox boxRelEstoque;
+    private javax.swing.JCheckBox boxRelLancamento;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnDeletar;
     private javax.swing.JButton btnPrincipal;
     private javax.swing.JCheckBox checkBoxAdmin;
     private javax.swing.JCheckBox checkBoxInativar;
-    private javax.swing.JCheckBox checkCentroCusto;
-    private javax.swing.JCheckBox checkEmpresas;
-    private javax.swing.JCheckBox checkListarLancamentos;
-    private javax.swing.JCheckBox checkListarProdutos;
-    private javax.swing.JCheckBox checkNovoLancamento;
-    private javax.swing.JCheckBox checkOperacoes;
-    private javax.swing.JCheckBox checkProdutosServicos;
-    private javax.swing.JCheckBox checkReportEstoqueProdutos;
-    private javax.swing.JCheckBox checkReportLancamentoFinanceiro;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

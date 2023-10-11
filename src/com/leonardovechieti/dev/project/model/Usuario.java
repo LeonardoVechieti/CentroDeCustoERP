@@ -8,13 +8,16 @@ public class Usuario {
     private Boolean inativo;
     private String perfil;
 
-    public Usuario(int id, String nome, String login, String senha, Boolean inativo, String perfil) {
+    private String regras;
+
+    public Usuario(int id, String nome, String login, String senha, Boolean inativo, String perfil, String regras) {
         this.id = id;
         this.nome = nome;
         this.login = login;
         this.senha = senha;
         this.inativo = inativo;
         this.perfil = perfil;
+        this.regras = regras;
     }
 
     public int getId() {
@@ -63,5 +66,13 @@ public class Usuario {
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+
+    public String getRegras() {
+        return regras;
+    }
+
+    public void setRegras(String regras) {
+        this.regras = regras;
     }
 }

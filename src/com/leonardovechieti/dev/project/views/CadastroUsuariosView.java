@@ -83,6 +83,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
     }
 
     private void selecionaUsuario(String id){
+        //limparCampos();
         UsuarioRepository usuarioRepository = new UsuarioRepository();
         Usuario usuario = usuarioRepository.buscaId(Integer.parseInt(id));
         labelId.setText(String.valueOf(usuario.getId()));
@@ -98,36 +99,57 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
     private void setRegras(String perfil, String regras){
         if(perfil.equals("ADMIN")){
             checkBoxAdmin.setSelected(true);
+        } else {
+            checkBoxAdmin.setSelected(false);
         }
         if(regras.contains("CAD_PRODUTO")){
             boxCadProduto.setSelected(true);
+        } else {
+            boxCadProduto.setSelected(false);
         }
         if(regras.contains("CAD_CENTRO_DE_CUSTO")){
             boxCadCentro.setSelected(true);
+        } else {
+            boxCadCentro.setSelected(false);
         }
         if(regras.contains("CAD_OPERACAO")){
             boxCadOperacao.setSelected(true);
+        } else {
+            boxCadOperacao.setSelected(false);
         }
         if(regras.contains("LIS_PRODUTO")){
             boxLisProduto.setSelected(true);
+        } else {
+            boxLisProduto.setSelected(false);
         }
         if(regras.contains("CAD_EMPRESA")){
             boxCadEmpresa.setSelected(true);
+        } else {
+            boxCadEmpresa.setSelected(false);
         }
         if(regras.contains("CAD_LANCAMENTO_FINANCEIRO")){
             boxNovoLancamento.setSelected(true);
+        } else {
+            boxNovoLancamento.setSelected(false);
         }
         if(regras.contains("LIS_LANCAMENTO_FINANCEIRO")){
             boxLisLancamento.setSelected(true);
+        } else {
+            boxLisLancamento.setSelected(false);
         }
         if(regras.contains("REL_PRODUTO_ESTOQUE")){
             boxRelEstoque.setSelected(true);
+        } else {
+            boxRelEstoque.setSelected(false);
         }
         if(regras.contains("REL_LANCAMENTO_FINANCEIRO")){
             boxRelLancamento.setSelected(true);
+        } else {
+            boxRelLancamento.setSelected(false);
         }
 
     }
+
     private void cadastrarUsuario() {
         // TODO add your handling code here:
         if (validarCampos()) {
@@ -334,6 +356,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         boxNovoLancamento = new javax.swing.JCheckBox();
         boxLisLancamento = new javax.swing.JCheckBox();
+        boxPermiteCancelamento = new javax.swing.JCheckBox();
         jPanel8 = new javax.swing.JPanel();
         boxRelLancamento = new javax.swing.JCheckBox();
         boxRelEstoque = new javax.swing.JCheckBox();
@@ -404,7 +427,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                                 .addComponent(LabeNome2)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(41, Short.MAX_VALUE))
+                        .addContainerGap(58, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(checkBoxAdmin)
                         .addGap(18, 18, 18)
@@ -470,11 +493,10 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -564,7 +586,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(boxCadProduto)
                     .addComponent(boxLisProduto))
@@ -573,8 +595,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                     .addComponent(boxCadCentro)
                     .addComponent(boxCadEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(boxCadOperacao)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(boxCadOperacao))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentações", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 13))); // NOI18N
@@ -590,6 +611,15 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         boxLisLancamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         boxLisLancamento.setText("Listar Lançamentos");
 
+        boxPermiteCancelamento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        boxPermiteCancelamento.setText("Permite Cancelamentos");
+        boxPermiteCancelamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                //todo: implementar cancelamento
+               // boxPermiteCancelamentoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -598,14 +628,19 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(boxLisLancamento)
-                    .addComponent(boxNovoLancamento))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(boxNovoLancamento)
+                        .addGap(38, 38, 38)
+                        .addComponent(boxPermiteCancelamento)))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(boxNovoLancamento)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(boxNovoLancamento)
+                    .addComponent(boxPermiteCancelamento))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(boxLisLancamento))
         );
@@ -632,12 +667,12 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(boxRelEstoque)
                     .addComponent(boxRelLancamento))
-                .addContainerGap(348, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(10, Short.MAX_VALUE)
                 .addComponent(boxRelLancamento)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(boxRelEstoque))
@@ -648,22 +683,23 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Permissões", jPanel4);
@@ -845,6 +881,7 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
     private javax.swing.JCheckBox boxLisLancamento;
     private javax.swing.JCheckBox boxLisProduto;
     private javax.swing.JCheckBox boxNovoLancamento;
+    private javax.swing.JCheckBox boxPermiteCancelamento;
     private javax.swing.JCheckBox boxRelEstoque;
     private javax.swing.JCheckBox boxRelLancamento;
     private javax.swing.JButton btnCancelar;

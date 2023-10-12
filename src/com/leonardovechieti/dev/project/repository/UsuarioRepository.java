@@ -76,7 +76,7 @@ public class UsuarioRepository {
     }
 
     public String cadastrar(String nome, String login, String senha, Boolean inativo, String perfil, String regras) {
-        String sql = "insert into usuario (nome, login, senha, inativo, perfil) values (?, ?, ?, ?, ?, ?)";
+        String sql = "insert into usuario (nome, login, senha, inativo, perfil, regras) values (?, ?, ?, ?, ?, ?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, nome);

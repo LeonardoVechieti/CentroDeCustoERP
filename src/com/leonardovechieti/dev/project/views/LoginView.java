@@ -12,6 +12,7 @@ import com.leonardovechieti.dev.project.repository.UsuarioRepository;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.plaf.InsetsUIResource;
 import java.sql.Connection;
 
 /**
@@ -26,18 +27,14 @@ public class LoginView extends javax.swing.JFrame {
     public LoginView() {
         initComponents();
         setIcon();
+        configuraMenu();
         Connection conexao = ModuloConexao.conector();
         if (conexao != null){
-            status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png")));
             autoLogin();
         }else{
-            status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dberror.png")));
-            MessageView messageView = new MessageView("Erro!", "Não foi possível conectar ao banco de dados!", "error");
+            new MessageView("Erro!", "Não foi possível conectar ao banco de dados!", "error");
         }
-
     }
-
-    
 
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));       
@@ -50,19 +47,46 @@ public class LoginView extends javax.swing.JFrame {
     }
     
     public void logar(){
-            UsuarioRepository usuarioRepository = new UsuarioRepository();
-            String senha = new String(txtSenha.getPassword());
-            Usuario usuario = usuarioRepository.login(txtUsuario.getText(),senha );
-            if (usuario != null){
-                //Abre a tela principal passando o usuário
-                PrincipalView principal = new PrincipalView(usuario);
-                //Fecha a tela de login
-                this.dispose();
-            } else {
-                usuario=null;
-                MessageView messageView = new MessageView("Aviso!", "Usuário ou senha inválidos!", "alert");
-            }
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        String senha = new String(txtSenha.getPassword());
+        Usuario usuario = usuarioRepository.login(txtUsuario.getText(),senha );
+        if (usuario != null){
+            PrincipalView principal = new PrincipalView(usuario);
+            this.dispose();
+        } else {
+            usuario=null;
+            new MessageView("Aviso!", "Usuário ou senha inválidos!", "alert");
         }
+    }
+
+    private void configuraMenu(){
+
+        labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(System.currentTimeMillis())));
+
+        rodape.setBackground(Color.decode("#76C2AF"));
+        rodape.setForeground(Color.decode("#FFFFFF"));
+        rodape.setBorderPainted(false);
+        rodape.setFocusable(false);
+        rodape.setOpaque(true);
+        rodape.setRequestFocusEnabled(false);
+        rodape.setVerifyInputWhenFocusTarget(false);
+        rodape.setVisible(true);
+        rodape.setBorder(null);
+        rodape.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+
+        //Troca a cor do texto do rodape para branco
+        labelNomeEmpresa.setForeground(Color.decode("#FFFFFF"));
+        //labelUsuario.setForeground(Color.decode("#FFFFFF"));
+        labelData.setForeground(Color.decode("#FFFFFF"));
+        labelDateTime.setForeground(Color.decode("#FFFFFF"));
+
+        //Espacamento entre os textos do rodape
+
+        labelNomeEmpresa.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        labelData.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 2));
+        status.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -79,7 +103,12 @@ public class LoginView extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         txtSenha = new javax.swing.JPasswordField();
         labelStatus = new javax.swing.JLabel();
+        rodape = new javax.swing.JToolBar();
+        labelNomeEmpresa = new javax.swing.JLabel();
+        labelData = new javax.swing.JLabel();
+        labelDateTime = new javax.swing.JLabel();
         status = new javax.swing.JLabel();
+        logo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -94,10 +123,10 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        labelUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelUsuario.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
         labelUsuario.setText("Usuário");
 
-        labelSenha.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelSenha.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
         labelSenha.setText("Senha");
 
         txtUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
@@ -119,10 +148,34 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/dbok.png"))); // NOI18N
+        rodape.setRollover(true);
+
+        labelNomeEmpresa.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelNomeEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/empresas.png"))); // NOI18N
+        labelNomeEmpresa.setText("Nome da Empresa");
+        rodape.add(labelNomeEmpresa);
+
+        labelData.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelData.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/calendar.png"))); // NOI18N
+        labelData.setText("Data Atual:  ");
+        rodape.add(labelData);
+
+        labelDateTime.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        labelDateTime.setText("Data");
+        rodape.add(labelDateTime);
+
+        status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/db_check.png"))); // NOI18N
         status.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 statusMouseClicked(evt);
+            }
+        });
+        rodape.add(status);
+
+        logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/entrar3.png"))); // NOI18N
+        logo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoMouseClicked(evt);
             }
         });
 
@@ -130,49 +183,56 @@ public class LoginView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(177, 177, 177)
-                .addComponent(labelStatus)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(labelSenha)
-                            .addComponent(labelUsuario))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtUsuario)
-                            .addComponent(txtSenha)))
+                        .addGap(165, 165, 165)
+                        .addComponent(labelStatus)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(status)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                        .addComponent(btnLogin)))
-                .addGap(55, 55, 55))
+                        .addGap(31, 31, 31)
+                        .addComponent(logo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelUsuario, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelSenha, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                            .addComponent(txtSenha))))
+                .addGap(47, 47, 47))
+            .addComponent(rodape, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelUsuario)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelSenha)
-                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelStatus)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLogin)
-                    .addComponent(status))
-                .addGap(65, 65, 65))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelUsuario)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelSenha)
+                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(logo)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLogin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelStatus)
+                        .addGap(57, 57, 57)))
+                .addComponent(rodape, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        setSize(new java.awt.Dimension(316, 193));
+        setSize(new java.awt.Dimension(436, 225));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -205,6 +265,10 @@ public class LoginView extends javax.swing.JFrame {
         ConfigDaoView config = new ConfigDaoView();
         config.setVisible(true);
     }//GEN-LAST:event_statusMouseClicked
+
+    private void logoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -243,9 +307,14 @@ public class LoginView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JLabel labelData;
+    private javax.swing.JLabel labelDateTime;
+    public static javax.swing.JLabel labelNomeEmpresa;
     private javax.swing.JLabel labelSenha;
     private javax.swing.JLabel labelStatus;
     private javax.swing.JLabel labelUsuario;
+    private javax.swing.JLabel logo;
+    private javax.swing.JToolBar rodape;
     private javax.swing.JLabel status;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtUsuario;

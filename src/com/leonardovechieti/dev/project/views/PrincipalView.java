@@ -6,8 +6,10 @@
 package com.leonardovechieti.dev.project.views;
 
 import com.leonardovechieti.dev.project.model.Usuario;
+import com.leonardovechieti.dev.project.util.Func;
 
 import javax.swing.*;
+import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 
 /**
@@ -23,48 +25,169 @@ public class PrincipalView extends javax.swing.JFrame {
     
     public PrincipalView() {
         initComponents();
-        //Seta os dados do usuario logado
-
-        //Formata menu
-        //menuBarraPrincipal.setBackground(Color.decode("#2E2E2E"));
-        //menuBarraPrincipal.setForeground(Color.decode("#FFFFFF"));
-//        menuBarraPrincipal.setBorderPainted(false);
-//        menuBarraPrincipal.setFocusable(false);
-//        menuBarraPrincipal.setOpaque(true);
-//        menuBarraPrincipal.setRequestFocusEnabled(false);
-//        //menuBarraPrincipal.setRolloverEnabled(false);
-//        menuBarraPrincipal.setVerifyInputWhenFocusTarget(false);
-//        menuBarraPrincipal.setVisible(true);
-//        menuBarraPrincipal.setBorder(null);
-
-        //Seta uma margem para o menu
-        menuBarraPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
-
-
-
-
-
     }
     public PrincipalView(Usuario usuario) {
         initComponents();
-        //Seta icon da janela
         setIcon();
-        //Seta os dados do usuario logado
         setUsuario(usuario);
+        configuraMenu();
         this.setVisible(true);
     }
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
+
     }
     
     public void setUsuario(Usuario usuario){
         this.usuario = usuario;
         if(usuario != null){
-            labelNomeUsuario.setText(usuario.getNome());
+            labelNomeUsuario.setText(Func.formataNome(usuario.getNome()));
             labelIdUsuario.setText(String.valueOf(usuario.getId()));
             //Seta data atual formatada
             labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(System.currentTimeMillis())));
+            atualizaRegras(usuario.getPerfil(), usuario.getRegras());
         }
+    }
+
+    private void atualizaRegras(String perfil, String regras){
+        if(perfil.equals("ADMIN")){
+            menuCadastrarUsuarios.setVisible(true);
+        }else{
+            menuCadastrarUsuarios.setVisible(false);
+        }
+        if(regras.contains("CAD_PRODUTO")){
+            menuCadastrarProdutos.setVisible(true);
+            barraCadastrarProdutos.setVisible(true);
+        }else{
+            menuCadastrarProdutos.setVisible(false);
+            barraCadastrarProdutos.setVisible(false);
+        }
+        if(regras.contains("LIS_PRODUTO")){
+            menuListarProdutos.setVisible(true);
+            barraListarProdutos.setVisible(true);
+        }else{
+            menuListarProdutos.setVisible(false);
+            barraListarProdutos.setVisible(false);
+        }
+        if(regras.contains("CAD_CENTRO_DE_CUSTO")){
+            menuCadastrarCentroDeCusto.setVisible(true);
+            barraCadastroCentroCusto.setVisible(true);
+        }else{
+            menuCadastrarCentroDeCusto.setVisible(false);
+            barraCadastroCentroCusto.setVisible(false);
+        }
+        if(regras.contains("CAD_OPERACAO")){
+            menuCadastrarOpercaoes.setVisible(true);
+            barraCadastrarOpercaoes.setVisible(true);
+        }else{
+            menuCadastrarOpercaoes.setVisible(false);
+            barraCadastrarOpercaoes.setVisible(false);
+        }
+        if(regras.contains("CAD_LANCAMENTO_FINANCEIRO")){
+            menuNovoLancamento.setVisible(true);
+            barraNovoLancamento.setVisible(true);
+        }else{
+            menuNovoLancamento.setVisible(false);
+            barraNovoLancamento.setVisible(false);
+        }
+        if(regras.contains("LIS_LANCAMENTO_FINANCEIRO")){
+            menuListarLancamento.setVisible(true);
+            barraListLancamento.setVisible(true);
+        }else{
+            menuListarLancamento.setVisible(false);
+            barraListLancamento.setVisible(false);
+        }
+
+    }
+
+    private void configuraMenu(){
+        menuBarraPrincipal.setBackground(Color.decode("#2E2E2E"));
+        //menuBarraPrincipal.setForeground(Color.decode("#FFFFFF"));
+        menuBarraPrincipal.setBorderPainted(false);
+        menuBarraPrincipal.setFocusable(false);
+        menuBarraPrincipal.setOpaque(true);
+        menuBarraPrincipal.setRequestFocusEnabled(false);
+        menuBarraPrincipal.setVerifyInputWhenFocusTarget(false);
+        menuBarraPrincipal.setVisible(true);
+        menuBarraPrincipal.setBorder(null);
+        menuBarraPrincipal.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+
+        menuCadastros.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuMovimentacoes.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelatorios.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuSistema.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+
+        //Sub menus
+        menuCadastrarProdutos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuListarProdutos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuCadastrarCentroDeCusto.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuCadastrarOpercaoes.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuNovoLancamento.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuListarLancamento.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuCadastrarUsuarios.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuProdutosServicos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        //Remove a borda dos submenus
+        menuCadastrarProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuListarProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuCadastrarCentroDeCusto.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuCadastrarOpercaoes.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuNovoLancamento.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuListarLancamento.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuCadastrarUsuarios.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuProdutosServicos.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        //Remove a linha de separacao dos submenus
+        menuCadastrarProdutos.setBorderPainted(false);
+        menuListarProdutos.setBorderPainted(false);
+        menuCadastrarCentroDeCusto.setBorderPainted(false);
+        menuCadastrarOpercaoes.setBorderPainted(false);
+        menuNovoLancamento.setBorderPainted(false);
+        menuListarLancamento.setBorderPainted(false);
+        menuCadastrarUsuarios.setBorderPainted(false);
+        menuProdutosServicos.setBorderPainted(false);
+
+        barraAtalhos.setBorderPainted(false);
+        barraAtalhos.setFocusable(false);
+        barraAtalhos.setOpaque(true);
+        barraAtalhos.setRequestFocusEnabled(false);
+        barraAtalhos.setVerifyInputWhenFocusTarget(false);
+        barraAtalhos.setVisible(true);
+        barraAtalhos.setBorder(null);
+        barraAtalhos.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+
+        barraCadastrarProdutos.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+        barraListarProdutos.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+        barraCadastrarOpercaoes.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+        barraCadastroCentroCusto.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+        barraListLancamento.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+        barraNovoLancamento.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+
+        rodape.setBackground(Color.decode("#76C2AF"));
+        rodape.setForeground(Color.decode("#FFFFFF"));
+        rodape.setBorderPainted(false);
+        rodape.setFocusable(false);
+        rodape.setOpaque(true);
+        rodape.setRequestFocusEnabled(false);
+        rodape.setVerifyInputWhenFocusTarget(false);
+        rodape.setVisible(true);
+        rodape.setBorder(null);
+        rodape.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+
+        //Troca a cor do texto do rodape para branco
+        labelVersao.setForeground(Color.decode("#FFFFFF"));
+        labelNomeEmpresa.setForeground(Color.decode("#FFFFFF"));
+        labelUsuario.setForeground(Color.decode("#FFFFFF"));
+        labelIdUsuario.setForeground(Color.decode("#FFFFFF"));
+        jLabel4.setForeground(Color.decode("#FFFFFF"));
+        labelNomeUsuario.setForeground(Color.decode("#FFFFFF"));
+        labelData.setForeground(Color.decode("#FFFFFF"));
+        labelDateTime.setForeground(Color.decode("#FFFFFF"));
+
+        //Espacamento entre os textos do rodape
+        labelVersao.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        labelNomeEmpresa.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        labelUsuario.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 2));
+        labelData.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 2));
+
     }
 
     /**
@@ -77,46 +200,34 @@ public class PrincipalView extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu3 = new javax.swing.JMenu();
-        jToolBar1 = new javax.swing.JToolBar();
+        barraAtalhos = new javax.swing.JToolBar();
         barraCadastrarProdutos = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JToolBar.Separator();
         barraListarProdutos = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
         barraCadastrarOpercaoes = new javax.swing.JButton();
-        jSeparator5 = new javax.swing.JToolBar.Separator();
         barraCadastroCentroCusto = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
         barraListLancamento = new javax.swing.JButton();
-        jSeparator4 = new javax.swing.JToolBar.Separator();
         barraNovoLancamento = new javax.swing.JButton();
-        jToolBar3 = new javax.swing.JToolBar();
-        jSeparator9 = new javax.swing.JToolBar.Separator();
+        rodape = new javax.swing.JToolBar();
         labelVersao = new javax.swing.JLabel();
-        jSeparator10 = new javax.swing.JToolBar.Separator();
-        labelIdEmpresa = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         labelNomeEmpresa = new javax.swing.JLabel();
-        jSeparator11 = new javax.swing.JToolBar.Separator();
-        jLabel2 = new javax.swing.JLabel();
+        labelUsuario = new javax.swing.JLabel();
         labelIdUsuario = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         labelNomeUsuario = new javax.swing.JLabel();
-        jSeparator12 = new javax.swing.JToolBar.Separator();
-        lblData1 = new javax.swing.JLabel();
+        labelData = new javax.swing.JLabel();
         labelDateTime = new javax.swing.JLabel();
-        jSeparator13 = new javax.swing.JToolBar.Separator();
         menuBarraPrincipal = new javax.swing.JMenuBar();
-        jMenu5 = new javax.swing.JMenu();
-        jMenu6 = new javax.swing.JMenu();
+        menuCadastros = new javax.swing.JMenu();
+        menuProdutosServicos = new javax.swing.JMenu();
         menuCadastrarProdutos = new javax.swing.JMenuItem();
         menuListarProdutos = new javax.swing.JMenuItem();
         menuCadastrarCentroDeCusto = new javax.swing.JMenuItem();
         menuCadastrarOpercaoes = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        menuCadastrarProdutos2 = new javax.swing.JMenuItem();
+        menuMovimentacoes = new javax.swing.JMenu();
+        menuNovoLancamento = new javax.swing.JMenuItem();
         menuListarLancamento = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
-        jMenu7 = new javax.swing.JMenu();
+        menuRelatorios = new javax.swing.JMenu();
+        menuSistema = new javax.swing.JMenu();
         menuCadastrarUsuarios = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
@@ -124,7 +235,7 @@ public class PrincipalView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dev - Software");
 
-        jToolBar1.setRollover(true);
+        barraAtalhos.setRollover(true);
 
         barraCadastrarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
         barraCadastrarProdutos.setToolTipText("Cadastrar Produtos e Serviços ");
@@ -136,8 +247,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 barraCadastrarProdutosActionPerformed(evt);
             }
         });
-        jToolBar1.add(barraCadastrarProdutos);
-        jToolBar1.add(jSeparator2);
+        barraAtalhos.add(barraCadastrarProdutos);
 
         barraListarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
         barraListarProdutos.setToolTipText("Listar Produtos e Serviços ");
@@ -149,8 +259,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 barraListarProdutosActionPerformed(evt);
             }
         });
-        jToolBar1.add(barraListarProdutos);
-        jToolBar1.add(jSeparator3);
+        barraAtalhos.add(barraListarProdutos);
 
         barraCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/integracao.png"))); // NOI18N
         barraCadastrarOpercaoes.setToolTipText("Cadastrar Opercaoes");
@@ -162,8 +271,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 barraCadastrarOpercaoesActionPerformed(evt);
             }
         });
-        jToolBar1.add(barraCadastrarOpercaoes);
-        jToolBar1.add(jSeparator5);
+        barraAtalhos.add(barraCadastrarOpercaoes);
 
         barraCadastroCentroCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
         barraCadastroCentroCusto.setToolTipText("Cadastro de Centro de Custo");
@@ -175,8 +283,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 barraCadastroCentroCustoActionPerformed(evt);
             }
         });
-        jToolBar1.add(barraCadastroCentroCusto);
-        jToolBar1.add(jSeparator1);
+        barraAtalhos.add(barraCadastroCentroCusto);
 
         barraListLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/garficoelupa.png"))); // NOI18N
         barraListLancamento.setToolTipText("Listar Lançamento Financeiro");
@@ -188,8 +295,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 barraListLancamentoActionPerformed(evt);
             }
         });
-        jToolBar1.add(barraListLancamento);
-        jToolBar1.add(jSeparator4);
+        barraAtalhos.add(barraListLancamento);
 
         barraNovoLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
         barraNovoLancamento.setToolTipText("Novo Lançamento Financeiro");
@@ -201,61 +307,53 @@ public class PrincipalView extends javax.swing.JFrame {
                 barraNovoLancamentoActionPerformed(evt);
             }
         });
-        jToolBar1.add(barraNovoLancamento);
+        barraAtalhos.add(barraNovoLancamento);
 
-        jToolBar3.setRollover(true);
-        jToolBar3.add(jSeparator9);
+        rodape.setRollover(true);
 
         labelVersao.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelVersao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png"))); // NOI18N
         labelVersao.setText("Versão: 1.0");
-        jToolBar3.add(labelVersao);
-        jToolBar3.add(jSeparator10);
-
-        labelIdEmpresa.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        labelIdEmpresa.setText("ID");
-        jToolBar3.add(labelIdEmpresa);
-
-        jLabel3.setText(" - ");
-        jToolBar3.add(jLabel3);
+        rodape.add(labelVersao);
 
         labelNomeEmpresa.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelNomeEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/empresas.png"))); // NOI18N
         labelNomeEmpresa.setText("Nome da Empresa");
-        jToolBar3.add(labelNomeEmpresa);
-        jToolBar3.add(jSeparator11);
+        rodape.add(labelNomeEmpresa);
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        jLabel2.setText("Usuário: ");
-        jToolBar3.add(jLabel2);
+        labelUsuario.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/user3.png"))); // NOI18N
+        labelUsuario.setText("Usuário: ");
+        rodape.add(labelUsuario);
 
         labelIdUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelIdUsuario.setText("ID");
-        jToolBar3.add(labelIdUsuario);
+        rodape.add(labelIdUsuario);
 
         jLabel4.setText(" - ");
-        jToolBar3.add(jLabel4);
+        rodape.add(jLabel4);
 
         labelNomeUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelNomeUsuario.setText("Nome do Usuário");
-        jToolBar3.add(labelNomeUsuario);
-        jToolBar3.add(jSeparator12);
+        rodape.add(labelNomeUsuario);
 
-        lblData1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        lblData1.setText("Data Atual:  ");
-        jToolBar3.add(lblData1);
+        labelData.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        labelData.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/calendar.png"))); // NOI18N
+        labelData.setText("Data Atual:  ");
+        rodape.add(labelData);
 
         labelDateTime.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         labelDateTime.setText("Data");
-        jToolBar3.add(labelDateTime);
-        jToolBar3.add(jSeparator13);
+        rodape.add(labelDateTime);
 
         menuBarraPrincipal.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
-        jMenu5.setText("Cadastros");
-        jMenu5.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuCadastros.setText("Cadastros");
+        menuCadastros.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
 
-        jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
-        jMenu6.setText("Produtos e serviços");
-        jMenu6.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuProdutosServicos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
+        menuProdutosServicos.setText("Produtos e serviços");
+        menuProdutosServicos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
         menuCadastrarProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produto1.png"))); // NOI18N
@@ -265,7 +363,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 menuCadastrarProdutosActionPerformed(evt);
             }
         });
-        jMenu6.add(menuCadastrarProdutos);
+        menuProdutosServicos.add(menuCadastrarProdutos);
 
         menuListarProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuListarProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/produtoList1.png"))); // NOI18N
@@ -275,9 +373,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 menuListarProdutosActionPerformed(evt);
             }
         });
-        jMenu6.add(menuListarProdutos);
+        menuProdutosServicos.add(menuListarProdutos);
 
-        jMenu5.add(jMenu6);
+        menuCadastros.add(menuProdutosServicos);
 
         menuCadastrarCentroDeCusto.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarCentroDeCusto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/statistics.png"))); // NOI18N
@@ -287,7 +385,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 menuCadastrarCentroDeCustoActionPerformed(evt);
             }
         });
-        jMenu5.add(menuCadastrarCentroDeCusto);
+        menuCadastros.add(menuCadastrarCentroDeCusto);
 
         menuCadastrarOpercaoes.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarOpercaoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/integracao.png"))); // NOI18N
@@ -297,22 +395,22 @@ public class PrincipalView extends javax.swing.JFrame {
                 menuCadastrarOpercaoesActionPerformed(evt);
             }
         });
-        jMenu5.add(menuCadastrarOpercaoes);
+        menuCadastros.add(menuCadastrarOpercaoes);
 
-        menuBarraPrincipal.add(jMenu5);
+        menuBarraPrincipal.add(menuCadastros);
 
-        jMenu2.setText("Movimentações");
-        jMenu2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuMovimentacoes.setText("Movimentações");
+        menuMovimentacoes.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
 
-        menuCadastrarProdutos2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        menuCadastrarProdutos2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
-        menuCadastrarProdutos2.setText("Novo Lançamento Financeiro");
-        menuCadastrarProdutos2.addActionListener(new java.awt.event.ActionListener() {
+        menuNovoLancamento.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuNovoLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/graficobarras.png"))); // NOI18N
+        menuNovoLancamento.setText("Novo Lançamento Financeiro");
+        menuNovoLancamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuCadastrarProdutos2ActionPerformed(evt);
+                menuNovoLancamentoActionPerformed(evt);
             }
         });
-        jMenu2.add(menuCadastrarProdutos2);
+        menuMovimentacoes.add(menuNovoLancamento);
 
         menuListarLancamento.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuListarLancamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/garficoelupa.png"))); // NOI18N
@@ -322,16 +420,16 @@ public class PrincipalView extends javax.swing.JFrame {
                 menuListarLancamentoActionPerformed(evt);
             }
         });
-        jMenu2.add(menuListarLancamento);
+        menuMovimentacoes.add(menuListarLancamento);
 
-        menuBarraPrincipal.add(jMenu2);
+        menuBarraPrincipal.add(menuMovimentacoes);
 
-        jMenu4.setText("Relatórios");
-        jMenu4.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        menuBarraPrincipal.add(jMenu4);
+        menuRelatorios.setText("Relatórios");
+        menuRelatorios.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
+        menuBarraPrincipal.add(menuRelatorios);
 
-        jMenu7.setText("Sistema");
-        jMenu7.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuSistema.setText("Sistema");
+        menuSistema.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
 
         menuCadastrarUsuarios.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         menuCadastrarUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/pastapessoaamarela.png"))); // NOI18N
@@ -341,9 +439,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 menuCadastrarUsuariosActionPerformed(evt);
             }
         });
-        jMenu7.add(menuCadastrarUsuarios);
+        menuSistema.add(menuCadastrarUsuarios);
 
-        menuBarraPrincipal.add(jMenu7);
+        menuBarraPrincipal.add(menuSistema);
 
         setJMenuBar(menuBarraPrincipal);
 
@@ -351,15 +449,15 @@ public class PrincipalView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 1213, Short.MAX_VALUE)
+            .addComponent(barraAtalhos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(rodape, javax.swing.GroupLayout.DEFAULT_SIZE, 1213, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 652, Short.MAX_VALUE)
-                .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(barraAtalhos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 612, Short.MAX_VALUE)
+                .addComponent(rodape, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -402,11 +500,11 @@ public class PrincipalView extends javax.swing.JFrame {
         centroDeCusto.setVisible(true);
     }//GEN-LAST:event_menuCadastrarCentroDeCustoActionPerformed
 
-    private void menuCadastrarProdutos2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarProdutos2ActionPerformed
+    private void menuNovoLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNovoLancamentoActionPerformed
         // TODO add your handling code here:
         LancamentoFinanceiroView lancamento = new LancamentoFinanceiroView();
         lancamento.setVisible(true);
-    }//GEN-LAST:event_menuCadastrarProdutos2ActionPerformed
+    }//GEN-LAST:event_menuNovoLancamentoActionPerformed
 
     private void menuCadastrarOpercaoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastrarOpercaoesActionPerformed
         // TODO add your handling code here:
@@ -479,47 +577,35 @@ public class PrincipalView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToolBar barraAtalhos;
     private javax.swing.JButton barraCadastrarOpercaoes;
     private javax.swing.JButton barraCadastrarProdutos;
     private javax.swing.JButton barraCadastroCentroCusto;
     private javax.swing.JButton barraListLancamento;
     private javax.swing.JButton barraListarProdutos;
     private javax.swing.JButton barraNovoLancamento;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenu jMenu6;
-    private javax.swing.JMenu jMenu7;
-    private javax.swing.JToolBar.Separator jSeparator1;
-    private javax.swing.JToolBar.Separator jSeparator10;
-    private javax.swing.JToolBar.Separator jSeparator11;
-    private javax.swing.JToolBar.Separator jSeparator12;
-    private javax.swing.JToolBar.Separator jSeparator13;
-    private javax.swing.JToolBar.Separator jSeparator2;
-    private javax.swing.JToolBar.Separator jSeparator3;
-    private javax.swing.JToolBar.Separator jSeparator4;
-    private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JToolBar.Separator jSeparator9;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar3;
+    private javax.swing.JLabel labelData;
     private javax.swing.JLabel labelDateTime;
-    public static javax.swing.JLabel labelIdEmpresa;
     public static javax.swing.JLabel labelIdUsuario;
     public static javax.swing.JLabel labelNomeEmpresa;
     public static javax.swing.JLabel labelNomeUsuario;
+    private javax.swing.JLabel labelUsuario;
     private javax.swing.JLabel labelVersao;
-    private javax.swing.JLabel lblData1;
     private javax.swing.JMenuBar menuBarraPrincipal;
     private javax.swing.JMenuItem menuCadastrarCentroDeCusto;
     private javax.swing.JMenuItem menuCadastrarOpercaoes;
     private javax.swing.JMenuItem menuCadastrarProdutos;
-    private javax.swing.JMenuItem menuCadastrarProdutos2;
     private javax.swing.JMenuItem menuCadastrarUsuarios;
+    private javax.swing.JMenu menuCadastros;
     private javax.swing.JMenuItem menuListarLancamento;
     private javax.swing.JMenuItem menuListarProdutos;
+    private javax.swing.JMenu menuMovimentacoes;
+    private javax.swing.JMenuItem menuNovoLancamento;
+    private javax.swing.JMenu menuProdutosServicos;
+    private javax.swing.JMenu menuRelatorios;
+    private javax.swing.JMenu menuSistema;
+    private javax.swing.JToolBar rodape;
     // End of variables declaration//GEN-END:variables
 }

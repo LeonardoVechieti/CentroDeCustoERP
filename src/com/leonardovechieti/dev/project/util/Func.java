@@ -118,5 +118,18 @@ public class Func {
         }
         return true;
     }
+
+    public static String formataNome(String nome) {
+        String nomeFormatado = nome.toLowerCase();
+        nomeFormatado = nomeFormatado.substring(0, 1).toUpperCase() + nomeFormatado.substring(1);
+        if (nomeFormatado.contains(" ")) {
+            String[] nomes = nomeFormatado.split(" ");
+            nomeFormatado = "";
+            for (int i = 0; i < nomes.length; i++) {
+                nomeFormatado += nomes[i].substring(0, 1).toUpperCase() + nomes[i].substring(1) + " ";
+            }
+        }
+        return nomeFormatado;
+    }
 }
 

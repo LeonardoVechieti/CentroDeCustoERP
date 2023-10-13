@@ -5,6 +5,7 @@
  */
 package com.leonardovechieti.dev.project.views;
 
+import com.leonardovechieti.dev.project.model.Empresa;
 import com.leonardovechieti.dev.project.model.Usuario;
 import com.leonardovechieti.dev.project.util.Func;
 
@@ -22,6 +23,7 @@ public class PrincipalView extends javax.swing.JFrame {
      * Creates new form PrincipalView
      */
     public Usuario usuario;
+    public Empresa empresa;
     
     public PrincipalView() {
         initComponents();
@@ -30,12 +32,12 @@ public class PrincipalView extends javax.swing.JFrame {
         initComponents();
         setIcon();
         setUsuario(usuario);
+        setEmpresa();
         configuraMenu();
         this.setVisible(true);
     }
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
-
     }
     
     public void setUsuario(Usuario usuario){
@@ -49,9 +51,19 @@ public class PrincipalView extends javax.swing.JFrame {
         }
     }
 
+    private void setEmpresa(){
+        try {
+            empresa = new com.leonardovechieti.dev.project.config.ConfigParametros().getEmpresa();
+            labelNomeEmpresa.setText(empresa.getNome());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao carregar dados da empresa: " + e.getMessage());
+        }
+    }
+
     private void atualizaRegras(String perfil, String regras){
         if(perfil.equals("ADMIN")){
             menuCadastrarUsuarios.setVisible(true);
+            menuParametrosSistema.setVisible(true);
         }else{
             menuCadastrarUsuarios.setVisible(false);
         }
@@ -97,7 +109,6 @@ public class PrincipalView extends javax.swing.JFrame {
             menuListarLancamento.setVisible(false);
             barraListLancamento.setVisible(false);
         }
-
     }
 
     private void configuraMenu(){
@@ -126,6 +137,7 @@ public class PrincipalView extends javax.swing.JFrame {
         menuListarLancamento.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         menuCadastrarUsuarios.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         menuProdutosServicos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuParametrosSistema.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         //Remove a borda dos submenus
         menuCadastrarProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
         menuListarProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
@@ -135,6 +147,7 @@ public class PrincipalView extends javax.swing.JFrame {
         menuListarLancamento.setMargin(new InsetsUIResource(0, 0, 0, 0));
         menuCadastrarUsuarios.setMargin(new InsetsUIResource(0, 0, 0, 0));
         menuProdutosServicos.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuParametrosSistema.setMargin(new InsetsUIResource(0, 0, 0, 0));
         //Remove a linha de separacao dos submenus
         menuCadastrarProdutos.setBorderPainted(false);
         menuListarProdutos.setBorderPainted(false);
@@ -144,6 +157,7 @@ public class PrincipalView extends javax.swing.JFrame {
         menuListarLancamento.setBorderPainted(false);
         menuCadastrarUsuarios.setBorderPainted(false);
         menuProdutosServicos.setBorderPainted(false);
+        menuParametrosSistema.setBorderPainted(false);
 
         barraAtalhos.setBorderPainted(false);
         barraAtalhos.setFocusable(false);
@@ -229,6 +243,7 @@ public class PrincipalView extends javax.swing.JFrame {
         menuRelatorios = new javax.swing.JMenu();
         menuSistema = new javax.swing.JMenu();
         menuCadastrarUsuarios = new javax.swing.JMenuItem();
+        menuParametrosSistema = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
 
@@ -441,6 +456,16 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         menuSistema.add(menuCadastrarUsuarios);
 
+        menuParametrosSistema.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuParametrosSistema.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/pastaconfiguracaoverde.png"))); // NOI18N
+        menuParametrosSistema.setText("Parâmetros do Sistema");
+        menuParametrosSistema.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuParametrosSistemaActionPerformed(evt);
+            }
+        });
+        menuSistema.add(menuParametrosSistema);
+
         menuBarraPrincipal.add(menuSistema);
 
         setJMenuBar(menuBarraPrincipal);
@@ -541,6 +566,11 @@ public class PrincipalView extends javax.swing.JFrame {
         opercao.setVisible(true);
     }//GEN-LAST:event_barraCadastrarOpercaoesActionPerformed
 
+    private void menuParametrosSistemaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuParametrosSistemaActionPerformed
+        // TODO add your handling code here:
+        ParametrosSistemaView parametros = new ParametrosSistemaView();
+    }//GEN-LAST:event_menuParametrosSistemaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -603,6 +633,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuListarProdutos;
     private javax.swing.JMenu menuMovimentacoes;
     private javax.swing.JMenuItem menuNovoLancamento;
+    private javax.swing.JMenuItem menuParametrosSistema;
     private javax.swing.JMenu menuProdutosServicos;
     private javax.swing.JMenu menuRelatorios;
     private javax.swing.JMenu menuSistema;

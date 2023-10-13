@@ -5,7 +5,9 @@
  */
 package com.leonardovechieti.dev.project.views;
 
+import com.leonardovechieti.dev.project.config.ConfigParametros;
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
+import com.leonardovechieti.dev.project.model.Empresa;
 import com.leonardovechieti.dev.project.model.Usuario;
 import com.leonardovechieti.dev.project.repository.UsuarioRepository;
 
@@ -60,6 +62,13 @@ public class LoginView extends javax.swing.JFrame {
     }
 
     private void configuraMenu(){
+        try {
+            ConfigParametros configParametros = new ConfigParametros();
+            Empresa empresa = configParametros.getEmpresa();
+            labelNomeEmpresa.setText(empresa.getNome());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         labelDateTime.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(System.currentTimeMillis())));
 

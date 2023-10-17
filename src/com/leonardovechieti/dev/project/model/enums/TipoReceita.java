@@ -1,7 +1,7 @@
 package com.leonardovechieti.dev.project.model.enums;
 
 public enum TipoReceita {
-    ENTRADA,
-    SAIDA,
+    RECEITA,
+    DESPESA,
     NENHUM,
 }

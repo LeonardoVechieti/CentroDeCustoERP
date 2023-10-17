@@ -138,6 +138,14 @@ public class PrincipalView extends javax.swing.JFrame {
         menuCadastrarUsuarios.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         menuProdutosServicos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         menuParametrosSistema.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelCadastros.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelCadastrosProdutos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelCadastrosCentro.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelMovimentacoes.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelMovimentacoesLancamentos.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelMovimentacoesVendas.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        menuRelMovimentacoesCompras.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+
         //Remove a borda dos submenus
         menuCadastrarProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
         menuListarProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
@@ -148,6 +156,14 @@ public class PrincipalView extends javax.swing.JFrame {
         menuCadastrarUsuarios.setMargin(new InsetsUIResource(0, 0, 0, 0));
         menuProdutosServicos.setMargin(new InsetsUIResource(0, 0, 0, 0));
         menuParametrosSistema.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelCadastros.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelCadastrosProdutos.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelCadastrosCentro.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelMovimentacoes.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelMovimentacoesLancamentos.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelMovimentacoesVendas.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        menuRelMovimentacoesCompras.setMargin(new InsetsUIResource(0, 0, 0, 0));
+
         //Remove a linha de separacao dos submenus
         menuCadastrarProdutos.setBorderPainted(false);
         menuListarProdutos.setBorderPainted(false);
@@ -158,6 +174,14 @@ public class PrincipalView extends javax.swing.JFrame {
         menuCadastrarUsuarios.setBorderPainted(false);
         menuProdutosServicos.setBorderPainted(false);
         menuParametrosSistema.setBorderPainted(false);
+        menuRelCadastros.setBorderPainted(false);
+        menuRelCadastrosProdutos.setBorderPainted(false);
+        menuRelCadastrosCentro.setBorderPainted(false);
+        menuRelMovimentacoes.setBorderPainted(false);
+        menuRelMovimentacoesLancamentos.setBorderPainted(false);
+        menuRelMovimentacoesVendas.setBorderPainted(false);
+        menuRelMovimentacoesCompras.setBorderPainted(false);
+
 
         barraAtalhos.setBorderPainted(false);
         barraAtalhos.setFocusable(false);
@@ -202,6 +226,10 @@ public class PrincipalView extends javax.swing.JFrame {
         labelUsuario.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 2));
         labelData.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 2));
 
+        //Todo: Menus desabilitados, futuramente serão implementados
+        menuRelCadastrosCentro.setEnabled(false);
+        menuRelMovimentacoesCompras.setEnabled(false);
+        menuRelMovimentacoesVendas.setEnabled(false);
     }
 
     /**
@@ -241,6 +269,13 @@ public class PrincipalView extends javax.swing.JFrame {
         menuNovoLancamento = new javax.swing.JMenuItem();
         menuListarLancamento = new javax.swing.JMenuItem();
         menuRelatorios = new javax.swing.JMenu();
+        menuRelCadastros = new javax.swing.JMenu();
+        menuRelCadastrosProdutos = new javax.swing.JMenuItem();
+        menuRelCadastrosCentro = new javax.swing.JMenuItem();
+        menuRelMovimentacoes = new javax.swing.JMenu();
+        menuRelMovimentacoesLancamentos = new javax.swing.JMenuItem();
+        menuRelMovimentacoesVendas = new javax.swing.JMenuItem();
+        menuRelMovimentacoesCompras = new javax.swing.JMenuItem();
         menuSistema = new javax.swing.JMenu();
         menuCadastrarUsuarios = new javax.swing.JMenuItem();
         menuParametrosSistema = new javax.swing.JMenuItem();
@@ -441,6 +476,69 @@ public class PrincipalView extends javax.swing.JFrame {
 
         menuRelatorios.setText("Relatórios");
         menuRelatorios.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
+
+        menuRelCadastros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelCadastros.setText("Cadastros");
+        menuRelCadastros.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        menuRelCadastrosProdutos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuRelCadastrosProdutos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelCadastrosProdutos.setText("Produtos");
+        menuRelCadastrosProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelCadastrosProdutosActionPerformed(evt);
+            }
+        });
+        menuRelCadastros.add(menuRelCadastrosProdutos);
+
+        menuRelCadastrosCentro.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuRelCadastrosCentro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelCadastrosCentro.setText("Centro de Custo");
+        menuRelCadastrosCentro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelCadastrosCentroActionPerformed(evt);
+            }
+        });
+        menuRelCadastros.add(menuRelCadastrosCentro);
+
+        menuRelatorios.add(menuRelCadastros);
+
+        menuRelMovimentacoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelMovimentacoes.setText("Movimentações");
+        menuRelMovimentacoes.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+
+        menuRelMovimentacoesLancamentos.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuRelMovimentacoesLancamentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelMovimentacoesLancamentos.setText("Lançamentos Financeiros");
+        menuRelMovimentacoesLancamentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelMovimentacoesLancamentosActionPerformed(evt);
+            }
+        });
+        menuRelMovimentacoes.add(menuRelMovimentacoesLancamentos);
+
+        menuRelMovimentacoesVendas.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuRelMovimentacoesVendas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelMovimentacoesVendas.setText("Vendas");
+        menuRelMovimentacoesVendas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelMovimentacoesVendasActionPerformed(evt);
+            }
+        });
+        menuRelMovimentacoes.add(menuRelMovimentacoesVendas);
+
+        menuRelMovimentacoesCompras.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        menuRelMovimentacoesCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/leonardovechieti/dev/project/icon/print1.png"))); // NOI18N
+        menuRelMovimentacoesCompras.setText("Compras");
+        menuRelMovimentacoesCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelMovimentacoesComprasActionPerformed(evt);
+            }
+        });
+        menuRelMovimentacoes.add(menuRelMovimentacoesCompras);
+
+        menuRelatorios.add(menuRelMovimentacoes);
+
         menuBarraPrincipal.add(menuRelatorios);
 
         menuSistema.setText("Sistema");
@@ -571,6 +669,28 @@ public class PrincipalView extends javax.swing.JFrame {
         ParametrosSistemaView parametros = new ParametrosSistemaView();
     }//GEN-LAST:event_menuParametrosSistemaActionPerformed
 
+    private void menuRelCadastrosProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelCadastrosProdutosActionPerformed
+        // TODO add your handling code here:
+         new RelatorioProdutos();
+    }//GEN-LAST:event_menuRelCadastrosProdutosActionPerformed
+
+    private void menuRelCadastrosCentroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelCadastrosCentroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuRelCadastrosCentroActionPerformed
+
+    private void menuRelMovimentacoesLancamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelMovimentacoesLancamentosActionPerformed
+        // TODO add your handling code here:
+       new RelatorioLancamentoFinanceiroView();
+    }//GEN-LAST:event_menuRelMovimentacoesLancamentosActionPerformed
+
+    private void menuRelMovimentacoesVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelMovimentacoesVendasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuRelMovimentacoesVendasActionPerformed
+
+    private void menuRelMovimentacoesComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelMovimentacoesComprasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuRelMovimentacoesComprasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -635,6 +755,13 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuNovoLancamento;
     private javax.swing.JMenuItem menuParametrosSistema;
     private javax.swing.JMenu menuProdutosServicos;
+    private javax.swing.JMenu menuRelCadastros;
+    private javax.swing.JMenuItem menuRelCadastrosCentro;
+    private javax.swing.JMenuItem menuRelCadastrosProdutos;
+    private javax.swing.JMenu menuRelMovimentacoes;
+    private javax.swing.JMenuItem menuRelMovimentacoesCompras;
+    private javax.swing.JMenuItem menuRelMovimentacoesLancamentos;
+    private javax.swing.JMenuItem menuRelMovimentacoesVendas;
     private javax.swing.JMenu menuRelatorios;
     private javax.swing.JMenu menuSistema;
     private javax.swing.JToolBar rodape;

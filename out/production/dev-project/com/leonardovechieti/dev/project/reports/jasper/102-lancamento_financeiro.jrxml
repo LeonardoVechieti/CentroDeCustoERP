@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="teste" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2ae400e1-6fa3-493b-87f0-7a7ec6f1750f">
 	<property name="ireport.zoom" value="1.6105100000000168"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="149"/>
 	<field name="id" class="java.lang.String"/>
 	<field name="operacao" class="java.lang.String"/>
 	<field name="centro" class="java.lang.String"/>
@@ -18,6 +18,8 @@
 	<field name="report.totalEntrada" class="java.lang.String"/>
 	<field name="report.totalSaida" class="java.lang.String"/>
 	<field name="report.totalFinal" class="java.lang.String"/>
+	<field name="report.filtroReceita" class="java.lang.String"/>
+	<field name="report.filtroUsuario" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -73,15 +75,15 @@
 				<textFieldExpression><![CDATA[$F{report.filtroCentro}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="430" y="6" width="42" height="14" uuid="e474dbfb-8df1-4cb5-b6af-130a938dc0ae"/>
+				<reportElement x="430" y="6" width="50" height="14" uuid="e474dbfb-8df1-4cb5-b6af-130a938dc0ae"/>
 				<textFieldExpression><![CDATA[$F{report.filtroDataInicial}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="472" y="6" width="13" height="14" uuid="e3eca0a0-2328-4211-942b-54c7e9254355"/>
+				<reportElement x="480" y="6" width="13" height="14" uuid="e3eca0a0-2328-4211-942b-54c7e9254355"/>
 				<text><![CDATA[a]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="485" y="6" width="57" height="14" uuid="4fcbc6da-809f-4648-a2e9-201655379edd"/>
+				<reportElement x="493" y="6" width="57" height="14" uuid="4fcbc6da-809f-4648-a2e9-201655379edd"/>
 				<textFieldExpression><![CDATA[$F{report.filtroDataFinal}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -101,6 +103,28 @@
 					<pen lineWidth="0.75" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement x="181" y="20" width="57" height="14" uuid="d5076f1c-c1ec-4daa-85bd-aaa451ef6082"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUÁRIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="6" width="57" height="14" uuid="4b610fd9-05dc-424c-8020-b6654ada601c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DES/REC:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="262" y="6" width="101" height="14" uuid="f8e2a76d-f071-4c6f-b42d-581f159a528f"/>
+				<textFieldExpression><![CDATA[$F{report.filtroReceita}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="238" y="20" width="125" height="14" uuid="b3beef18-af1f-46b6-9d0e-2a086c9f7d9d"/>
+				<textFieldExpression><![CDATA[$F{report.filtroUsuario}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -207,14 +231,14 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Entradas:]]></text>
+				<text><![CDATA[Receita:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="18" y="25" width="52" height="14" uuid="de0651f9-565a-42aa-9bb0-4e1ca96d98df"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Saidas:]]></text>
+				<text><![CDATA[Despesa:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="18" y="39" width="52" height="14" uuid="97e663ee-41c5-4191-93f3-7056082b0058"/>

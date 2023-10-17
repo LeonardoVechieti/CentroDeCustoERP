@@ -31,6 +31,9 @@ public class Produto {
     public Produto() {
 
     }
+    public Produto(int id){
+        this.id = id;
+    }
 
     public int getId() {
         return id;

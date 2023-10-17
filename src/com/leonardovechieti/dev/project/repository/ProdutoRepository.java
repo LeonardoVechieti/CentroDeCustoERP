@@ -1,11 +1,15 @@
 package com.leonardovechieti.dev.project.repository;
 
 import com.leonardovechieti.dev.project.dao.ModuloConexao;
+import com.leonardovechieti.dev.project.model.dto.LancamentoFinanceiroDTO;
+import com.leonardovechieti.dev.project.model.dto.ProdutoDTO;
+import com.leonardovechieti.dev.project.model.dto.ReportDTO;
 import com.leonardovechieti.dev.project.util.Func;
 import com.leonardovechieti.dev.project.util.Message;
 import com.leonardovechieti.dev.project.model.Produto;
 import com.leonardovechieti.dev.project.views.MessageView;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoRepository {
@@ -202,5 +206,117 @@ public class ProdutoRepository {
     public void fecharConexao() throws SQLException {
          conexao.close();
         System.out.println("Conexao fechada!");
+    }
+
+//                dataInicial,
+//                dataFinal,
+//                boxEstoque.isSelected(),
+//                boxProducao.isSelected(),
+//                boxServicos.isSelected(),
+//                comboBoxStatus.getSelectedItem().toString(),
+//                usuario.getId()
+// produtoDTO.setPreco(Func.formataPrecoPadrao(rs.getString(3)));
+//                produtoDTO.setUnidade(rs.getString(4));
+//                produtoDTO.setInativo(rs.getBoolean(5));
+//                produtoDTO.setServico(rs.getBoolean(6));
+//                produtoDTO.setEstoque(rs.getBoolean(7));
+//                produtoDTO.setProducao(rs.getBoolean(8));
+//                produtoDTO.setDataCriacao(rs.getString(9));
+//                produtoDTO.setDataModificacao(rs.getString(10));
+//                produtoDTO.setUsuario(rs.getInt(11));
+//                produtoDTO.setNomeUsuario(rs.getString(12));
+    public List<ProdutoDTO> buscaProduto(
+            String dataInicial,
+            String dataFinal,
+            String unidade,
+            boolean estoque,
+            boolean producao,
+            boolean servicos,
+            boolean status,
+            int idUsuario,
+            boolean orderAlfabetica
+    ) {
+        String sql = "select p.id as ID, p.descricao as DESCRICAO, p.preco as PRECO, p.unidade as UNIDADE, p.inativo as INATIVO," +
+                " p.servico as SERVICO, p.estoque as ESTOQUE, p.producao as PRODUCAO, DATE_FORMAT(p.dataCriacao,'%d/%m/%Y') as DATACRIA," +
+                " u.id as IDUSUARIO, u.nome as USUARIO, DATE_FORMAT(p.dataModificacao,'%d/%m/%Y') as DATAMODIFICA " +
+                " from produto p\n" +
+                " inner join usuario u on u.id = p.usuario\n";
+
+        if(estoque) {
+            sql = sql + "where p.estoque = true\n";
+        }
+        if(producao) {
+            sql = sql + "where p.producao = true\n";
+        }
+        if(servicos) {
+            sql = sql + "where p.servico = true\n";
+        }
+        if(unidade != null) {
+            sql = sql + "where p.unidade = ?\n";
+        }
+        if(status) {
+            sql = sql + "where p.inativo = false\n";
+        }
+        if(dataInicial != null && dataFinal != null) {
+            sql = sql + "and p.dataModificacao between ? and ?\n";
+        }
+        if(idUsuario != 0) {
+            sql = sql + "and p.usuario = ?\n";
+        }
+        if(orderAlfabetica) {
+            sql = sql + "order by p.descricao asc";
+        } else {
+            sql = sql + "order by p.dataModificacao asc";
+        }
+
+        List<ProdutoDTO> lista = new ArrayList<>();
+        ReportDTO reportDTO = new ReportDTO();
+        try {
+            int i = 1;
+            pst = conexao.prepareStatement(sql);
+            if(unidade != null) {
+                pst.setString(i, unidade);
+                i++;
+            }
+            if(dataInicial != null && dataFinal != null) {
+                pst.setString(i, dataInicial);
+                i++;
+                pst.setString(i, dataFinal);
+                i++;
+            }
+            if(idUsuario != 0) {
+                pst.setInt(i, idUsuario);
+                i++;
+            }
+
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                ProdutoDTO produtoDTO = new ProdutoDTO();
+                produtoDTO.setId(rs.getInt(1));
+                produtoDTO.setDescricao(rs.getString(2));
+                produtoDTO.setPreco(Func.formataPrecoPadrao(rs.getString(3)));
+                produtoDTO.setUnidade(rs.getString(4));
+                produtoDTO.setInativo(rs.getBoolean(5));
+                produtoDTO.setServico(rs.getBoolean(6));
+                produtoDTO.setEstoque(rs.getBoolean(7));
+                produtoDTO.setProducao(rs.getBoolean(8));
+                produtoDTO.setDataCriacao(rs.getString(9));
+                produtoDTO.setUsuario(rs.getInt(10));
+                produtoDTO.setNomeUsuario(rs.getString(11));
+                produtoDTO.setDataModificacao(rs.getString(12));
+                produtoDTO.setReport(reportDTO);
+                //Seta o saldo do produto e valor total x quantidade
+                Produto produto = new Produto(rs.getInt(1));
+                produtoDTO.setSaldoEstoque(new EstoqueRepository().retornaTotalEstoque(produto).toString());
+                produtoDTO.setValorSaldoTotal(Func.formataPrecoPadrao(String.valueOf(new
+                        EstoqueRepository().retornaTotalEstoque(produto) * (rs.getString(3) == null ? 0 : Double.parseDouble(rs.getString(3)
+                )))));
+
+                lista.add(produtoDTO);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return lista;
     }
 }

@@ -20,6 +20,10 @@ public class Usuario {
         this.regras = regras;
     }
 
+    public Usuario() {
+
+    }
+
     public int getId() {
         return id;
     }

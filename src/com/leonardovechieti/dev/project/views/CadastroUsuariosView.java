@@ -10,6 +10,7 @@ import com.leonardovechieti.dev.project.repository.UsuarioRepository;
 import com.leonardovechieti.dev.project.util.Func;
 import net.proteanit.sql.DbUtils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
 
@@ -320,6 +321,8 @@ public class CadastroUsuariosView extends javax.swing.JFrame {
 
     private void setIcon(){
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/com/leonardovechieti/dev/project/icon/iconesistema.png")));
+        //deixa o visual das bordas do jframe arredondadas
+        //this.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#76C2AF")));
     }
 
     /**

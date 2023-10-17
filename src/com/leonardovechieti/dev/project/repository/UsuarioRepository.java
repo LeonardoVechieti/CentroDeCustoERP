@@ -164,6 +164,32 @@ public class UsuarioRepository {
         return null;
     }
 
+    public Usuario buscaPorNome(String nome) {
+        String slq = "select * from usuario where nome = ?";
+        try {
+            pst  = conexao.prepareStatement(slq);
+            pst.setString(1, nome);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return new
+                        Usuario(rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getBoolean("inativo"),
+                        rs.getString("perfil"),
+                        rs.getString("regras")
+                );
+            }else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        return null;
+    }
+
     public ResultSet buscaUsuarios() {
         String slq = "select id as ID, nome as NOME, login as LOGIN from usuario";
         try {
@@ -181,6 +207,21 @@ public class UsuarioRepository {
             conexao.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    public String nomesUsuario() {
+        String sql = "select nome from usuario where inativo = 0";
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            String nomes = "";
+            while (rs.next()) {
+                nomes += rs.getString("nome") + ",";
+            }
+            return nomes;
+        } catch (Exception e) {
+            return "";
         }
     }
 }
